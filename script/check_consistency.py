@@ -79,7 +79,7 @@ def main() -> None:
             if not rows:
                 errors.append("result/metrics.csv is empty.")
         for chart in [
-            "prf1_by_tool.png", "recall_heatmap.png", "skill_effect.png",
+            "prf1_by_tool.png", "f1_heatmap.png", "skill_effect.png",
             "stability.png", "miss_rate_by_type.png",
         ]:
             if not (FIG_DIR / chart).exists():

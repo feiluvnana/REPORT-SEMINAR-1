@@ -8,6 +8,7 @@ import argparse
 import csv
 import itertools
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -245,7 +246,8 @@ def load_tool_runs(tool: str, docs: dict[str, dict]) -> list[dict[str, list[dict
         ddir = tool_dir / d
         if not ddir.exists():
             return []
-        reps = {p.stem.split("_")[1] for p in ddir.glob("run_*.json")}
+        # Only run_<k>.json result files (not run_<k>.meta.json metadata).
+        reps = {m.group(1) for p in ddir.glob("run_*.json") if (m := re.fullmatch(r"run_(\d+)\.json", p.name))}
         rep_sets.append(reps)
     common_reps = sorted(set.intersection(*rep_sets)) if rep_sets else []
     runs = []
@@ -257,6 +259,11 @@ def load_tool_runs(tool: str, docs: dict[str, dict]) -> list[dict[str, list[dict
             run_map[d] = canonicalize_predictions(raw["findings"], req_order)
         runs.append(run_map)
     return runs
+
+
+def _sd(xs: list[float]) -> float:
+    """Sample standard deviation over repeats (0 for a single run)."""
+    return float(np.std(xs, ddof=1)) if len(xs) > 1 else 0.0
 
 
 def eval_subset(
@@ -289,161 +296,177 @@ def eval_subset(
         misses.append(m)
         f1s.append(f1)
     return {
-        "p_mean": float(np.mean(precs)), "p_sd": float(np.std(precs)),
-        "r_mean": float(np.mean(recs)), "r_sd": float(np.std(recs)),
-        "miss_mean": float(np.mean(misses)), "miss_sd": float(np.std(misses)),
-        "f1_mean": float(np.mean(f1s)), "f1_sd": float(np.std(f1s)),
+        "p_mean": float(np.mean(precs)), "p_sd": _sd(precs),
+        "r_mean": float(np.mean(recs)), "r_sd": _sd(recs),
+        "miss_mean": float(np.mean(misses)), "miss_sd": _sd(misses),
+        "f1_mean": float(np.mean(f1s)), "f1_sd": _sd(f1s),
         "fps": all_fps, "fns": all_fns,
     }
 
 
-def generate_charts(summary: dict, tools: list[str]) -> None:
-    PIC_DIR.mkdir(parents=True, exist_ok=True)
-    plt.rcParams.update({"font.size": 10, "figure.dpi": 200})
+# Validated categorical slots (dataviz reference palette, light surface) and text inks.
+C_BLUE, C_ORANGE, C_AQUA = "#2a78d6", "#eb6834", "#1baf7a"
+C_GRAY, INK, INK_2, SURFACE = "#9a9994", "#0b0b0b", "#52514e", "#fcfcfb"
+TYPE_VI = {"ambiguity": "Mơ hồ", "incompleteness": "Thiếu sót", "inconsistency": "Mâu thuẫn"}
 
-    # 1. P / R / F1 bar chart per tool (All 147, strict)
+
+def _style_axes(ax) -> None:
+    ax.set_facecolor(SURFACE)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(INK_2)
+    ax.tick_params(colors=INK_2)
+    ax.grid(axis="y", color="#dcdbd5", linewidth=0.6)
+    ax.set_axisbelow(True)
+
+
+def _bars(ax, x, vals, width, color, label, errs=None, value_labels=False):
+    bars = ax.bar(x, vals, width * 0.92, yerr=errs, capsize=2.5, label=label, color=color,
+                  edgecolor=SURFACE, linewidth=1.0, error_kw={"elinewidth": 0.8, "ecolor": INK_2})
+    if value_labels:
+        for k, (b, v) in enumerate(zip(bars, vals)):
+            top = v + (errs[k] if errs is not None else 0)  # sit above the error cap, not on it
+            ax.text(b.get_x() + b.get_width() / 2, top + 1.5, f"{v:.0f}", ha="center", va="bottom", fontsize=8, color=INK)
+    return bars
+
+
+def generate_charts(summary: dict, tools: list[str], ref_f1: float | None = None) -> None:
+    """All charts use the PURE subset (107 real requirements); the seeded doc is at the ceiling."""
+    PIC_DIR.mkdir(parents=True, exist_ok=True)
+    plt.rcParams.update({"font.size": 10, "figure.dpi": 200, "savefig.facecolor": SURFACE, "text.color": INK})
+
+    # 1. P / R / F1 per tool (PURE, strict) + flag-everything reference
     x = np.arange(len(tools))
-    w = 0.25
+    w = 0.26
     fig, ax = plt.subplots(figsize=(8, 4.3))
-    for i, (metric, label, color) in enumerate([
-        ("p", "Precision", "#1f77b4"),
-        ("r", "Recall (Detection Rate)", "#2ca02c"),
-        ("f1", "F1 Score", "#cc1527"),
-    ]):
-        vals = [summary[t]["all_strict"][f"{metric}_mean"] * 100 for t in tools]
-        errs = [summary[t]["all_strict"][f"{metric}_sd"] * 100 for t in tools]
-        ax.bar(x + (i - 1) * w, vals, w, yerr=errs, capsize=3, label=label, color=color, alpha=0.9)
+    _style_axes(ax)
+    for i, (metric, label, color) in enumerate([("p", "Precision", C_BLUE), ("r", "Recall (tỷ lệ phát hiện đúng)", C_ORANGE), ("f1", "F1", C_AQUA)]):
+        vals = [summary[t]["pure_strict"][f"{metric}_mean"] * 100 for t in tools]
+        errs = [summary[t]["pure_strict"][f"{metric}_sd"] * 100 for t in tools]
+        _bars(ax, x + (i - 1) * w, vals, w, color, label, errs, value_labels=True)
+    if ref_f1 is not None:
+        ax.axhline(ref_f1 * 100, color=INK_2, linestyle="--", linewidth=1.0, label=f"F1 khi gắn cờ mọi yêu cầu ({ref_f1 * 100:.0f})")
     ax.set_xticks(x)
     ax.set_xticklabels(tools)
-    ax.set_ylabel("Percentage (%)")
-    ax.set_ylim(0, 105)
-    ax.set_title("Precision, Recall, and F1 by Tool (All 147 Requirements, Strict)")
-    ax.legend()
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.set_ylabel("%")
+    ax.set_ylim(0, 112)
+    ax.set_title("Precision, Recall, F1 theo công cụ (PURE, 107 yêu cầu, so khớp chặt)", color=INK)
+    ax.legend(frameon=False, ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.08), fontsize=8.5)
     fig.tight_layout()
     fig.savefig(PIC_DIR / "prf1_by_tool.png")
     plt.close(fig)
 
-    # 2. Recall heatmap (Tool x Defect Type)
-    mat = np.array([[summary[t]["by_type"][tp]["r_mean"] * 100 for tp in TYPES] for t in tools])
+    # 2. F1 heatmap (tool x type, PURE) - sequential blue ramp. Recall is near the ceiling for
+    #    every LLM tool, so F1 (driven by precision) is what separates the defect types.
+    from matplotlib.colors import LinearSegmentedColormap
+    seq = LinearSegmentedColormap.from_list("seq_blue", ["#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"])
+    mat = np.array([[summary[t]["pure_by_type"][tp]["f1_mean"] * 100 for tp in TYPES] for t in tools])
     fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    im = ax.imshow(mat, cmap="YlGnBu", vmin=0, vmax=100, aspect="auto")
+    im = ax.imshow(mat, cmap=seq, vmin=0, vmax=100, aspect="auto")
     ax.set_xticks(np.arange(len(TYPES)))
-    ax.set_xticklabels(["Ambiguity", "Incompleteness", "Inconsistency"])
+    ax.set_xticklabels([TYPE_VI[t] for t in TYPES])
     ax.set_yticks(np.arange(len(tools)))
     ax.set_yticklabels(tools)
+    ax.tick_params(colors=INK_2, length=0)
+    for side in ax.spines.values():
+        side.set_visible(False)
     for i in range(len(tools)):
         for j in range(len(TYPES)):
-            color = "white" if mat[i, j] > 55 else "black"
-            ax.text(j, i, f"{mat[i, j]:.1f}%", ha="center", va="center", color=color, fontweight="bold")
-    fig.colorbar(im, ax=ax, label="Recall (%)")
-    ax.set_title("Recall (%) Heatmap: Tool x Defect Type (All 147)")
+            ax.text(j, i, f"{mat[i, j]:.0f}%", ha="center", va="center", color="white" if mat[i, j] > 60 else INK, fontweight="bold")
+    fig.colorbar(im, ax=ax, label="F1 (%)")
+    ax.set_title("F1 theo loại khiếm khuyết (PURE)", color=INK)
     fig.tight_layout()
-    fig.savefig(PIC_DIR / "recall_heatmap.png")
+    fig.savefig(PIC_DIR / "f1_heatmap.png")
     plt.close(fig)
 
-    # 3. Skill-effect chart (Plain vs +Skill F1 for all model pairs)
+    # 3. Skill effect: plain vs + SKILL.md, F1 on PURE
     pairs = []
     if "T1" in summary and "T2" in summary:
-        pairs.append(("Gemini 4 Hydrogen", summary["T1"]["all_strict"]["f1_mean"] * 100, summary["T2"]["all_strict"]["f1_mean"] * 100))
+        pairs.append(("Gemini 4 Hydrogen\n(T1 → T2)", summary["T1"]["pure_strict"]["f1_mean"] * 100, summary["T2"]["pure_strict"]["f1_mean"] * 100))
     if "T3" in summary and "T4" in summary:
-        pairs.append(("Gemini 4 Neon", summary["T3"]["all_strict"]["f1_mean"] * 100, summary["T4"]["all_strict"]["f1_mean"] * 100))
+        pairs.append(("Gemini 4 Neon\n(T3 → T4)", summary["T3"]["pure_strict"]["f1_mean"] * 100, summary["T4"]["pure_strict"]["f1_mean"] * 100))
     if pairs:
         px = np.arange(len(pairs))
         fig, ax = plt.subplots(figsize=(6, 4))
-        ax.bar(px - 0.18, [p[1] for p in pairs], 0.34, label="Plain prompt", color="#7f8c8d")
-        ax.bar(px + 0.18, [p[2] for p in pairs], 0.34, label="+ SKILL.md", color="#cc1527")
+        _style_axes(ax)
+        _bars(ax, px - 0.18, [p[1] for p in pairs], 0.36, C_GRAY, "Câu lệnh thuần", value_labels=True)
+        _bars(ax, px + 0.18, [p[2] for p in pairs], 0.36, C_BLUE, "+ SKILL.md", value_labels=True)
         for idx, (_, plain_v, skill_v) in enumerate(pairs):
-            ax.text(idx + 0.18, skill_v + 1.5, f"{skill_v - plain_v:+.1f} pp", ha="center", fontweight="bold")
+            ax.text(idx, max(plain_v, skill_v) + 10, f"{skill_v - plain_v:+.1f} điểm %".replace(".", ","), ha="center", fontweight="bold", color=INK)
         ax.set_xticks(px)
         ax.set_xticklabels([p[0] for p in pairs])
-        ax.set_ylabel("F1 Score (%)")
-        ax.set_ylim(0, 105)
-        ax.set_title("Effect of SKILL.md on Strict F1 Score")
-        ax.legend()
-        ax.grid(axis="y", linestyle="--", alpha=0.4)
+        ax.set_ylabel("F1 (%)")
+        ax.set_ylim(0, 100)
+        ax.set_title("Tác động của SKILL.md lên F1 (PURE)", color=INK)
+        ax.legend(frameon=False, loc="upper right")
         fig.tight_layout()
         fig.savefig(PIC_DIR / "skill_effect.png")
         plt.close(fig)
 
-    # 4. Stability chart (Jaccard & Fleiss' kappa for multi-run tools)
+    # 4. Stability across the 3 repeats (PURE)
     multi = [t for t in tools if summary[t]["n_runs"] > 1]
     if multi:
         mx = np.arange(len(multi))
         fig, ax = plt.subplots(figsize=(6.5, 4))
-        ax.bar(mx - 0.18, [summary[t]["jaccard_all"] for t in multi], 0.34, label="Mean Pairwise Jaccard", color="#2980b9")
-        ax.bar(mx + 0.18, [summary[t]["fleiss_all"] for t in multi], 0.34, label="Fleiss' kappa", color="#8e44ad")
+        _style_axes(ax)
+        _bars(ax, mx - 0.18, [summary[t]["jaccard_pure"] * 100 for t in multi], 0.36, C_BLUE, "Jaccard trung bình giữa các cặp lượt", value_labels=True)
+        _bars(ax, mx + 0.18, [summary[t]["fleiss_pure"] * 100 for t in multi], 0.36, C_ORANGE, "Fleiss' κ (×100)", value_labels=True)
         ax.set_xticks(mx)
         ax.set_xticklabels(multi)
-        ax.set_ylim(0, 1.05)
-        ax.set_ylabel("Agreement / Overlap (0-1)")
-        ax.set_title("Run-to-Run Stability Across 3 Repeats")
-        ax.legend()
-        ax.grid(axis="y", linestyle="--", alpha=0.4)
+        ax.set_ylim(0, 112)
+        ax.set_ylabel("Mức trùng khớp (0–100)")
+        ax.set_title("Độ ổn định qua 3 lượt chạy lặp (PURE)", color=INK)
+        ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=2)
         fig.tight_layout()
         fig.savefig(PIC_DIR / "stability.png")
         plt.close(fig)
 
-    # 5. Miss-rate chart per defect type
+    # 5. Miss rate per defect type (PURE)
     fig, ax = plt.subplots(figsize=(8, 4.3))
+    _style_axes(ax)
     tx = np.arange(len(tools))
-    w = 0.25
-    for i, (tp, label, color) in enumerate([
-        ("ambiguity", "Ambiguity", "#e67e22"),
-        ("incompleteness", "Incompleteness", "#2980b9"),
-        ("inconsistency", "Inconsistency", "#c0392b"),
-    ]):
-        vals = [summary[t]["by_type"][tp]["miss_mean"] * 100 for t in tools]
-        ax.bar(tx + (i - 1) * w, vals, w, label=label, color=color, alpha=0.9)
+    w = 0.26
+    for i, (tp, color) in enumerate([("ambiguity", C_BLUE), ("incompleteness", C_ORANGE), ("inconsistency", C_AQUA)]):
+        vals = [summary[t]["pure_by_type"][tp]["miss_mean"] * 100 for t in tools]
+        _bars(ax, tx + (i - 1) * w, vals, w, color, TYPE_VI[tp], value_labels=True)
     ax.set_xticks(tx)
     ax.set_xticklabels(tools)
-    ax.set_ylabel("Miss Rate (%) = 1 - Recall")
+    ax.set_ylabel("Miss rate (%) = 1 − Recall")
     ax.set_ylim(0, 105)
-    ax.set_title("Miss Rate (%) by Tool and Defect Type (Lower is Better)")
-    ax.legend()
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.set_title("Tỷ lệ bỏ sót theo loại khiếm khuyết (PURE, thấp hơn là tốt hơn)", color=INK)
+    ax.legend(frameon=False, ncol=3, loc="upper right")
     fig.tight_layout()
     fig.savefig(PIC_DIR / "miss_rate_by_type.png")
     plt.close(fig)
 
 
-def write_latex_tables(summary: dict, tools: list[str]) -> None:
-    TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    lines = [
-        r"\begin{tabular}{lccccc}",
-        r"\toprule",
-        r"Công cụ & Precision (\%) & Recall (\%) & Miss Rate (\%) & F1 (\%) & 95\% CI F1 \\",
-        r"\midrule",
-    ]
-    for t in tools:
-        s = summary[t]["all_strict"]
-        ci_lo, ci_hi = summary[t]["ci_all"]
-        lines.append(
-            f"{t} & {s['p_mean']*100:.1f} $\\pm$ {s['p_sd']*100:.1f} & "
-            f"{s['r_mean']*100:.1f} $\\pm$ {s['r_sd']*100:.1f} & "
-            f"{s['miss_mean']*100:.1f} $\\pm$ {s['miss_sd']*100:.1f} & "
-            f"{s['f1_mean']*100:.1f} $\\pm$ {s['f1_sd']*100:.1f} & "
-            f"[{ci_lo*100:.1f}, {ci_hi*100:.1f}] \\\\"
-        )
-    lines += [r"\bottomrule", r"\end{tabular}"]
-    (TABLES_DIR / "overall_metrics.tex").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+def _vn(x: float) -> str:
+    """One decimal with a Vietnamese decimal comma, for LaTeX."""
+    return f"{x * 100:.1f}".replace(".", "{,}")
 
-    tlines = [
-        r"\begin{tabular}{lcccccc}",
-        r"\toprule",
-        r"Công cụ & \multicolumn{2}{c}{Ambiguity} & \multicolumn{2}{c}{Incompleteness} & \multicolumn{2}{c}{Inconsistency} \\",
-        r" & Recall (\%) & Miss (\%) & Recall (\%) & Miss (\%) & Recall (\%) & Miss (\%) \\",
-        r"\midrule",
-    ]
-    for t in tools:
-        bt = summary[t]["by_type"]
-        tlines.append(
-            f"{t} & {bt['ambiguity']['r_mean']*100:.1f} & {bt['ambiguity']['miss_mean']*100:.1f} & "
-            f"{bt['incompleteness']['r_mean']*100:.1f} & {bt['incompleteness']['miss_mean']*100:.1f} & "
-            f"{bt['inconsistency']['r_mean']*100:.1f} & {bt['inconsistency']['miss_mean']*100:.1f} \\\\"
-        )
-    tlines += [r"\bottomrule", r"\end{tabular}"]
-    (TABLES_DIR / "by_type_metrics.tex").write_text("\n".join(tlines) + "\n", encoding="utf-8", newline="\n")
+
+def write_latex_tables(summary: dict, tools: list[str]) -> None:
+    """overall_pure.tex (main, PURE 107 reqs) and overall_all.tex (all 147 reqs).
+    The PURE per-type table (pure_by_type.tex) is written by extra_analysis.py."""
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    for name, key, ci_key in (("overall_pure.tex", "pure_strict", "ci_pure"), ("overall_all.tex", "all_strict", "ci_all")):
+        lines = [
+            r"\begin{tabular}{lccccc}",
+            r"\toprule",
+            r"\textbf{Công cụ} & \textbf{Precision (\%)} & \textbf{Recall (\%)} & \textbf{Miss rate (\%)} & \textbf{$F_1$ (\%)} & \textbf{KTC 95\% của $F_1$} \\",
+            r"\midrule",
+        ]
+        for t in tools:
+            m = summary[t][key]
+            lo, hi = summary[t][ci_key]
+            lines.append(
+                f"{t} & {_vn(m['p_mean'])} $\\pm$ {_vn(m['p_sd'])} & {_vn(m['r_mean'])} $\\pm$ {_vn(m['r_sd'])} & "
+                f"{_vn(m['miss_mean'])} $\\pm$ {_vn(m['miss_sd'])} & {_vn(m['f1_mean'])} $\\pm$ {_vn(m['f1_sd'])} & "
+                f"[{_vn(lo)}; {_vn(hi)}] \\\\"
+            )
+        lines += [r"\bottomrule", r"\end{tabular}"]
+        (TABLES_DIR / name).write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def run_self_test() -> None:
@@ -503,8 +526,10 @@ def main() -> None:
         seed_strict = eval_subset(docs, gt_by_doc, runs, ["seeded_lms"])
         all_lenient = eval_subset(docs, gt_by_doc, runs, DOCS_ALL, lenient=True)
         by_type = {tp: eval_subset(docs, gt_by_doc, runs, DOCS_ALL, filter_type=tp) for tp in TYPES}
+        pure_by_type = {tp: eval_subset(docs, gt_by_doc, runs, DOCS_PURE, filter_type=tp) for tp in TYPES}
 
         ci_lo, ci_hi, boot_arr = bootstrap_ci_f1(docs, gt_by_doc, runs, DOCS_ALL)
+        ci_pure_lo, ci_pure_hi, _ = bootstrap_ci_f1(docs, gt_by_doc, runs, DOCS_PURE)
         boot_cache[t] = boot_arr
         jacc_all, fk_all = compute_stability(runs, docs, DOCS_ALL)
         jacc_pure, fk_pure = compute_stability(runs, docs, DOCS_PURE)
@@ -516,7 +541,9 @@ def main() -> None:
             "seed_strict": seed_strict,
             "all_lenient": all_lenient,
             "by_type": by_type,
+            "pure_by_type": pure_by_type,
             "ci_all": (ci_lo, ci_hi),
+            "ci_pure": (ci_pure_lo, ci_pure_hi),
             "jaccard_all": jacc_all,
             "fleiss_all": fk_all,
             "jaccard_pure": jacc_pure,
@@ -575,7 +602,10 @@ def main() -> None:
 
     valid_tools = list(summary.keys())
     write_latex_tables(summary, valid_tools)
-    generate_charts(summary, valid_tools)
+    # Reference: flag every (requirement, type) pair on PURE -> recall 1, precision = base rate.
+    flag_all = {d: [{"req_id": r["req_id"], "type": t, "related_ids": []} for r in docs[d]["requirements"] for t in TYPES] for d in DOCS_PURE}
+    ref_f1 = eval_subset(docs, gt_by_doc, [flag_all], DOCS_PURE)["f1_mean"]
+    generate_charts(summary, valid_tools, ref_f1)
     print(f"Evaluated tools {valid_tools}. Outputs written to {RESULTS_DIR} and {PIC_DIR}.")
 
 

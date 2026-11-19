@@ -224,7 +224,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 | 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ✅ done (κ=0.814; 16 disagreements → 9 accepted/7 rejected; final GT 82 findings) |
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ✅ done 2026-11-19T01:59Z; re-frozen 06:23Z after the prompt change (GT + SKILL.md + prompts) |
 | 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; smoke run OK; full T1–T4 run in progress (2026-11-19) |
-| 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ runs on frozen GT; T0 evaluated (all-strict F1 0.487, PURE 0.411, seeded 0.653) |
+| 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ✅ done 2026-11-19: `result/metrics.csv`, `result/extra_analysis.json`, tables `overall_pure/overall_all/pure_by_type.tex`, 5 PURE charts in `report/figures/` |
 | 10 | Error analysis | 9 | ☐ |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slide/hust_logo.png`, `report/figures/hust_logo.png`, `slide/hust_banner_white.png` from hust.edu.vn) |
 | 12 | `main.tex` → `main.pdf` | 9, 10, 11 | ⏳ Ch. 1–4, References & Appendix written + `xelatex` verified; Ch. 5–7 await Phase 3–6 results |
@@ -248,6 +248,22 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - **Step 4 run check (2026-11-19):** 48/48 OK; audit clean (no web/browser/command tools, no outside reads, SKILL.md read in 12/12 T2/T4 runs, 0/24 tool calls in T1/T3, no GT strings in logs); no duplicate (req_id, type) pairs, no mis-anchored inconsistencies. Cost: 119.6 agy-minutes, 1.81M tokens; per-run table in `result/run/run_summary.csv`.
 - **Leak #3 found in Step 4:** `dataset/seeded_lms.json` `source` said "10 clean, 30 defective"; every T1–T4 run (and expert pass 2) returned exactly 30 seeded findings. PURE results unaffected. **Fixed in Step 4b:** `source` became "Synthetic Library Management System SRS (40 requirements)" (seed_defects.py too); 12 leaked runs moved to `result/run_leaked/`; seeded runs re-run (12/12 OK, audit clean). A fresh blind Opus expert on the clean doc found 30/30 seeds with 0 extras (`result/expert_seeded_check.json`). Clean-doc tool recall is 28–30/30 (leaked: 30/30), so the seeded doc sits at the ceiling and PURE is the discriminating measure. `script/audit_runs.py` reproduces `run_summary.csv`.
 - **Folder restructure (2026-11-19, after the 48 runs):** lean layout of §3; all paths live in `script/paths.py`; HASHES.txt path entries rewritten (digests and freeze time unchanged).
+
+### Step 5 headline results (PURE, 107 reqs, strict, mean of 3 runs)
+| Tool | P | R | F1 | F1 95% CI |
+|---|---|---|---|---|
+| T0 rules | 0.400 | 0.423 | 0.411 | [0.297, 0.519] |
+| T1 Hydrogen | 0.252 | 1.000 | 0.403 | [0.332, 0.470] |
+| T2 Hydrogen + skill | 0.366 | 0.949 | 0.528 | [0.450, 0.601] |
+| T3 Neon | 0.283 | 0.994 | 0.439 | [0.364, 0.509] |
+| T4 Neon + skill | 0.397 | 0.929 | 0.556 | [0.470, 0.632] |
+| flag everything | 0.162 | 1.000 | 0.279 | — |
+
+- Skill effect (PURE, paired bootstrap): T2−T1 ΔF1 +0.125 [0.088, 0.163]; T4−T3 +0.116 [0.078, 0.154]. It comes from precision (+0.11) at a small recall cost (−0.05/−0.06).
+- By type (PURE F1): inconsistency is easiest (0.69–0.89); incompleteness is hardest (0.37–0.46 for LLMs, 0.23 for T0); T0 is competitive on ambiguity (0.67).
+- Stability (PURE): Jaccard 0.82–0.93, Fleiss κ 0.77–0.89.
+- Seeded doc at the ceiling (F1 0.96–1.00); SD-023 sensitivity changes F1 by ≤ 0.02; the count leak inflated seeded F1 by ≤ 0.04.
+- The SD over repeats is the sample SD (ddof=1). Charts are PURE-scoped with Vietnamese labels and a validated palette; the recall heatmap was replaced by an F1 heatmap, since LLM recall is at the ceiling.
 
 ## 7. Agent Assignment
 | Work | Agent |
