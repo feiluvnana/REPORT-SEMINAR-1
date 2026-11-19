@@ -53,7 +53,7 @@
    "req_id": "SD-014",
    "type": "incompleteness",
    "subtype": "missing_value_or_unit",
-   "evidence": "allowed maximum",
+   "evidence": "maximum",
    "related_ids": [],
    "rationale": "Unquantified limit phrase without value."
   },

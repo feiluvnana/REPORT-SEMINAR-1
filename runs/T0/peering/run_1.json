@@ -161,6 +161,14 @@
    "rationale": "Matched vague term(s): effective."
   },
   {
+   "req_id": "PE-021",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is ensured",
+   "related_ids": [],
+   "rationale": "Passive construction 'is ensured' without an explicit 'by <Actor>' agent."
+  },
+  {
    "req_id": "PE-022",
    "type": "incompleteness",
    "subtype": "missing_actor",

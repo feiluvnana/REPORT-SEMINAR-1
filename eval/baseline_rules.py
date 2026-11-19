@@ -6,6 +6,12 @@ REPORT/runs/T0/<doc>/run_1.json matching the shared findings schema.
 import json
 import re
 from pathlib import Path
+import sys
+
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ["keepass", "peering", "gammaj", "seeded_lms"]
@@ -16,7 +22,7 @@ VAGUE_WORDS = [
     "adequate", "adequately", "appropriate", "appropriately", "reasonable",
     "reasonably", "acceptable", "timely", "many", "several", "large", "small",
     "effective", "effectively", "efficient", "efficiently", "flexible",
-    "minimal", "robust", "reliable", "seamless", "noticeable", "more than a line",
+    "minimal", "robust", "reliable", "seamless", "noticeable",
 ]
 WEAK_PHRASES = [
     "where possible", "if possible", "as appropriate", "if appropriate",
@@ -27,11 +33,12 @@ COORD_RE = re.compile(r"\band/or\b", re.I)
 PRONOUN_RE = re.compile(r"\b(him|his|her|hers|he|she)\b", re.I)
 PASSIVE_RE = re.compile(
     r"\b(?:shall|must|will|should|can|cannot|is|are|be)\s+be\s+[a-z]+(?:ed|en)\b"
-    r"|\b(?:is|are)\s+(?:defined|identified|reported|detected|rejected|established|deployed|placed|considered|replicated|acted)\b",
+    r"|\b(?:is|are|was|were)\s+[a-z]+(?:ed|en)\b",  # generic Smella-style passive; no data-specific verb list
     re.I,
 )
 BY_ACTOR_RE = re.compile(r"\bby\s+(?:the\s+|a\s+|an\s+)?[A-Z][A-Za-z0-9_-]+")
-MISSING_VAL_RE = re.compile(r"\b(?:allowed maximum|maximum allowed|configurable limit|defined number)\b", re.I)
+# Generic QuARS-style underspecification: a limit word with no number anywhere in the requirement.
+MISSING_VAL_RE = re.compile(r"\b(?:maximum|minimum|limit|threshold|capacity)\b", re.I)
 
 
 def normalize_tokens(text: str) -> set[str]:
@@ -90,7 +97,7 @@ def detect_doc(doc: dict) -> dict:
         # --- Incompleteness checks ---
         if m := TBD_RE.search(text):
             add_finding(rid, "incompleteness", "tbd", m.group(0), [], f"Matched placeholder '{m.group(0)}'.")
-        elif m := MISSING_VAL_RE.search(text):
+        elif (m := MISSING_VAL_RE.search(text)) and not re.search(r"\d", text):
             add_finding(rid, "incompleteness", "missing_value_or_unit", m.group(0), [], "Unquantified limit phrase without value.")
         elif (m := PASSIVE_RE.search(text)) and not BY_ACTOR_RE.search(text[m.end():]):
             add_finding(
@@ -120,11 +127,11 @@ def detect_doc(doc: dict) -> dict:
 
 def main() -> None:
     for doc_id in DOCS:
-        doc = json.loads((ROOT / f"data/{doc_id}.json").read_text())
+        doc = json.loads((ROOT / f"data/{doc_id}.json").read_text(encoding="utf-8"))
         out = detect_doc(doc)
         out_dir = ROOT / f"runs/T0/{doc_id}"
         out_dir.mkdir(parents=True, exist_ok=True)
-        (out_dir / "run_1.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+        (out_dir / "run_1.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
         by_type = {}
         for f in out["findings"]:
             by_type[f["type"]] = by_type.get(f["type"], 0) + 1

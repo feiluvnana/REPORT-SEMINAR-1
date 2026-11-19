@@ -3,6 +3,11 @@ import json, re, sys
 import html
 from pathlib import Path
 
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data/raw/pure_xml/XMLZIPFile"
 DOCS = {"keepass": "2008 - keepass.xml", "peering": "2008 - peering.xml", "gammaj": "0000 - gamma j.xml"}
@@ -24,5 +29,5 @@ for key, fname in DOCS.items():
         if t:
             reqs.append({"req_id": f"{PREFIX[key]}-{i:03d}", "text": t})
     out = {"doc_id": key, "title": title, "source": f"PURE dataset (Ferrari et al., 2017): {fname}", "requirements": reqs}
-    (ROOT / f"data/{key}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    (ROOT / f"data/{key}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
     print(key, title, len(reqs))

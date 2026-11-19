@@ -9,6 +9,12 @@ contradicts an earlier clean requirement listed in `related_ids`.
 """
 import json
 from pathlib import Path
+import sys
+
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -690,8 +696,8 @@ def main() -> None:
         "original_texts": originals,
     }
 
-    (ROOT / "data/seeded_lms.json").write_text(json.dumps(doc_out, ensure_ascii=False, indent=1) + "\n")
-    (ROOT / "ground_truth/seed_key.json").write_text(json.dumps(key_out, ensure_ascii=False, indent=1) + "\n")
+    (ROOT / "data/seeded_lms.json").write_text(json.dumps(doc_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    (ROOT / "ground_truth/seed_key.json").write_text(json.dumps(key_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
 
     print("Generated seeded_lms.json (40 reqs) and seed_key.json (30 findings)")
     print("Type counts:", by_type)

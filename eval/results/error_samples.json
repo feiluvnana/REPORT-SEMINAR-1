@@ -1,0 +1,655 @@
+{
+ "T0": {
+  "false_positives": [
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-001",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "must be downloaded",
+    "related_ids": [],
+    "rationale": "Passive construction 'must be downloaded' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-002",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "can be used",
+    "related_ids": [],
+    "rationale": "Passive construction 'can be used' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-008",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "cannot be created",
+    "related_ids": [],
+    "rationale": "Passive construction 'cannot be created' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-010",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "must be placed",
+    "related_ids": [],
+    "rationale": "Passive construction 'must be placed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-012",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is completed",
+    "related_ids": [],
+    "rationale": "Passive construction 'is completed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-014",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "must be selected",
+    "related_ids": [],
+    "rationale": "Passive construction 'must be selected' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-015",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is changed",
+    "related_ids": [],
+    "rationale": "Passive construction 'is changed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-016",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "must be selected",
+    "related_ids": [],
+    "rationale": "Passive construction 'must be selected' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-017",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are required",
+    "related_ids": [],
+    "rationale": "Passive construction 'are required' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-018",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is required",
+    "related_ids": [],
+    "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-020",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are referred",
+    "related_ids": [],
+    "rationale": "Passive construction 'are referred' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-022",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "must be enclosed",
+    "related_ids": [],
+    "rationale": "Passive construction 'must be enclosed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-023",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is required",
+    "related_ids": [],
+    "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-024",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is required",
+    "related_ids": [],
+    "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-025",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are required",
+    "related_ids": [],
+    "rationale": "Passive construction 'are required' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-030",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "cannot be changed",
+    "related_ids": [],
+    "rationale": "Passive construction 'cannot be changed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-031",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "cannot be changed",
+    "related_ids": [],
+    "rationale": "Passive construction 'cannot be changed' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-032",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is used",
+    "related_ids": [],
+    "rationale": "Passive construction 'is used' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-001",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-002",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-003",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-006",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-009",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are considered",
+    "related_ids": [],
+    "rationale": "Passive construction 'are considered' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-010",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-011",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'is defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-012",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'are defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-014",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are identified",
+    "related_ids": [],
+    "rationale": "Passive construction 'are identified' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-018",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is established",
+    "related_ids": [],
+    "rationale": "Passive construction 'is established' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-020",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are identified",
+    "related_ids": [],
+    "rationale": "Passive construction 'are identified' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-021",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "is ensured",
+    "related_ids": [],
+    "rationale": "Passive construction 'is ensured' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-022",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "are defined",
+    "related_ids": [],
+    "rationale": "Passive construction 'are defined' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-005",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "easy",
+    "related_ids": [],
+    "rationale": "Matched vague term(s): easy."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-026",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "shall be protected",
+    "related_ids": [],
+    "rationale": "Passive construction 'shall be protected' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-002",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "shall be rejected",
+    "related_ids": [],
+    "rationale": "Passive construction 'shall be rejected' without an explicit 'by <Actor>' agent."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-009",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "shall be blocked",
+    "related_ids": [],
+    "rationale": "Passive construction 'shall be blocked' without an explicit 'by <Actor>' agent."
+   }
+  ],
+  "false_negatives": [
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-003",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "Folder selected must be of type the database can read and that is “name”.kdb",
+    "related_ids": [],
+    "rationale": "No behaviour is stated when a non-.kdb file is selected; also 'Folder' is used where a database file is meant, which could be misread."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-004",
+    "type": "ambiguity",
+    "subtype": "referential",
+    "evidence": "or else the previews one will be replace if selected",
+    "related_ids": [],
+    "rationale": "It is unclear what 'the previous one' and 'if selected' refer to (which database, selected by whom/for what)."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-006",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "All data related to the word must be shown",
+    "related_ids": [],
+    "rationale": "'Related to the word' is unbounded: which fields are searched (title, URL, notes...) and match rules (substring, case) are not defined beyond one example."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-013",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "Password field and repeat password field must be identical",
+    "related_ids": [],
+    "rationale": "The system response to a mismatch (error message, blocking save) is not stated."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-015",
+    "type": "inconsistency",
+    "subtype": "duplicate",
+    "evidence": "the repeat password field must be Changed and be identical with password field",
+    "related_ids": [
+     "KP-012",
+     "KP-013"
+    ],
+    "rationale": "Restates KP-012/KP-013 (repeat field must be completed and identical) with no distinct behaviour."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-019",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "Sequence’s length must not be more than a line (59 characters)",
+    "related_ids": [],
+    "rationale": "What happens when an Auto-Type sequence exceeds 59 characters (rejected, truncated, warning) is not stated."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-028",
+    "type": "incompleteness",
+    "subtype": "missing_condition",
+    "evidence": "File formats are not specialized password database formats",
+    "related_ids": [],
+    "rationale": "It is not stated which file formats (import/export? which ones?) the statement applies to."
+   },
+   {
+    "doc_id": "keepass",
+    "req_id": "KP-029",
+    "type": "incompleteness",
+    "subtype": "missing_condition",
+    "evidence": "File formats only specify",
+    "related_ids": [],
+    "rationale": "The file formats in scope are not identified."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-007",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "Malicious requests",
+    "related_ids": [],
+    "rationale": "'Malicious' is not defined; no criteria for detection are given."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-008",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "necessary content",
+    "related_ids": [],
+    "rationale": "Which content is 'necessary' is not defined."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-009",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "are considered",
+    "related_ids": [],
+    "rationale": "'Considered' does not specify what the system must do with anticipated and unanticipated requests; not testable."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-015",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "Malicious requests",
+    "related_ids": [],
+    "rationale": "'Malicious' is undefined (same issue accepted for PE-007)."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-015",
+    "type": "inconsistency",
+    "subtype": "duplicate",
+    "evidence": "Malicious requests are identified and acted upon.",
+    "related_ids": [
+     "PE-007"
+    ],
+    "rationale": "Near-restatement of PE-007; additionally 'acted upon' is weaker than 'rejected', leaving the intended action unclear."
+   },
+   {
+    "doc_id": "peering",
+    "req_id": "PE-020",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "Functional policies",
+    "related_ids": [],
+    "rationale": "Which policies are 'functional' is undefined; requirement is not verifiable."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-005",
+    "type": "inconsistency",
+    "subtype": "duplicate",
+    "evidence": "Must use a SQL based database.",
+    "related_ids": [
+     "GJ-003"
+    ],
+    "rationale": "Restates GJ-003 (SQL based database)."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-007",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "Shall install online help for users",
+    "related_ids": [],
+    "rationale": "No subject: unclear whether the system or the developers install the online help."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-008",
+    "type": "incompleteness",
+    "subtype": "missing_actor",
+    "evidence": "Shall deliver Operations and Maintenance manual",
+    "related_ids": [],
+    "rationale": "No subject identifying who delivers the documentation."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-016",
+    "type": "incompleteness",
+    "subtype": "missing_condition",
+    "evidence": "email customer and vendor in less than 1 second",
+    "related_ids": [],
+    "rationale": "The triggering event for the email (order placed, shipped, etc.) and its starting point for the 1-second timing are not stated."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-017",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "validate credit card in less than 2 seconds",
+    "related_ids": [],
+    "rationale": "No behaviour is defined when card validation fails or the validation service is unavailable."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-020",
+    "type": "incompleteness",
+    "subtype": "missing_value_or_unit",
+    "evidence": "periodic backups",
+    "related_ids": [],
+    "rationale": "Backup period/frequency is not given."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-021",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "validate credit cards against fraud",
+    "related_ids": [],
+    "rationale": "No behaviour specified when a card is flagged as fraudulent or the validation service fails."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-022",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "all sensitive information",
+    "related_ids": [],
+    "rationale": "Which information counts as 'sensitive' is not defined."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-024",
+    "type": "incompleteness",
+    "subtype": "missing_condition",
+    "evidence": "auto detect IP DOS attacks and block IP automatically",
+    "related_ids": [],
+    "rationale": "Detection criteria/threshold and block duration/unblocking are not specified."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-025",
+    "type": "incompleteness",
+    "subtype": "missing_consequence",
+    "evidence": "detect consecutive failed login attempts",
+    "related_ids": [],
+    "rationale": "No number of attempts and no resulting action (lockout, alert, duration) is stated."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-029",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "validate 'existing' credit card in system after each log in",
+    "related_ids": [],
+    "rationale": "Behaviour when the stored card is invalid or expired is not stated."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-032",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "validate email address existence",
+    "related_ids": [],
+    "rationale": "Behaviour when the email address does not exist or cannot be verified is not stated."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-039",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "interchangeable plugins",
+    "related_ids": [],
+    "rationale": "What plugins and what 'interchangeable' means are not defined."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-043",
+    "type": "ambiguity",
+    "subtype": "vague_term",
+    "evidence": "extremely portable",
+    "related_ids": [],
+    "rationale": "'Extremely portable' is unquantified."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-048",
+    "type": "inconsistency",
+    "subtype": "terminology",
+    "evidence": "weborder system",
+    "related_ids": [
+     "GJ-001"
+    ],
+    "rationale": "'Weborder system' is a new name for the product called 'Web Store' elsewhere."
+   },
+   {
+    "doc_id": "gammaj",
+    "req_id": "GJ-051",
+    "type": "inconsistency",
+    "subtype": "conflicting_values",
+    "evidence": "OS: Apache web server",
+    "related_ids": [
+     "GJ-002"
+    ],
+    "rationale": "Lists Apache web server as the OS, conflicting with GJ-002 which specifies Slackware Linux 2.6 as the OS and Apache as the web server."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-005",
+    "type": "incompleteness",
+    "subtype": "missing_consequence",
+    "evidence": "lock a Member account after 5 consecutive failed login attempts",
+    "related_ids": [],
+    "rationale": "Specifies the lockout trigger but omits the lockout duration and unlock/error behavior."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-013",
+    "type": "incompleteness",
+    "subtype": "missing_error_handling",
+    "evidence": "validate item eligibility ... and issue the loan receipt",
+    "related_ids": [],
+    "rationale": "Omits error handling when the barcode is invalid or the item is ineligible for checkout."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-015",
+    "type": "inconsistency",
+    "subtype": "conflicting_values",
+    "evidence": "borrow up to 8 physical items simultaneously",
+    "related_ids": [
+     "SD-009"
+    ],
+    "rationale": "Conflicts with SD-009, which limits active simultaneous loans to at most 5 items."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-016",
+    "type": "inconsistency",
+    "subtype": "conflicting_values",
+    "evidence": "21 calendar days",
+    "related_ids": [
+     "SD-010"
+    ],
+    "rationale": "Conflicts with SD-010, which defines the standard loan duration as 14 calendar days."
+   },
+   {
+    "doc_id": "seeded_lms",
+    "req_id": "SD-017",
+    "type": "inconsistency",
+    "subtype": "conflicting_rules",
+    "evidence": "self-register online ... and immediately check out physical books without Librarian ID verification",
+    "related_ids": [
+     "SD-001"
+    ],
+    "rationale": "Directly contradicts SD-001, which requires in-person Librarian verification of a government-issued photo ID before account creation."
+   }
+  ]
+ }
+}

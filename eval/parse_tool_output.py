@@ -11,6 +11,11 @@ import re
 import sys
 from pathlib import Path
 
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 VALID_TYPES = {"ambiguity", "incompleteness", "inconsistency"}
 VALID_SUBTYPES = {
     "ambiguity": {"vague_term", "referential", "syntactic", "coordination", "weak_phrase"},
@@ -140,16 +145,16 @@ def main() -> None:
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args()
 
-    doc = json.loads(args.doc.read_text())
+    doc = json.loads(args.doc.read_text(encoding="utf-8"))
     valid_req_ids = {r["req_id"] for r in doc["requirements"]}
-    raw_text = args.raw.read_text(errors="replace")
+    raw_text = args.raw.read_text(errors="replace", encoding="utf-8")
 
     assistant_text = unwrap_cli_envelope(raw_text)
     obj = extract_json_object(assistant_text)
     validated = validate_findings(obj, doc["doc_id"], valid_req_ids)
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(validated, ensure_ascii=False, indent=1) + "\n")
+    args.out.write_text(json.dumps(validated, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"OK: {doc['doc_id']} -> {len(validated['findings'])} findings")
 
 

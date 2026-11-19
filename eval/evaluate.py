@@ -18,6 +18,11 @@ import numpy as np
 
 from check_gt import verify as verify_hashes
 
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = ROOT / "eval/results"
 TABLES_DIR = RESULTS_DIR / "tables"
@@ -29,11 +34,11 @@ TYPES = ["ambiguity", "incompleteness", "inconsistency"]
 
 
 def load_docs() -> dict[str, dict]:
-    return {d: json.loads((ROOT / f"data/{d}.json").read_text()) for d in DOCS_ALL}
+    return {d: json.loads((ROOT / f"data/{d}.json").read_text(encoding="utf-8")) for d in DOCS_ALL}
 
 
 def load_gt() -> dict[str, list[dict]]:
-    raw = json.loads((ROOT / "ground_truth/final_gt.json").read_text())
+    raw = json.loads((ROOT / "ground_truth/final_gt.json").read_text(encoding="utf-8"))
     if "docs" in raw:
         return {k: v["findings"] for k, v in raw["docs"].items()}
     return {k: (v["findings"] if isinstance(v, dict) else v) for k, v in raw.items()}
@@ -250,7 +255,7 @@ def load_tool_runs(tool: str, docs: dict[str, dict]) -> list[dict[str, list[dict
         run_map = {}
         for d in DOCS_ALL:
             req_order = {r["req_id"]: i for i, r in enumerate(docs[d]["requirements"])}
-            raw = json.loads((tool_dir / d / f"run_{rep}.json").read_text())
+            raw = json.loads((tool_dir / d / f"run_{rep}.json").read_text(encoding="utf-8"))
             run_map[d] = canonicalize_predictions(raw["findings"], req_order)
         runs.append(run_map)
     return runs
@@ -423,7 +428,7 @@ def write_latex_tables(summary: dict, tools: list[str]) -> None:
             f"[{ci_lo*100:.1f}, {ci_hi*100:.1f}] \\\\"
         )
     lines += [r"\bottomrule", r"\end{tabular}"]
-    (TABLES_DIR / "overall_metrics.tex").write_text("\n".join(lines) + "\n")
+    (TABLES_DIR / "overall_metrics.tex").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
     tlines = [
         r"\begin{tabular}{lcccccc}",
@@ -440,7 +445,7 @@ def write_latex_tables(summary: dict, tools: list[str]) -> None:
             f"{bt['inconsistency']['r_mean']*100:.1f} & {bt['inconsistency']['miss_mean']*100:.1f} \\\\"
         )
     tlines += [r"\bottomrule", r"\end{tabular}"]
-    (TABLES_DIR / "by_type_metrics.tex").write_text("\n".join(tlines) + "\n")
+    (TABLES_DIR / "by_type_metrics.tex").write_text("\n".join(tlines) + "\n", encoding="utf-8", newline="\n")
 
 
 def run_self_test() -> None:
@@ -545,8 +550,8 @@ def main() -> None:
                 "fleiss_kappa": round(fk_all, 4) if scope == "all_strict" else "",
             })
 
-    with (RESULTS_DIR / "metrics.csv").open("w", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=list(csv_rows[0].keys()))
+    with (RESULTS_DIR / "metrics.csv").open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(csv_rows[0].keys()), lineterminator="\n")
         writer.writeheader()
         writer.writerows(csv_rows)
 
@@ -567,8 +572,8 @@ def main() -> None:
         t: {"false_positives": summary[t]["all_strict"]["fps"][:35], "false_negatives": summary[t]["all_strict"]["fns"][:35]}
         for t in summary
     }
-    (RESULTS_DIR / "error_samples.json").write_text(json.dumps(error_samples, ensure_ascii=False, indent=1) + "\n")
-    (RESULTS_DIR / "skill_effects.json").write_text(json.dumps(skill_effects, indent=1) + "\n")
+    (RESULTS_DIR / "error_samples.json").write_text(json.dumps(error_samples, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    (RESULTS_DIR / "skill_effects.json").write_text(json.dumps(skill_effects, indent=1) + "\n", encoding="utf-8", newline="\n")
 
     valid_tools = list(summary.keys())
     write_latex_tables(summary, valid_tools)

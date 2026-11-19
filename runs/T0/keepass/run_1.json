@@ -18,12 +18,28 @@
    "rationale": "Passive construction 'can be used' without an explicit 'by <Actor>' agent."
   },
   {
+   "req_id": "KP-007",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is required",
+   "related_ids": [],
+   "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+  },
+  {
    "req_id": "KP-008",
    "type": "incompleteness",
    "subtype": "missing_actor",
    "evidence": "cannot be created",
    "related_ids": [],
    "rationale": "Passive construction 'cannot be created' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-009",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is required",
+   "related_ids": [],
+   "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
   },
   {
    "req_id": "KP-010",
@@ -37,9 +53,9 @@
    "req_id": "KP-012",
    "type": "incompleteness",
    "subtype": "missing_actor",
-   "evidence": "must be completed",
+   "evidence": "is completed",
    "related_ids": [],
-   "rationale": "Passive construction 'must be completed' without an explicit 'by <Actor>' agent."
+   "rationale": "Passive construction 'is completed' without an explicit 'by <Actor>' agent."
   },
   {
    "req_id": "KP-014",
@@ -53,9 +69,9 @@
    "req_id": "KP-015",
    "type": "incompleteness",
    "subtype": "missing_actor",
-   "evidence": "must be Changed",
+   "evidence": "is changed",
    "related_ids": [],
-   "rationale": "Passive construction 'must be Changed' without an explicit 'by <Actor>' agent."
+   "rationale": "Passive construction 'is changed' without an explicit 'by <Actor>' agent."
   },
   {
    "req_id": "KP-016",
@@ -66,12 +82,36 @@
    "rationale": "Passive construction 'must be selected' without an explicit 'by <Actor>' agent."
   },
   {
-   "req_id": "KP-019",
-   "type": "ambiguity",
-   "subtype": "vague_term",
-   "evidence": "more than a line",
+   "req_id": "KP-017",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are required",
    "related_ids": [],
-   "rationale": "Matched vague term(s): more than a line."
+   "rationale": "Passive construction 'are required' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-018",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is required",
+   "related_ids": [],
+   "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-020",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are referred",
+   "related_ids": [],
+   "rationale": "Passive construction 'are referred' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-021",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is allowed",
+   "related_ids": [],
+   "rationale": "Passive construction 'is allowed' without an explicit 'by <Actor>' agent."
   },
   {
    "req_id": "KP-022",
@@ -80,6 +120,30 @@
    "evidence": "must be enclosed",
    "related_ids": [],
    "rationale": "Passive construction 'must be enclosed' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-023",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is required",
+   "related_ids": [],
+   "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-024",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is required",
+   "related_ids": [],
+   "rationale": "Passive construction 'is required' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-025",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are required",
+   "related_ids": [],
+   "rationale": "Passive construction 'are required' without an explicit 'by <Actor>' agent."
   },
   {
    "req_id": "KP-030",
@@ -96,6 +160,14 @@
    "evidence": "cannot be changed",
    "related_ids": [],
    "rationale": "Passive construction 'cannot be changed' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "KP-032",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is used",
+   "related_ids": [],
+   "rationale": "Passive construction 'is used' without an explicit 'by <Actor>' agent."
   }
  ]
 }

@@ -13,10 +13,10 @@ Rules:
   "doc_id": "<doc_id from input>",
   "findings": [
     {
-      "req_id": "KP-019",
+      "req_id": "XX-001",
       "type": "ambiguity",
       "subtype": "vague_term",
-      "evidence": "more than a line",
+      "evidence": "user-friendly",
       "related_ids": [],
       "rationale": "Concise explanation of the defect."
     }

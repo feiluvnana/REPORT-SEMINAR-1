@@ -18,6 +18,11 @@ import json
 import sys
 from pathlib import Path
 
+# Windows consoles default to a legacy code page; force UTF-8 so non-ASCII text prints safely.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 GT_DIR = ROOT / "ground_truth"
 PURE_DOCS = ["keepass", "peering", "gammaj"]
@@ -25,14 +30,14 @@ TYPES = ["ambiguity", "incompleteness", "inconsistency"]
 
 
 def load_doc_reqs(doc_id: str) -> list[dict]:
-    return json.loads((ROOT / f"data/{doc_id}.json").read_text())["requirements"]
+    return json.loads((ROOT / f"data/{doc_id}.json").read_text(encoding="utf-8"))["requirements"]
 
 
 def load_gt_map(path: Path) -> dict[str, list[dict]]:
     """Load expert_pass1.json / expert_pass2.json keyed by doc_id -> findings list.
     Accepts either {"docs": {"keepass": {"findings": [...]}}} or {"keepass": [...]}.
     """
-    raw = json.loads(path.read_text())
+    raw = json.loads(path.read_text(encoding="utf-8"))
     if "docs" in raw:
         return {k: v["findings"] for k, v in raw["docs"].items()}
     return {k: (v["findings"] if isinstance(v, dict) else v) for k, v in raw.items()}
@@ -60,7 +65,7 @@ def analyze() -> None:
 
     p1 = load_gt_map(p1_path)
     p2 = load_gt_map(p2_path)
-    seed_key = json.loads(sk_path.read_text())
+    seed_key = json.loads(sk_path.read_text(encoding="utf-8"))
 
     # 1. Cohen's kappa over all 107 x 3 = 321 (req_id, type) pairs on PURE
     all_y1, all_y2 = [], []
@@ -117,6 +122,8 @@ def freeze() -> None:
         p for p in GT_DIR.iterdir()
         if p.is_file() and p.name != "HASHES.txt"
     )
+    # Also freeze the tool inputs so the skill/prompts cannot be tuned after seeing GT.
+    extra = sorted((ROOT / "skill").rglob("*.md")) + sorted((ROOT / "prompts").glob("*.txt"))
     if not (GT_DIR / "final_gt.json").exists():
         sys.exit("Refusing to freeze: ground_truth/final_gt.json does not exist yet.")
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -124,7 +131,11 @@ def freeze() -> None:
     for p in targets:
         digest = hashlib.sha256(p.read_bytes()).hexdigest()
         lines.append(f"{digest}  {p.name}")
-    (GT_DIR / "HASHES.txt").write_text("\n".join(lines) + "\n")
+    for p in extra:
+        digest = hashlib.sha256(p.read_bytes()).hexdigest()
+        lines.append(f"{digest}  ../{p.relative_to(ROOT)}")
+    targets = targets + extra
+    (GT_DIR / "HASHES.txt").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print(f"Froze {len(targets)} ground_truth files to ground_truth/HASHES.txt at {now}")
 
 
@@ -134,7 +145,7 @@ def verify() -> bool:
         print("ERROR: ground_truth/HASHES.txt not found.", file=sys.stderr)
         return False
     recorded = {}
-    for line in hash_file.read_text().splitlines():
+    for line in hash_file.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue

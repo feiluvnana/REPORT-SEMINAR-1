@@ -1,0 +1,685 @@
+{
+ "annotator": "expert_pass2",
+ "docs": {
+  "keepass": {
+   "findings": [
+    {
+     "req_id": "KP-003",
+     "type": "incompleteness",
+     "subtype": "missing_condition",
+     "evidence": "Folder selected must be of type the database can read",
+     "related_ids": [],
+     "rationale": "The operation in which the folder/file is selected (open, import, save) and the behaviour for an unreadable selection are not stated; 'folder' vs '.kdb' file is also unclear."
+    },
+    {
+     "req_id": "KP-004",
+     "type": "ambiguity",
+     "subtype": "referential",
+     "evidence": "or else the previews one will be replace if selected",
+     "related_ids": [],
+     "rationale": "'the previous one' and 'if selected' have no clear antecedent (which database is replaced, and what is selected)."
+    },
+    {
+     "req_id": "KP-006",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "All data related to the word must be shown",
+     "related_ids": [],
+     "rationale": "'related to' does not define the matching rule or which fields are searched; the example covers only password and username."
+    },
+    {
+     "req_id": "KP-007",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "A name is required in order for the new group/subgroup to be created",
+     "related_ids": [],
+     "rationale": "No behaviour is stated when the user tries to create a group without a name."
+    },
+    {
+     "req_id": "KP-009",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "A name is required in order for the group/subgroup to be renamed",
+     "related_ids": [],
+     "rationale": "No behaviour is stated when the user tries to rename with an empty name."
+    },
+    {
+     "req_id": "KP-013",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "Password field and repeat password field must be identical",
+     "related_ids": [],
+     "rationale": "No system response is defined when the two fields do not match."
+    },
+    {
+     "req_id": "KP-015",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "the repeat password field must be Changed and be identical with password field",
+     "related_ids": [
+      "KP-012",
+      "KP-013"
+     ],
+     "rationale": "Restates the completion and identity rules of KP-012/KP-013 with no clearly distinct scope."
+    },
+    {
+     "req_id": "KP-028",
+     "type": "incompleteness",
+     "subtype": "missing_condition",
+     "evidence": "File formats are not specialized password database formats",
+     "related_ids": [],
+     "rationale": "Which file formats (import/export, which ones) the statement applies to is not stated, so it cannot be verified."
+    },
+    {
+     "req_id": "KP-029",
+     "type": "incompleteness",
+     "subtype": "missing_condition",
+     "evidence": "File formats only specify a low-level layout of stored data",
+     "related_ids": [],
+     "rationale": "The file formats concerned are not identified and 'low-level layout' is undefined."
+    }
+   ]
+  },
+  "peering": {
+   "findings": [
+    {
+     "req_id": "PE-002",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "The format for service information description is defined",
+     "related_ids": [
+      "PE-001"
+     ],
+     "rationale": "Verbatim repeat of PE-001."
+    },
+    {
+     "req_id": "PE-005",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "any resource failure will be reported",
+     "related_ids": [],
+     "rationale": "Neither who reports the failure nor to whom it is reported is stated."
+    },
+    {
+     "req_id": "PE-006",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "The interaction protocol between Web Server-SR, SR-mediator is defined.",
+     "related_ids": [
+      "PE-003"
+     ],
+     "rationale": "Verbatim repeat of PE-003."
+    },
+    {
+     "req_id": "PE-007",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "Malicious requests are detected and rejected.",
+     "related_ids": [],
+     "rationale": "The component that detects and rejects malicious requests is not identified."
+    },
+    {
+     "req_id": "PE-008",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "necessary content",
+     "related_ids": [],
+     "rationale": "'necessary' content is not defined, so the precondition cannot be checked."
+    },
+    {
+     "req_id": "PE-009",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "are considered",
+     "related_ids": [],
+     "rationale": "'considered' does not state what the system must do with anticipated/unanticipated traffic."
+    },
+    {
+     "req_id": "PE-010",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "The format for service information description is defined",
+     "related_ids": [
+      "PE-001",
+      "PE-002"
+     ],
+     "rationale": "Verbatim repeat of PE-001/PE-002."
+    },
+    {
+     "req_id": "PE-015",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "identified and acted upon",
+     "related_ids": [],
+     "rationale": "'acted upon' gives no resulting behaviour (compare 'rejected' in PE-007)."
+    },
+    {
+     "req_id": "PE-019",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "sufficient external resources",
+     "related_ids": [],
+     "rationale": "'sufficient' has no measurable threshold."
+    },
+    {
+     "req_id": "PE-020",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "Functional policies",
+     "related_ids": [],
+     "rationale": "'Functional policies' is undefined; which policies must be deployed is unclear."
+    },
+    {
+     "req_id": "PE-021",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "Effective content delivery",
+     "related_ids": [],
+     "rationale": "'Effective' is unquantified; no SLA metrics are given."
+    },
+    {
+     "req_id": "PE-024",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "Policies are in place to perform renegotiation for problem resolution.",
+     "related_ids": [
+      "PE-023"
+     ],
+     "rationale": "Verbatim repeat of PE-023."
+    }
+   ]
+  },
+  "gammaj": {
+   "findings": [
+    {
+     "req_id": "GJ-005",
+     "type": "inconsistency",
+     "subtype": "duplicate",
+     "evidence": "Must use a SQL based database.",
+     "related_ids": [
+      "GJ-003"
+     ],
+     "rationale": "Restates GJ-003 (SQL based database) with only rationale added."
+    },
+    {
+     "req_id": "GJ-007",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "Shall install online help for users via the web interface",
+     "related_ids": [],
+     "rationale": "The sentence has no subject; who installs the online help is not stated."
+    },
+    {
+     "req_id": "GJ-008",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "Shall deliver Operations and Maintenance manual, Users Guide book, and Installation Instructions",
+     "related_ids": [],
+     "rationale": "The party responsible for delivering the documentation is not stated."
+    },
+    {
+     "req_id": "GJ-008",
+     "type": "ambiguity",
+     "subtype": "syntactic",
+     "evidence": "Users Guide book, and Installation Instructions for the Administrator",
+     "related_ids": [],
+     "rationale": "'for the Administrator' may attach to all three documents or only to the Installation Instructions."
+    },
+    {
+     "req_id": "GJ-016",
+     "type": "incompleteness",
+     "subtype": "missing_condition",
+     "evidence": "email customer and vendor in less than 1 second",
+     "related_ids": [],
+     "rationale": "The triggering event for the email (order placed, shipped, etc.) and its starting point for the 1-second timing are not stated."
+    },
+    {
+     "req_id": "GJ-017",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "validate credit card in less than 2 seconds",
+     "related_ids": [],
+     "rationale": "No behaviour is defined when card validation fails or the validation service is unavailable."
+    },
+    {
+     "req_id": "GJ-020",
+     "type": "incompleteness",
+     "subtype": "missing_value_or_unit",
+     "evidence": "periodic backups",
+     "related_ids": [],
+     "rationale": "The backup period/frequency is not given."
+    },
+    {
+     "req_id": "GJ-021",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "validate credit cards against fraud",
+     "related_ids": [],
+     "rationale": "The response to a suspected fraudulent card and the fraud criteria are not stated."
+    },
+    {
+     "req_id": "GJ-022",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "all sensitive information",
+     "related_ids": [],
+     "rationale": "'sensitive' is not defined, so the scope of encryption is unclear."
+    },
+    {
+     "req_id": "GJ-024",
+     "type": "incompleteness",
+     "subtype": "missing_condition",
+     "evidence": "auto detect IP DOS attacks and block IP automatically",
+     "related_ids": [],
+     "rationale": "Detection criteria/threshold and block duration or unblock behaviour are not given."
+    },
+    {
+     "req_id": "GJ-025",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "detect consecutive failed login attempts",
+     "related_ids": [],
+     "rationale": "Neither the number of attempts nor the action taken on detection (lock, alert) is stated."
+    },
+    {
+     "req_id": "GJ-029",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "validate 'existing' credit card in system after each log in",
+     "related_ids": [],
+     "rationale": "No behaviour is stated when the stored card fails validation (expired, declined)."
+    },
+    {
+     "req_id": "GJ-030",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "too large in size",
+     "related_ids": [],
+     "rationale": "No size threshold or target size is given."
+    },
+    {
+     "req_id": "GJ-032",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "validate email address existence",
+     "related_ids": [],
+     "rationale": "No behaviour is stated when the address does not exist or cannot be verified."
+    },
+    {
+     "req_id": "GJ-033",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easy to use",
+     "related_ids": [],
+     "rationale": "Subjective quality with no measurable criterion."
+    },
+    {
+     "req_id": "GJ-034",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easy to learn",
+     "related_ids": [],
+     "rationale": "Subjective quality with no measurable criterion (e.g. training time)."
+    },
+    {
+     "req_id": "GJ-036",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easy to locate buttons",
+     "related_ids": [],
+     "rationale": "'easy to locate' is untestable as stated."
+    },
+    {
+     "req_id": "GJ-037",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "friend easy to read error messages",
+     "related_ids": [],
+     "rationale": "'friendly'/'easy to read' are subjective with no criterion."
+    },
+    {
+     "req_id": "GJ-039",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "interchangeable plugins",
+     "related_ids": [],
+     "rationale": "Which plugins, interchangeable with what, and through which interface is undefined."
+    },
+    {
+     "req_id": "GJ-040",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easily updatable",
+     "related_ids": [],
+     "rationale": "'easily' has no measurable criterion."
+    },
+    {
+     "req_id": "GJ-042",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easy to upgrade",
+     "related_ids": [],
+     "rationale": "'easy' has no measurable criterion."
+    },
+    {
+     "req_id": "GJ-043",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "extremely portable",
+     "related_ids": [],
+     "rationale": "'extremely portable' is unquantified."
+    },
+    {
+     "req_id": "GJ-044",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "easy to migrate or backed up",
+     "related_ids": [],
+     "rationale": "'easy' has no measurable criterion."
+    },
+    {
+     "req_id": "GJ-048",
+     "type": "inconsistency",
+     "subtype": "terminology",
+     "evidence": "weborder system",
+     "related_ids": [
+      "GJ-001"
+     ],
+     "rationale": "The system is named 'Web Store' elsewhere; 'weborder system' introduces an undefined alternative name."
+    },
+    {
+     "req_id": "GJ-049",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "The system hardware shall be fixed and patched via an internet connection.",
+     "related_ids": [],
+     "rationale": "Who fixes/patches the hardware is not stated (and patching hardware remotely is itself unclear)."
+    },
+    {
+     "req_id": "GJ-051",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "OS: Apache web server",
+     "related_ids": [
+      "GJ-002"
+     ],
+     "rationale": "GJ-002 specifies Slackware Linux 2.6 as the operating system with Apache as the web server, whereas GJ-051 lists Apache web server as the OS."
+    }
+   ]
+  },
+  "seeded_lms": {
+   "findings": [
+    {
+     "req_id": "SD-005",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "lock a Member account after 5 consecutive failed login attempts",
+     "related_ids": [],
+     "rationale": "Lock duration and unlock/recovery procedure are not stated."
+    },
+    {
+     "req_id": "SD-006",
+     "type": "ambiguity",
+     "subtype": "referential",
+     "evidence": "shall notify him by email",
+     "related_ids": [],
+     "rationale": "'him' could be the Librarian, the Member, or the Guarantor."
+    },
+    {
+     "req_id": "SD-007",
+     "type": "incompleteness",
+     "subtype": "tbd",
+     "evidence": "TBD minutes after issuance",
+     "related_ids": [],
+     "rationale": "Token expiry time is a TBD placeholder."
+    },
+    {
+     "req_id": "SD-008",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "user-friendly Member dashboard that is easy to navigate and loads rapidly on standard connections",
+     "related_ids": [],
+     "rationale": "'user-friendly', 'easy to navigate', 'rapidly' and 'standard connections' are unquantified."
+    },
+    {
+     "req_id": "SD-012",
+     "type": "incompleteness",
+     "subtype": "tbd",
+     "evidence": "at most TBD consecutive times",
+     "related_ids": [],
+     "rationale": "Maximum number of renewals is a TBD placeholder."
+    },
+    {
+     "req_id": "SD-013",
+     "type": "incompleteness",
+     "subtype": "missing_error_handling",
+     "evidence": "validate item eligibility within 2 seconds and issue the loan receipt",
+     "related_ids": [],
+     "rationale": "No behaviour is stated when the item is ineligible or validation fails."
+    },
+    {
+     "req_id": "SD-014",
+     "type": "incompleteness",
+     "subtype": "missing_value_or_unit",
+     "evidence": "the allowed maximum number of active hold requests",
+     "related_ids": [],
+     "rationale": "The maximum number of holds is not given anywhere in the document."
+    },
+    {
+     "req_id": "SD-015",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "borrow up to 8 physical items simultaneously",
+     "related_ids": [
+      "SD-009"
+     ],
+     "rationale": "SD-009 limits a Member in good standing to 5 items."
+    },
+    {
+     "req_id": "SD-016",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "21 calendar days",
+     "related_ids": [
+      "SD-010"
+     ],
+     "rationale": "SD-010 sets the standard loan period for print books to 14 calendar days."
+    },
+    {
+     "req_id": "SD-017",
+     "type": "inconsistency",
+     "subtype": "conflicting_rules",
+     "evidence": "self-register online with only an email address and immediately check out physical books without Librarian ID verification",
+     "related_ids": [
+      "SD-001"
+     ],
+     "rationale": "SD-001 requires Librarian verification of government photo ID before account creation."
+    },
+    {
+     "req_id": "SD-018",
+     "type": "inconsistency",
+     "subtype": "conflicting_rules",
+     "evidence": "remain held indefinitely until the requesting Member explicitly cancels the hold",
+     "related_ids": [
+      "SD-011"
+     ],
+     "rationale": "SD-011 cancels uncollected holds after exactly 72 hours."
+    },
+    {
+     "req_id": "SD-021",
+     "type": "ambiguity",
+     "subtype": "coordination",
+     "evidence": "send an overdue email and/or suspend borrowing privileges and/or apply a penalty flag",
+     "related_ids": [],
+     "rationale": "Chained 'and/or' leaves unclear which actions must be taken (and suspension/flagging is assigned to the Notification Service)."
+    },
+    {
+     "req_id": "SD-022",
+     "type": "incompleteness",
+     "subtype": "missing_actor",
+     "evidence": "shall be reviewed, approved, and recorded",
+     "related_ids": [],
+     "rationale": "Passive voice; the role or component that reviews and approves waivers is not stated."
+    },
+    {
+     "req_id": "SD-023",
+     "type": "ambiguity",
+     "subtype": "weak_phrase",
+     "evidence": "if appropriate",
+     "related_ids": [],
+     "rationale": "'if appropriate' makes the obligation optional with no criterion."
+    },
+    {
+     "req_id": "SD-023",
+     "type": "incompleteness",
+     "subtype": "missing_value_or_unit",
+     "evidence": "before the due date",
+     "related_ids": [],
+     "rationale": "How long before the due date the SMS is sent is not specified."
+    },
+    {
+     "req_id": "SD-024",
+     "type": "incompleteness",
+     "subtype": "tbd",
+     "evidence": "TBD years",
+     "related_ids": [],
+     "rationale": "Receipt retention period is a TBD placeholder."
+    },
+    {
+     "req_id": "SD-025",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "$1.25 USD per overdue day per item with no maximum cap",
+     "related_ids": [
+      "SD-019"
+     ],
+     "rationale": "SD-019 sets $0.50/day capped at $20.00 per item."
+    },
+    {
+     "req_id": "SD-026",
+     "type": "inconsistency",
+     "subtype": "conflicting_rules",
+     "evidence": "renew borrowed items online at any time regardless of any unpaid overdue fine balance",
+     "related_ids": [
+      "SD-012",
+      "SD-020"
+     ],
+     "rationale": "SD-020 blocks renewals when the fine balance exceeds $5.00, and SD-012 forbids renewal when another Member holds the title."
+    },
+    {
+     "req_id": "SD-027",
+     "type": "inconsistency",
+     "subtype": "terminology",
+     "evidence": "each Patron's active loan count ... on the Patron profile screen",
+     "related_ids": [
+      "SD-001",
+      "SD-009"
+     ],
+     "rationale": "'Patron' is used for the entity called 'Member' everywhere else; the 5-item limit also conflicts with SD-015's 8 items."
+    },
+    {
+     "req_id": "SD-028",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "return search results quickly even when many users are querying",
+     "related_ids": [],
+     "rationale": "'quickly' and 'many users' have no thresholds."
+    },
+    {
+     "req_id": "SD-029",
+     "type": "ambiguity",
+     "subtype": "weak_phrase",
+     "evidence": "where possible",
+     "related_ids": [],
+     "rationale": "'where possible' makes the highlighting obligation optional."
+    },
+    {
+     "req_id": "SD-030",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "sufficient ISBN matching accuracy and acceptable response times",
+     "related_ids": [],
+     "rationale": "'sufficient' and 'acceptable' are unquantified."
+    },
+    {
+     "req_id": "SD-031",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "efficiently process large batch MARC21 files without noticeable system slowdown",
+     "related_ids": [],
+     "rationale": "'efficiently', 'large' and 'noticeable' have no thresholds."
+    },
+    {
+     "req_id": "SD-032",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "shall detect the active references",
+     "related_ids": [],
+     "rationale": "What happens after detection (block deletion, warn, cascade) is not stated."
+    },
+    {
+     "req_id": "SD-034",
+     "type": "incompleteness",
+     "subtype": "tbd",
+     "evidence": "at TBD intervals",
+     "related_ids": [],
+     "rationale": "Backup interval is a TBD placeholder."
+    },
+    {
+     "req_id": "SD-035",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "important administrative actions in a timely manner and retain them for an appropriate period",
+     "related_ids": [],
+     "rationale": "'important', 'timely' and 'appropriate period' are undefined."
+    },
+    {
+     "req_id": "SD-036",
+     "type": "incompleteness",
+     "subtype": "missing_consequence",
+     "evidence": "the Failover Manager shall log event FAILOVER-01",
+     "related_ids": [],
+     "rationale": "Only logging is specified; the failover action itself and recovery behaviour are missing."
+    },
+    {
+     "req_id": "SD-037",
+     "type": "ambiguity",
+     "subtype": "vague_term",
+     "evidence": "adequate transport security and clear error messages",
+     "related_ids": [],
+     "rationale": "'adequate' and 'clear' are untestable without a standard or criterion."
+    },
+    {
+     "req_id": "SD-038",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "at least 8 characters",
+     "related_ids": [
+      "SD-002"
+     ],
+     "rationale": "SD-002 requires at least 12 characters with mixed character classes."
+    },
+    {
+     "req_id": "SD-039",
+     "type": "inconsistency",
+     "subtype": "conflicting_values",
+     "evidence": "active for 60 minutes of user inactivity",
+     "related_ids": [
+      "SD-004"
+     ],
+     "rationale": "SD-004 terminates sessions after 15 minutes of inactivity."
+    },
+    {
+     "req_id": "SD-040",
+     "type": "inconsistency",
+     "subtype": "conflicting_rules",
+     "evidence": "encrypt all Member passwords using reversible AES-256 encryption so Administrators can decrypt",
+     "related_ids": [
+      "SD-003"
+     ],
+     "rationale": "SD-003 requires one-way bcrypt hashing and forbids storing plaintext-recoverable passwords."
+    }
+   ]
+  }
+ }
+}

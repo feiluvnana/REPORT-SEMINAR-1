@@ -1,0 +1,8 @@
+tool,scope,n_runs,precision_mean,precision_sd,recall_mean,recall_sd,miss_rate_mean,miss_rate_sd,f1_mean,f1_sd,f1_ci95_lo,f1_ci95_hi,jaccard,fleiss_kappa
+T0,all_strict,1,0.5135,0.0,0.4634,0.0,0.5366,0.0,0.4872,0.0,0.3889,0.5799,1.0,1.0
+T0,pure_strict,1,0.4,0.0,0.4231,0.0,0.5769,0.0,0.4112,0.0,,,,
+T0,seeded_strict,1,0.8421,0.0,0.5333,0.0,0.4667,0.0,0.6531,0.0,,,,
+T0,all_lenient,1,0.6143,0.0,0.5443,0.0,0.4557,0.0,0.5772,0.0,,,,
+T0,type_ambiguity,1,0.9545,0.0,0.6774,0.0,0.3226,0.0,0.7925,0.0,,,,
+T0,type_incompleteness,1,0.2708,0.0,0.4062,0.0,0.5938,0.0,0.325,0.0,,,,
+T0,type_inconsistency,1,1.0,0.0,0.2105,0.0,0.7895,0.0,0.3478,0.0,,,,

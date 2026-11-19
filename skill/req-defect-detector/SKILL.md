@@ -12,8 +12,8 @@ Analyze every requirement in the provided SRS JSON document (`requirements`: lis
 ### A. `ambiguity` — Requirement allows multiple interpretations or lacks measurable criteria
 Check each requirement for:
 1. **`vague_term`**: Subjective, unquantified adjectives/adverbs or open-ended quantities with no testable threshold.
-   - Watch for: *fast, quickly, rapid(ly), slow(ly), easy, user-friendly, intuitive, simple, clear, sufficient, adequate, appropriate, reasonable, acceptable, timely, many, several, large, small, normal, standard, effective, efficient, flexible, minimal, robust, reliable, seamless, noticeable, more than a line* (without unit).
-   - **Guardrail:** Do **not** flag terms that are immediately paired with an explicit quantitative metric/standard in the same requirement (e.g., *"within 800 milliseconds under 500 concurrent queries"*, *"WCAG 2.1 Level AA contrast (minimum 4.5:1)"*).
+   - Watch for: *fast, quickly, rapid(ly), slow(ly), easy, user-friendly, intuitive, simple, clear, sufficient, adequate, appropriate, reasonable, acceptable, timely, many, several, large, small, normal, standard, effective, efficient, flexible, minimal, robust, reliable, seamless, noticeable*.
+   - **Guardrail:** Do **not** flag terms that are immediately paired with an explicit quantitative metric/standard in the same requirement (e.g., *"respond quickly, i.e. within 300 ms at the 95th percentile"*, *"readable font of at least 12 pt"*).
 2. **`referential`**: Unclear pronoun or demonstrative reference (*he, him, his, she, her, it, its, they, them, their, this, that, these, those*) where two or more plausible antecedents exist.
 3. **`syntactic`**: Sentence structure permits two grammatically valid readings (e.g., dangling modifier, unclear scope of *"only"*, *"all ... not"*, or attachment of prepositional/conditional clauses).
 4. **`coordination`**: Ambiguous logical connectives such as **`and/or`**, or stacked **`and`/`or`** clauses where operator precedence is unclear.
@@ -24,17 +24,17 @@ Check each requirement for:
 Check each requirement for:
 1. **`tbd`**: Explicit placeholders or deferred specifications (*TBD, TBA, TBC, TODO, ???, to be determined, to be defined*).
 2. **`missing_actor`**: Passive voice or nominalization (*"shall be reviewed"*, *"is defined"*, *"must be printed"*) where **who/which system component** performs or initiates the action cannot be determined from the sentence.
-   - **Guardrail:** Do not flag passive voice if the responsible actor/system is explicitly named elsewhere in the same sentence (e.g., *"shall be blocked by the Circulation System"*) or if the requirement purely defines an invariant/constraint on data format where no runtime actor is needed—unless an operational action is left unowned.
+   - **Guardrail:** Do not flag passive voice if the responsible actor/system is explicitly named elsewhere in the same sentence (e.g., *"shall be archived by the Billing Module"*) or if the requirement purely defines an invariant/constraint on data format where no runtime actor is needed—unless an operational action is left unowned.
 3. **`missing_condition`**: States an action without specifying the triggering event, precondition, or scope boundary when multiple modes/states are implied.
 4. **`missing_error_handling`**: Describes a validation, lookup, external dependency, authentication check, or state-changing operation on the happy path without specifying what happens on invalid input, failure, or denial.
-5. **`missing_value_or_unit`**: References a numeric limit, capacity, threshold, retention, or measurement without giving the actual number or unit (e.g., *"up to the allowed maximum limit"* with no number; *"within 10"* with no unit).
-6. **`missing_consequence`**: Specifies a trigger, fault, or detection condition (e.g., *"after 5 failed attempts"*, *"shall detect active references"*) without specifying the resulting system behavior, timeout duration, or recovery action.
+5. **`missing_value_or_unit`**: References a numeric limit, capacity, threshold, retention, or measurement without giving the actual number or unit (e.g., *"no more than the permitted number of bags"* with no number; *"within 30"* with no unit).
+6. **`missing_consequence`**: Specifies a trigger, fault, or detection condition (e.g., *"after 3 consecutive sensor faults"*, *"shall detect a low battery"*) without specifying the resulting system behavior, timeout duration, or recovery action.
 
 ### C. `inconsistency` — Contradiction, terminology drift, or duplication across requirements
 Compare every requirement against **all earlier requirements** in the document:
-1. **`conflicting_values`**: Two requirements specify incompatible numeric limits, durations, rates, capacities, currencies, or versions for the same entity/operation (e.g., max 5 loans vs. up to 8 items; 14 days vs. 21 days; 15 min vs. 60 min).
-2. **`conflicting_rules`**: Two requirements state mutually incompatible policies, permissions, security mechanisms, or state transitions (e.g., one-way bcrypt hashing vs. reversible AES decryption; ID check required vs. unverified self-checkout; auto-cancel after 72h vs. hold indefinitely).
-3. **`terminology`**: Uses a different term/label for an already-established domain entity or role defined in earlier requirements (e.g., switching from *"Member"* to *"Patron"* or *"Subscriber"* for the same borrower role).
+1. **`conflicting_values`**: Two requirements specify incompatible numeric limits, durations, rates, capacities, currencies, or versions for the same entity/operation (e.g., max 2 checked bags vs. up to 3 checked bags; refund within 7 days vs. within 30 days).
+2. **`conflicting_rules`**: Two requirements state mutually incompatible policies, permissions, security mechanisms, or state transitions (e.g., only a pharmacist may approve a prescription vs. a nurse may approve prescriptions; data deleted after closing an account vs. data retained forever).
+3. **`terminology`**: Uses a different term/label for an already-established domain entity or role defined in earlier requirements (e.g., switching from *"Passenger"* to *"Traveller"* or *"Customer"* for the same role).
 4. **`duplicate`**: Repeats an identical or near-identical requirement already stated earlier in the document with no distinct scope.
 
 ## 2. Step-by-Step Analysis Procedure

@@ -240,18 +240,26 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 | 1 | Create folders, download PURE, `prepare_data.py` (Gamma J title fixed) | — | ✅ done |
 | 2 | `seed_defects.py` → `seeded_lms.json` + `seed_key.json` | 1 | ✅ done (40 reqs, 30 canonical defects) |
 | 3 | Write `SKILL.md`, `plain_prompt.txt`, `skill_prompt.txt` | taxonomy | ✅ done |
-| 4 | Expert pass 1 (Claude Opus) | 1 | ☐ ready for Claude |
-| 5 | Expert pass 2 (fresh Claude Opus subagent), in parallel with 4 | 2, 3 | ☐ ready for Claude |
-| 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ☐ (`check_gt.py` ready) |
-| 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ☐ |
-| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; `run_tools.sh` & `parse_tool_output.py` ready (T1–T4 wait for step 7) |
-| 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ script written & `--self-test` passed (run after step 8) |
+| 4 | Expert pass 1 (Claude Opus) | 1 | ✅ done (blind Opus subagent, 55 findings; guideline `ground_truth/annotation_guideline.md`) |
+| 5 | Expert pass 2 (fresh Claude Opus subagent), in parallel with 4 | 2, 3 | ✅ done (78 findings; seeded recall 30/30) |
+| 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ✅ done (κ=0.814; 16 disagreements → 9 accepted/7 rejected; final GT 82 findings) |
+| 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ✅ done 2026-11-19T01:59Z (GT + SKILL.md + prompts). Re-freeze only if prompts change after `QUESTION.md` answers, before any run |
+| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 re-run with data-independent rules; `run_tools.sh` hides `ground_truth/` during runs + audits logs; T1–T4 wait for `QUESTION.md` answers |
+| 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ runs on frozen GT; T0 evaluated (all-strict F1 0.487, PURE 0.411, seeded 0.653) |
 | 10 | Error analysis | 9 | ☐ |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slides/hust_logo.png`, `pic/hust_logo.png`, `slides/hust_banner_white.png` from hust.edu.vn) |
 | 12 | `main.tex` → `main.pdf` | 9, 10, 11 | ⏳ Ch. 1–4, References & Appendix written + `xelatex` verified; Ch. 5–7 await Phase 3–6 results |
 | 13 | `beamerthemeHUST.sty` + `slides.tex` → PDFs | 9, 10, 11 | ⏳ HUST theme + Slides 1–10, 17–18 + notes written & `xelatex` verified; results slides await Phase 3–6 |
 | 14 | Write `README.md` in Vietnamese (overview, layout, reproduction steps, status) | 12, 13 | ✅ done (refresh final metrics summary after step 15 if needed) |
 | 15 | Final check: numbers in report = slides = `metrics.csv`; references verified; PDFs compile without errors | 12, 13, 14 | ☐ |
+
+### Changes made on 2026-11-19 (review)
+- **SKILL.md leak fixed:** its examples had been copied from the seeded defects (5 vs 8 loans, 14 vs 21 days, bcrypt vs AES, Member vs Patron, …). They were replaced with neutral examples from other domains. Both prompts' schema example (`KP-019` "more than a line", a real PURE item) became `XX-001` "user-friendly".
+- **T0 leak fixed:** dropped `"more than a line"`, the seeded `"allowed maximum"` phrase and the peering-specific passive-verb list. The rules are now generic.
+- **Expert passes:** both ran as blind Opus subagents with their own `annotation_guideline.md`, separate from SKILL.md. Pass 1 was not run in the main session, because that session had already seen the skill and seed key.
+- **Freeze also hashes** `skill/**/*.md` and `prompts/*.txt`.
+- **`run_tools.sh` fixes:** it moves `ground_truth/` out of the repo during runs, greps the logs for GT file names afterwards, and the macOS `seq 1 0` loop bug is fixed.
+- **Open questions** for agy (sandbox reads, whether the skill is really loaded) are in `QUESTION.md`.
 
 ## 7. Agent Assignment
 | Work | Agent |

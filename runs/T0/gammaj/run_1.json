@@ -2,14 +2,6 @@
  "doc_id": "gammaj",
  "findings": [
   {
-   "req_id": "GJ-002",
-   "type": "incompleteness",
-   "subtype": "missing_actor",
-   "evidence": "will be supplied",
-   "related_ids": [],
-   "rationale": "Passive construction 'will be supplied' without an explicit 'by <Actor>' agent."
-  },
-  {
    "req_id": "GJ-005",
    "type": "ambiguity",
    "subtype": "vague_term",
