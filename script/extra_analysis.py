@@ -33,7 +33,7 @@ LEAK_DIR = RESULT_DIR / "run_leaked"
 
 
 def summarize(res: dict) -> dict:
-    return {k: round(res[k], 4) for k in ("p_mean", "p_sd", "r_mean", "r_sd", "miss_mean", "f1_mean", "f1_sd")}
+    return {k: round(res[k], 6) for k in ("p_mean", "p_sd", "r_mean", "r_sd", "miss_mean", "f1_mean", "f1_sd")}
 
 
 def flag_everything(docs: dict, doc_list: list[str]) -> list[dict]:
@@ -96,7 +96,7 @@ def main() -> None:
 
     # 2. PURE skill effect (paired: same seed -> same resampled requirements for every tool)
     boots = {t: ev.bootstrap_ci_f1(docs, gt, runs[t], ev.DOCS_PURE) for t in ALL_TOOLS}
-    out["pure_f1_ci95"] = {t: [round(boots[t][0], 4), round(boots[t][1], 4)] for t in ALL_TOOLS}
+    out["pure_f1_ci95"] = {t: [round(boots[t][0], 6), round(boots[t][1], 6)] for t in ALL_TOOLS}
     out["pure_skill_effect"] = []
     for base, skill in (("T1", "T2"), ("T3", "T4")):
         diff = boots[skill][2] - boots[base][2]
@@ -104,8 +104,22 @@ def main() -> None:
         d_f1 = ev.eval_subset(docs, gt, runs[skill], ev.DOCS_PURE)["f1_mean"] - ev.eval_subset(docs, gt, runs[base], ev.DOCS_PURE)["f1_mean"]
         d_p = ev.eval_subset(docs, gt, runs[skill], ev.DOCS_PURE)["p_mean"] - ev.eval_subset(docs, gt, runs[base], ev.DOCS_PURE)["p_mean"]
         d_r = ev.eval_subset(docs, gt, runs[skill], ev.DOCS_PURE)["r_mean"] - ev.eval_subset(docs, gt, runs[base], ev.DOCS_PURE)["r_mean"]
-        out["pure_skill_effect"].append({"pair": f"{skill}-{base}", "delta_f1": round(d_f1, 4), "delta_precision": round(d_p, 4),
-                                         "delta_recall": round(d_r, 4), "ci95": [round(float(lo), 4), round(float(hi), 4)]})
+        out["pure_skill_effect"].append({"pair": f"{skill}-{base}", "delta_f1": round(d_f1, 6), "delta_precision": round(d_p, 6),
+                                         "delta_recall": round(d_r, 6), "ci95": [round(float(lo), 6), round(float(hi), 6)]})
+
+    # 2b. Model effect (Neon - Hydrogen), same paired bootstrap
+    out["model_effect"] = {}
+    for base, other in (("T1", "T3"), ("T2", "T4")):
+        diff = boots[other][2] - boots[base][2]
+        lo, hi = np.percentile(diff, [2.5, 97.5])
+        d_f1 = ev.eval_subset(docs, gt, runs[other], ev.DOCS_PURE)["f1_mean"] - ev.eval_subset(docs, gt, runs[base], ev.DOCS_PURE)["f1_mean"]
+        out["model_effect"][f"{other}-{base}"] = {"delta_f1": round(d_f1, 6), "ci95": [round(float(lo), 6), round(float(hi), 6)]}
+
+    # 2c. Stability on PURE (pairwise Jaccard, Fleiss' kappa over the 3 repeats)
+    out["stability_pure"] = {}
+    for t in LLM_TOOLS:
+        jac, fk = ev.compute_stability(runs[t], docs, ev.DOCS_PURE)
+        out["stability_pure"][t] = {"jaccard": round(jac, 6), "fleiss": round(fk, 6)}
 
     # 3. Flag-everything reference
     out["flag_everything"] = {scope: summarize(ev.eval_subset(docs, gt, flag_everything(docs, dl), dl))
@@ -115,10 +129,10 @@ def main() -> None:
     gt_sd = copy.deepcopy(gt)
     gt_sd["seeded_lms"].append({"req_id": "SD-023", "type": "incompleteness", "subtype": "missing_value_or_unit",
                                 "evidence": "before the due date", "related_ids": [], "rationale": "sensitivity"})
-    out["sd023_sensitivity"] = {t: {"seeded_f1_base": round(ev.eval_subset(docs, gt, runs[t], ["seeded_lms"])["f1_mean"], 4),
-                                    "seeded_f1_with_sd023": round(ev.eval_subset(docs, gt_sd, runs[t], ["seeded_lms"])["f1_mean"], 4),
-                                    "all_f1_base": round(ev.eval_subset(docs, gt, runs[t], ev.DOCS_ALL)["f1_mean"], 4),
-                                    "all_f1_with_sd023": round(ev.eval_subset(docs, gt_sd, runs[t], ev.DOCS_ALL)["f1_mean"], 4),
+    out["sd023_sensitivity"] = {t: {"seeded_f1_base": round(ev.eval_subset(docs, gt, runs[t], ["seeded_lms"])["f1_mean"], 6),
+                                    "seeded_f1_with_sd023": round(ev.eval_subset(docs, gt_sd, runs[t], ["seeded_lms"])["f1_mean"], 6),
+                                    "all_f1_base": round(ev.eval_subset(docs, gt, runs[t], ev.DOCS_ALL)["f1_mean"], 6),
+                                    "all_f1_with_sd023": round(ev.eval_subset(docs, gt_sd, runs[t], ev.DOCS_ALL)["f1_mean"], 6),
                                     "flagged_sd023": sum(any(f["req_id"] == "SD-023" and f["type"] == "incompleteness" for f in r["seeded_lms"]) for r in runs[t])}
                                 for t in ALL_TOOLS}
 
@@ -140,7 +154,7 @@ def main() -> None:
         for d in ev.DOCS_PURE:
             a, b, c, _, _ = ev.match_strict(gt[d], run[d])
             e_tp, e_fp, e_fn = e_tp + a, e_fp + b, e_fn + c
-        checks.append({"run": i + 1, "hand": [tp, fp, fn], "evaluate": [e_tp, e_fp, e_fn], "f1": round(f1, 4), "match": (tp, fp, fn) == (e_tp, e_fp, e_fn)})
+        checks.append({"run": i + 1, "hand": [tp, fp, fn], "evaluate": [e_tp, e_fp, e_fn], "f1": round(f1, 6), "match": (tp, fp, fn) == (e_tp, e_fp, e_fn)})
     out["hand_check_T2_pure"] = checks
     if not all(c["match"] for c in checks):
         sys.exit("Hand count disagrees with evaluate.py: " + json.dumps(checks))

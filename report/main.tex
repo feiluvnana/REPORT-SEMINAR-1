@@ -4,6 +4,8 @@
 %  SHARED METADATA
 % ============================================================
 \input{meta.tex}
+\input{../result/tables/numbers.tex}
+\newif\ifhumancheck\ifnum\numHumanCheckDone=1\relax\humanchecktrue\fi
 
 % ============================================================
 %  PACKAGES (XeLaTeX + Vietnamese)
@@ -169,6 +171,8 @@
 % ============================================================
 %  DOCUMENT START
 % ============================================================
+% Give paragraphs room to stretch around long code names.
+\setlength{\emergencystretch}{3em}
 \begin{document}
 
 % ============================================================
@@ -265,10 +269,11 @@ Dựa trên hệ thống phân loại ngôn ngữ học của Berry, Kamsties v�
 Trong tổng quan hệ thống trên 404 nghiên cứu về Xử lý Ngôn ngữ Tự nhiên cho Kỹ nghệ Yêu cầu (NLP4RE), Zhao và cộng sự (2021)~\cite{zhao2021} chỉ ra rằng phát hiện khiếm khuyết là một trong những tác vụ phổ biến nhất, nhưng đa số công cụ trước đây dựa vào luật hình thức hoặc phân tích cú pháp nông. Hai đại diện tiêu biểu là:
 \begin{itemize}
   \item \textbf{QuARS} (Fabbrini và cộng sự, 2001/2005)~\cite{fabbrini2001,fabbrini2005}: sử dụng mô hình chất lượng ngôn ngữ học với từ điển các chỉ dấu để phát hiện tính mơ hồ, thiếu chủ thể hoặc từ chỉ mức độ yếu trong yêu cầu.
-  \item \textbf{Smella} (Femmer và cộng sự, 2017)~\cite{femmer2017}: đề xuất khái niệm ``mùi yêu cầu'' (\textit{Requirements Smells}) tương tự \textit{code smells}, dùng biểu thức chính quy, gắn nhãn từ loại (POS tagging) và từ điển để cảnh báo nhanh ngay khi soạn thảo.
+  \item \textbf{Smella} (Femmer và cộng sự, 2017)~\cite{femmer2017}: đề xuất khái niệm ``mùi yêu cầu'' (\textit{Requirements Smells}) tương tự \textit{code smells}, dùng biểu thức chính quy, gắn nhãn từ loại (POS tagging) và từ điển để cảnh báo nhanh ngay khisoạn thảo.
+  \item \textbf{Công cụ thương mại} (ví dụ QVscribe, IBM Engineering Requirements Quality Assistant): theo mô tả của nhà cung cấp, các công cụ này chấm điểm từng yêu cầu theo bộ quy tắc viết yêu cầu (như hướng dẫn của INCOSE) và tích hợp vào công cụ quản lý yêu cầu. Chúng cần giấy phép trả phí, không công khai cách hoạt động, và chủ yếu đánh giá từng yêu cầu riêng lẻ, nên báo cáo này chỉ nhắc tới như công trình liên quan.
 \end{itemize}
 
-Các công cụ dựa trên luật có ưu điểm nhanh, tất định và dễ giải thích, nhưng tỷ lệ cảnh báo giả cao khi gặp ngoại lệ ngữ cảnh và gần như bất lực trước mâu thuẫn ngữ nghĩa liên câu. Ngược lại, các nghiên cứu gần đây của Lubos và cộng sự (2024)~\cite{lubos2024} hay Ronanki và cộng sự (2025)~\cite{ronanki2025} cho thấy LLM có khả năng đánh giá ngữ nghĩa yêu cầu ở mức cao, song nhạy cảm với cách viết câu lệnh (\textit{prompt}) và tính phi tất định giữa các lượt sinh.
+Các công cụ dựa trên luật có ưu điểm nhanh, tất định và dễ giải thích, nhưng tỷ lệ cảnh báo giả cao khi gặp ngoại lệ ngữ cảnh và gần như bất lực trước mâu thuẫn ngữ nghĩa liên câu. Ngược lại, Lubos và cộng sự (2024)~\cite{lubos2024} cho thấy LLM có thể đánh giá yêu cầu theo các đặc tính chất lượng của ISO 29148, giải thích nhận định và đề xuất bản sửa, được kỹ sư phần mềm xác nhận. Ronanki và cộng sự (2025)~\cite{ronanki2025} tổng hợp các hướng dẫn viết câu lệnh (\textit{prompt}) cho kỹ nghệ yêu cầu và nhận xét rằng LLM chưa hẳn sẵn sàng cho mọi tác vụ, nên kết quả phụ thuộc nhiều vào cách đặt câu lệnh.
 
 \subsection{Tác tử AI và cơ chế kỹ năng (\texttt{SKILL.md})}
 Thay vì chỉ gửi một câu lệnh ngắn gọn, mô hình \textbf{tác tử AI trang bị kỹ năng} tách tri thức chuyên môn (bảng phân loại 15 tiểu loại, quy tắc phân biệt ranh giới, danh sách kiểm tra 2 lượt và lược đồ JSON chuẩn) vào tệp hướng dẫn có cấu trúc \texttt{SKILL.md}. Điều này cho phép kiểm chứng thực nghiệm xem việc nạp tri thức miền có hệ thống qua kỹ năng có giúp tác tử nâng cao độ chính xác và giảm bỏ sót so với câu lệnh thông thường hay không (RQ2).
@@ -338,18 +343,18 @@ Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật v�
 \begin{itemize}
   \item \textbf{T0 (\texttt{baseline\_rules.py}):} Bộ dò mùi yêu cầu kiểu Smella/QuARS viết bằng Python, kết hợp danh sách từ mơ hồ, cụm từ yếu, biểu thức chính quy bắt \textit{TBD}, nhận diện câu bị động thiếu tác nhân \texttt{by <Actor>}, và phát hiện trùng lặp qua độ tương đồng Jaccard từ vựng ($\ge 0{,}80$).
   \item \textbf{T1 / T3 (Plain Prompt):} Sử dụng \texttt{agy} với hai mô hình \texttt{gemini-4-hydrogen-high} (\textbf{T1}) và \texttt{gemini-4-neon-high} (\textbf{T3}), chỉ nhận câu lệnh nhiệm vụ chuẩn kèm lược đồ JSON trong thư mục rỗng chỉ chứa tài liệu đầu vào (không có \texttt{SKILL.md}).
-  \item \textbf{T2 / T4 (+ \texttt{SKILL.md}):} Cùng hai mô hình \texttt{gemini-4-hydrogen-high} (\textbf{T2}) và \texttt{gemini-4-neon-high} (\textbf{T4}) với câu lệnh nhiệm vụ và lược đồ đầu ra giống hệt Plain Prompt, chỉ bổ sung chỉ dẫn nạp tệp \texttt{skill/req-defect-detector/SKILL.md} chứa định nghĩa chi tiết, danh sách kiểm tra hai lượt và các quy tắc loại trừ cảnh báo giả.
+  \item \textbf{T2 / T4 (+ \texttt{SKILL.md}):} Cùng hai mô hình \texttt{gemini-4-hydrogen-high} (\textbf{T2}) và \texttt{gemini-4-neon-high} (\textbf{T4}) với câu lệnh nhiệm vụ và lược đồ đầu ra giống hệt Plain Prompt, chỉ bổ sung chỉ dẫn nạp tệp \texttt{skill/\allowbreak req-defect-detector/\allowbreak SKILL.md} chứa định nghĩa chi tiết, danh sách kiểm tra hai lượt và các quy tắc loại trừ cảnh báo giả.
 \end{itemize}
 
 \section{Giao thức tạo chuẩn chuyên gia và đóng băng dữ liệu}
 Để giảm thiểu thiên lệch tự ưu tiên (\textit{self-preference bias}), vai trò chuyên gia được gán cố định cho mô hình \textbf{Claude Opus}, tách biệt hoàn toàn với họ mô hình Gemini của các công cụ đánh giá. Quy trình gồm 5 bước:
 \begin{enumerate}
-  \item \textbf{Hướng dẫn gắn nhãn:} Cả hai lượt dùng chung \texttt{dataset/ground\_truth/annotation\_guideline.md} gồm phân loại, tiêu chí phán đoán (\textit{chỉ gắn nhãn khi người rà soát cẩn thận sẽ yêu cầu tác giả sửa}) và quy tắc chuẩn hóa. Tài liệu này tách biệt với \texttt{SKILL.md} và chỉ dùng ví dụ trung lập không lấy từ bộ dữ liệu.
+  \item \textbf{Hướng dẫn gắn nhãn:} Cả hai lượt dùng chung \texttt{dataset/\allowbreak ground\_truth/\allowbreak annotation\_guideline.md} gồm phân loại, tiêu chí phán đoán (\textit{chỉ gắn nhãn khi người rà soát cẩn thận sẽ yêu cầu tác giả sửa}) và quy tắc chuẩn hóa. Tài liệu này tách biệt với \texttt{SKILL.md} và chỉ dùng ví dụ trung lập không lấy từ bộ dữ liệu.
   \item \textbf{Lượt 1 (Pass 1):} Một tác tử Claude Opus mới, chỉ được đọc thư mục tạm chứa 3 tài liệu PURE và hướng dẫn gắn nhãn, gắn nhãn 107 yêu cầu thành \texttt{expert\_pass1.json}.
   \item \textbf{Lượt 2 (Pass 2):} Một tác tử Claude Opus hoàn toàn mới (không được truy cập kết quả lượt 1 hay \texttt{seed\_key.json}) gắn nhãn toàn bộ 147 yêu cầu thành \texttt{expert\_pass2.json}.
   \item \textbf{Đo tự nhất quán và kiểm định:} Tính hệ số \textbf{Cohen's $\kappa$} giữa lượt 1 và lượt 2 trên $107 \times 3 = 321$ cặp nhị phân \texttt{(req\_id, type)} của bộ PURE; đồng thời đo Recall của lượt 2 trên tập \texttt{seeded\_lms} đối chiếu với \texttt{seed\_key.json}.
   \item \textbf{Phân xử (\textit{Adjudication}):} Giải quyết mọi bất đồng giữa hai lượt trên PURE và ghi nhận lý do vào \texttt{adjudication\_log.md} để chốt \texttt{final\_gt.json} (riêng \texttt{seeded\_lms} giữ nguyên đáp án chính xác từ \texttt{seed\_key.json}).
-  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{dataset/ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
+  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{dataset/\allowbreak ground\_truth/\allowbreak HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
 \end{enumerate}
 
 \section{Quy tắc khớp và các độ đo đánh giá}
@@ -360,12 +365,12 @@ Trước khi khớp, mã đánh giá thực hiện gộp các bản ghi trùng c
 \end{itemize}
 
 Từ các số đếm $TP, FP, FN$, các độ đo được tính theo trung bình và độ lệch chuẩn qua 3 lượt chạy lặp lại:
-\[
-  \text{Precision} = \frac{TP}{TP + FP}, \quad
-  \text{Recall} = \frac{TP}{TP + FN}, \quad
-  \text{Miss Rate} = 1 - \text{Recall} = \frac{FN}{TP + FN}, \quad
+\begin{gather*}
+  \text{Precision} = \frac{TP}{TP + FP}, \qquad
+  \text{Recall} = \frac{TP}{TP + FN}, \\
+  \text{Miss Rate} = 1 - \text{Recall} = \frac{FN}{TP + FN}, \qquad
   F_1 = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}.
-\]
+\end{gather*}
 Độ bất định của điểm $F_1$ được ước lượng bằng phương pháp \textbf{Bootstrap 95\% CI} theo cấp độ yêu cầu với $1000$ lần lấy mẫu lại. Độ ổn định qua 3 lượt lặp được đo bằng chỉ số chồng lấp \textbf{Jaccard trung bình} theo cặp lượt chạy và hệ số \textbf{Fleiss' $\kappa$} trên toàn bộ $147 \times 3 = 441$ cặp \texttt{(req\_id, type)}. Hiệu ứng của kỹ năng được đo bằng $\Delta F_1 = F_{1,\text{+skill}} - F_{1,\text{plain}}$ kèm khoảng tin cậy Bootstrap ghép cặp.
 
 % ============================================================
@@ -381,7 +386,7 @@ Nghiên cứu sử dụng tổng cộng \textbf{147 yêu cầu} từ 4 tài li�
 \caption{Thống kê 4 tài liệu đặc tả yêu cầu trong thực nghiệm (tổng cộng 147 yêu cầu).}
 \label{tab:dataset}
 \small
-\begin{tabular}{llp{4.5cm}cp{4.4cm}}
+\begin{tabular}{p{2.1cm}p{2.7cm}p{2.3cm}cp{4.6cm}}
 \toprule
 \textbf{Mã tài liệu} & \textbf{Nguồn} & \textbf{Lĩnh vực} & \textbf{Số yêu cầu} & \textbf{Đặc điểm nổi bật} \\
 \midrule
@@ -397,14 +402,14 @@ Nghiên cứu sử dụng tổng cộng \textbf{147 yêu cầu} từ 4 tài li�
 \end{table}
 
 \section{Thiết kế tập dữ liệu cấy lỗi kiểm soát (\texttt{seeded\_lms})}
-Tài liệu \texttt{seeded\_lms} được tạo tự động qua mã \texttt{script/seed\_defects.py} từ 40 yêu cầu gốc viết chặt chẽ (đầy đủ tác nhân, giá trị, đơn vị và xử lý lỗi). Mã nguồn thay thế 30 yêu cầu trong số đó bằng các phiên bản lỗi thuộc 12 tiểu loại cụ thể (Bảng~\ref{tab:seeded_dist}), đồng thời bảo toàn 10 yêu cầu sạch dùng làm đối chứng cho cả lỗi giả lẫn các cặp mâu thuẫn (mỗi yêu cầu \texttt{inconsistency} đều mâu thuẫn trực tiếp với một yêu cầu sạch xuất hiện trước đó).
+Tài liệu \texttt{seeded\_lms} được tạo tự động qua mã \texttt{script/\allowbreak seed\_defects.py} từ 40 yêu cầu gốc viết chặt chẽ (đầy đủ tác nhân, giá trị, đơn vị và xử lý lỗi). Mã nguồn thay thế 30 yêu cầu trong số đó bằng các phiên bản lỗi thuộc 12 tiểu loại cụ thể (Bảng~\ref{tab:seeded_dist}), đồng thời bảo toàn 10 yêu cầu sạch dùng làm đối chứng cho cả lỗi giả lẫn các cặp mâu thuẫn (mỗi yêu cầu \texttt{inconsistency} đều mâu thuẫn trực tiếp với một yêu cầu sạch xuất hiện trước đó).
 
 \begin{table}[H]
 \centering
 \caption{Phân bố 30 khiếm khuyết được cấy vào tài liệu \texttt{seeded\_lms} (10 lỗi/nhóm).}
 \label{tab:seeded_dist}
 \small
-\begin{tabular}{llc p{6.8cm}}
+\begin{tabular}{p{2.3cm}p{3.4cm}cp{5.7cm}}
 \toprule
 \textbf{Loại lỗi} & \textbf{Tiểu loại (\texttt{subtype})} & \textbf{Số lượng} & \textbf{Ví dụ cấy lỗi tiêu biểu} \\
 \midrule
@@ -416,8 +421,8 @@ Ambiguity (10) & \texttt{vague\_term} & 6 & \textit{``return search results quic
 Incompleteness (10) & \texttt{tbd} & 4 & \textit{``expire password-reset tokens TBD minutes after issuance''} \\
  & \texttt{missing\_consequence} & 3 & Khóa tài khoản sau 5 lần đăng nhập sai nhưng thiếu thời lượng khóa \\
  & \texttt{missing\_actor} & 1 & Bị động \textit{``shall be reviewed, approved, and recorded''} thiếu chủ thể \\
- & \texttt{missing\_error\_handling} & 1 & Thiếu xử lý khi mã vạch sách không hợp lệ ở quầy tự mượn \\
- & \texttt{missing\_value\_or\_unit} & 1 & \textit{``the allowed maximum number of active hold requests''} thiếu con số \\
+ & \texttt{missing\_\allowbreak error\_\allowbreak handling} & 1 & Thiếu xử lý khi mã vạch sách không hợp lệ ở quầy tự mượn \\
+ & \texttt{missing\_\allowbreak value\_\allowbreak or\_\allowbreak unit} & 1 & \textit{``the allowed maximum number of active hold requests''} thiếu con số \\
 \midrule
 Inconsistency (10) & \texttt{conflicting\_values} & 5 & Tối đa 5 sách (\texttt{SD-009}) vs 8 sách (\texttt{SD-015}); 14 ngày vs 21 ngày \\
  & \texttt{conflicting\_rules} & 4 & Băm một chiều bcrypt (\texttt{SD-003}) vs mã hóa thuận nghịch AES-256 (\texttt{SD-040}) \\
@@ -427,29 +432,30 @@ Inconsistency (10) & \texttt{conflicting\_values} & 5 & Tối đa 5 sách (\text
 \end{table}
 
 \section{Môi trường phần mềm và cấu hình thực thi}
-Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.13 (\texttt{REPORT/.venv}) với \texttt{numpy} và \texttt{matplotlib}, biên dịch báo cáo bằng \texttt{XeLaTeX} (\texttt{latexmk}). Các công cụ LLM chạy qua \texttt{agy} phiên bản 1.5.12 (bí danh mô hình \texttt{gemini-4-hydrogen-high} và \texttt{gemini-4-neon-high}, mức suy luận \textit{high}; CLI không cho đặt nhiệt độ hay seed và không công bố phiên bản mô hình cố định), giới hạn thời gian 300 giây mỗi lượt.
+Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.13 (\texttt{REPORT/\allowbreak .venv}) với \texttt{numpy} và \texttt{matplotlib}, biên dịch báo cáo bằng \texttt{XeLaTeX} (\texttt{latexmk}). Các công cụ LLM chạy qua \texttt{agy} phiên bản 1.5.12 (bí danh mô hình \texttt{gemini-4-hydrogen-high} và \texttt{gemini-4-neon-high}, mức suy luận \textit{high}; CLI không cho đặt nhiệt độ hay seed và không công bố phiên bản mô hình cố định), giới hạn thời gian 300 giây mỗi lượt.
 
 Kiểm thử thực nghiệm cho thấy cờ \texttt{--sandbox} của \texttt{agy} chỉ cô lập lệnh terminal, \textbf{không} chặn công cụ đọc tệp, và công cụ tìm kiếm web không thể tắt. Vì vậy nghiên cứu áp dụng 4 lớp bảo vệ chống rò rỉ đáp án:
 \begin{enumerate}
   \item \textbf{Quyền công cụ:} mọi lượt chạy dùng \texttt{--settings} với \texttt{toolPermission = request-review}, tự động từ chối mọi thao tác không nằm trong danh sách cho phép; riêng T2/T4 chỉ được phép đọc tệp \textit{bên trong} thư mục tạm của chính lượt chạy (nơi chứa \texttt{SKILL.md}).
-  \item \textbf{Cách ly vật lý:} \texttt{dataset/ground\_truth/} được chuyển ra ngoài kho mã trong suốt thời gian chạy và khôi phục khi kết thúc.
+  \item \textbf{Cách ly vật lý:} \texttt{dataset/\allowbreak ground\_truth/\allowbreak } được chuyển ra ngoài kho mã trong suốt thời gian chạy và khôi phục khi kết thúc.
   \item \textbf{Kiểm toán vết công cụ:} đầu ra \texttt{stream-json} ghi lại từng lời gọi công cụ; \texttt{parse\_tool\_output.py} loại bỏ lượt chạy nếu có tìm kiếm web, truy cập URL, trình duyệt, lệnh terminal, hoặc đọc tệp ngoài thư mục tạm, và với T2/T4 \textbf{bắt buộc} có lời gọi đọc \texttt{SKILL.md} (chứng minh kỹ năng thực sự được nạp).
   \item \textbf{Chỉ dẫn trong prompt:} cả hai prompt cấm tìm kiếm web và công cụ ngoài với cùng một câu chữ.
 \end{enumerate}
 Các lượt Plain chạy trong thư mục tạm chỉ chứa tài liệu đầu vào và truyền thêm \texttt{--disable-slash-commands}; máy chạy không cài kỹ năng toàn cục nào của \texttt{agy}, nên T1--T4 có cùng ngữ cảnh ngoài khác biệt về kỹ năng.
 
-Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{script/parse\_tool\_output.py} để tách gói \texttt{stream-json} của CLI, kiểm toán vết công cụ và kiểm tra hợp lệ lược đồ; thời gian chạy và số token được lưu vào \texttt{run\_k.meta.json}. Lượt chạy lỗi (định dạng, quá thời gian hoặc không qua kiểm toán) được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
+Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{script/\allowbreak parse\_tool\_output.py} để tách gói \texttt{stream-json} của CLI, kiểm toán vết công cụ và kiểm tra hợp lệ lược đồ; thời gian chạy và số token được lưu vào \texttt{run\_k.meta.json}. Lượt chạy lỗi (định dạng, quá thời gian hoặc không qua kiểm toán) được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
 
 % ============================================================
-%  CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM (CHỜ SỐ LIỆU PHASE 3-6)
+%  CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM
+%  Mọi con số lấy từ result/tables/numbers.tex (sinh bởi script/export_numbers.py).
 % ============================================================
 \chapter{Kết quả thực nghiệm}
 
 \begin{notebox}
-Chương này sẽ tự động cập nhật bằng các bảng \LaTeX\ từ \texttt{result/tables/} và 5 biểu đồ từ \texttt{report/figures/} sau khi hoàn tất Phase 3 (chuẩn chuyên gia Claude + đóng băng SHA-256), Phase 4 (chạy các công cụ LLM) và Phase 5 (\texttt{script/evaluate.py}).
+\textbf{Phạm vi báo cáo kết quả.} Thước đo chính là \textbf{PURE} (107 yêu cầu thật của \texttt{keepass}, \texttt{peering}, \texttt{gammaj}) với so khớp chặt \texttt{(req\_id, type)}. Mỗi giá trị của T1--T4 là trung bình $\pm$ độ lệch chuẩn mẫu của 3 lượt chạy; khoảng tin cậy (KTC) 95\% của $F_1$ lấy từ bootstrap 1000 lần trên các yêu cầu. Tài liệu cấy lỗi \texttt{seeded\_lms} chỉ dùng như phép kiểm tra hợp lý (mục~\ref{sec:seeded_sanity}) vì mọi công cụ đều đạt mức trần trên tài liệu này.
 \end{notebox}
 
-\section{Độ tin cậy chuẩn chuyên gia ($\kappa$ và kiểm định trên \texttt{seeded\_lms})}
+\section{Độ tin cậy của nhãn chuẩn}
 Lượt 1 tạo 55 phát hiện trên PURE, lượt 2 tạo 47 phát hiện trên PURE và 31 trên \texttt{seeded\_lms}. Mức đồng thuận giữa hai lượt trên $321$ cặp nhị phân \texttt{(req\_id, type)} được trình bày ở Bảng~\ref{tab:gt_kappa}.
 
 \begin{table}[H]
@@ -470,36 +476,163 @@ Số bất đồng cần phân xử & 16 \\
 \end{tabular}
 \end{table}
 
-Theo thang Landis--Koch, $\kappa = 0{,}81$ thuộc mức ``gần như hoàn hảo''. Tuy nhiên, đây là độ \textit{tự nhất quán} giữa hai lượt của cùng một mô hình, không phải bằng chứng về tính đúng đắn của nhãn. Bằng chứng về tính đúng đắn đến từ tập cấy lỗi. Khi kiểm tra các lượt chạy, nhóm phát hiện trường \texttt{source} của \texttt{seeded\_lms.json} vô tình ghi ``10 clean, 30 defective'', tức tiết lộ số lỗi cho cả lượt 2 lẫn các công cụ. Trường này đã được xóa, và một tác tử Claude Opus mới, không biết số lỗi, gắn nhãn lại tài liệu đã làm sạch: kết quả \textbf{30/30} lỗi cấy (Recall $= 100\%$) và không có phát hiện thừa (\texttt{result/expert\_seeded\_check.json}). Lượt 2 trên bản bị lộ cũng đạt 30/30 và báo thêm 1 phát hiện ngoài đáp án (\texttt{SD-023}, ``\textit{before the due date}'' không nêu khoảng thời gian), nhiều khả năng là một khiếm khuyết thật vô tình tồn tại trong yêu cầu ``sạch''.
+Theo thang Landis--Koch, $\kappa = 0{,}81$ thuộc mức ``gần như hoàn hảo''. Tuy nhiên, đây là độ \textit{tự nhất quán} giữa hai lượt của cùng một mô hình, không phải bằng chứng về tính đúng đắn của nhãn. Bằng chứng về tính đúng đắn đến từ tập cấy lỗi. Khi kiểm tra các lượt chạy, nhóm phát hiện trường \texttt{source} của \texttt{seeded\_lms.json} vô tình ghi ``10 clean, 30 defective'', tức tiết lộ số lỗi cho cả lượt 2 lẫn các công cụ. Trường này đã được xóa, và một tác tử Claude Opus mới, không biết số lỗi, gắn nhãn lại tài liệu đã làm sạch: kết quả \textbf{30/30} lỗi cấy (Recall $= 100\%$) và không có phát hiện thừa (\texttt{result/\allowbreak expert\_seeded\_check.json}). Lượt 2 trên bản bị lộ cũng đạt 30/30 và báo thêm 1 phát hiện ngoài đáp án (\texttt{SD-023}, ``\textit{before the due date}'' không nêu khoảng thời gian), nhiều khả năng là một khiếm khuyết thật vô tình tồn tại trong yêu cầu ``sạch''.
 
 Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quyết định có lý do trong \texttt{adjudication\_log.md}, ưu tiên nhất quán với cách cả hai lượt đã xử lý cùng một mẫu ở nơi khác (ví dụ kiểm tra đầu vào không nêu hành vi khi lỗi được tính là \texttt{missing\_error\_handling}). Chuẩn cuối cùng (\texttt{final\_gt.json}) gồm \textbf{82 phát hiện}: \texttt{keepass} 11, \texttt{peering} 15, \texttt{gammaj} 26, \texttt{seeded\_lms} 30. Toàn bộ tệp chuẩn, \texttt{SKILL.md} và hai prompt được đóng băng SHA-256 ngày 19/11/2026, trước khi chạy bất kỳ công cụ LLM nào.
 
+\subsection{Kiểm tra bởi người}
+\label{sec:human_check}
+\ifhumancheck
+Một thành viên nhóm gắn nhãn độc lập 20 yêu cầu PURE (phân tầng theo tài liệu và theo trạng thái nhãn chuẩn) mà không xem nhãn của AI. Mức đồng thuận với nhãn chuẩn trên 60 cặp \texttt{(req\_id, type)} đạt $\kappa = \numHCKappa$ (trùng khớp \numHCAgree\%). Ở phần đánh giá bất đồng (30 trường hợp ẩn nguồn), nhóm xác nhận \numHCExpConfirmed/\numHCExpTotal{} nhãn của chuyên gia mà công cụ bỏ sót là khiếm khuyết thật, và đánh giá \numHCRealRate\% cảnh báo chỉ do công cụ đưa ra là khiếm khuyết thật. Nhãn chuẩn đã đóng băng không bị thay đổi; các con số này được báo cáo song song (mục~\ref{sec:error_analysis}).
+\else
+\textbf{[Đang chờ kết quả kiểm tra bởi người.]} Phiếu \texttt{dataset/\allowbreak human\_check/\allowbreak part\_a.csv} (20 yêu cầu gắn nhãn độc lập) và \texttt{part\_b.csv} (30 trường hợp bất đồng, ẩn nguồn) đang được nhóm điền theo hướng dẫn ở mục~7 của \texttt{README.md}.
+\fi
+
 \section{Hiệu năng phát hiện tổng thể (RQ1)}
-\textit{(Chờ bảng \texttt{overall\_metrics.tex} và biểu đồ \texttt{report/figures/prf1\_by\_tool.png} sau Phase 5.)}
+\label{sec:rq1}
+Bảng~\ref{tab:overall_pure} và Hình~\ref{fig:prf1} tóm tắt kết quả trên PURE. Hai mẫu hình nổi bật:
+\begin{itemize}
+  \item \textbf{Công cụ LLM gần như không bỏ sót:} Recall đạt \numRTfour--\numRTone\% (miss rate \numMissTone--\numMissTfour\%), trong khi bộ dò luật T0 chỉ đạt \numRTzero\%.
+  \item \textbf{Nhưng gắn cờ quá nhiều:} trung bình mỗi lượt chạy T1 đưa ra \numFoundTone{} phát hiện trên PURE, T4 đưa ra \numFoundTfour, so với \numGTPure{} phát hiện của nhãn chuẩn. Vì vậy Precision chỉ đạt \numPTone--\numPTfour\%.
+\end{itemize}
+Khi không có kỹ năng, $F_1$ của LLM (T1: \numFTone\%, T3: \numFTthree\%) \textbf{không tốt hơn} bộ dò luật T0 (\numFTzero\%). Tất cả công cụ đều vượt mốc tham chiếu ``gắn cờ mọi yêu cầu cho mọi loại lỗi'' (Precision \numPFlagAll\%, $F_1$ \numFFlagAll\%), tức các công cụ LLM có chọn lọc thật chứ không gắn cờ ngẫu nhiên.
+
+\begin{table}[H]
+\centering
+\caption{Kết quả trên PURE (107 yêu cầu, so khớp chặt; trung bình $\pm$ SD của 3 lượt)}
+\label{tab:overall_pure}
+\small
+\input{../result/tables/overall_pure.tex}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{prf1_by_tool.png}
+\caption{Precision, Recall và $F_1$ theo công cụ trên PURE; đường nét đứt là $F_1$ khi gắn cờ mọi yêu cầu}
+\label{fig:prf1}
+\end{figure}
+
+\textbf{Ý nghĩa thực tế.} Nghịch đảo của Precision cho biết người rà soát phải đọc bao nhiêu cảnh báo để gặp một khiếm khuyết có trong nhãn chuẩn: \numEffortTone{} cảnh báo với T1, \numEffortTthree{} với T3, \numEffortTtwo{} với T2 và \numEffortTfour{} với T4. Với so khớp lỏng (một yêu cầu bị gắn cờ hay không), $F_1$ tăng lên \numFLenTone--\numFLenTfour\% cho các công cụ LLM, cho thấy phần lớn cảnh báo thừa nằm ở những yêu cầu đã có ít nhất một khiếm khuyết khác. Kết quả trên toàn bộ 147 yêu cầu (gồm tài liệu cấy lỗi) được trình bày ở Bảng~\ref{tab:overall_all}.
+
+\begin{table}[H]
+\centering
+\caption{Kết quả trên toàn bộ 147 yêu cầu (PURE + \texttt{seeded\_lms}, so khớp chặt)}
+\label{tab:overall_all}
+\small
+\input{../result/tables/overall_all.tex}
+\end{table}
 
 \section{Tác động của kỹ năng \texttt{SKILL.md} (RQ2)}
-\textit{(Chờ số liệu $\Delta F_1$ ghép cặp và biểu đồ \texttt{report/figures/skill\_effect.png} sau Phase 5.)}
+\label{sec:rq2}
+Kỹ năng cải thiện $F_1$ trên PURE ở \textbf{cả hai mô hình} với mức gần như nhau (Hình~\ref{fig:skill}):
+\begin{itemize}
+  \item \textbf{Gemini 4 Hydrogen (T1 $\rightarrow$ T2):} $\Delta F_1 = +\numSkillDFHydro$ điểm \% (KTC 95\% ghép cặp: [\numSkillLoHydro; \numSkillHiHydro]).
+  \item \textbf{Gemini 4 Neon (T3 $\rightarrow$ T4):} $\Delta F_1 = +\numSkillDFNeon$ điểm \% (KTC 95\%: [\numSkillLoNeon; \numSkillHiNeon]).
+\end{itemize}
+Cả hai khoảng tin cậy đều không chứa 0. Lợi ích đến từ \textbf{Precision} (tăng \numSkillDPHydro{} và \numSkillDPNeon{} điểm \%) với cái giá nhỏ về Recall (giảm \numSkillDRHydro{} và \numSkillDRNeon{} điểm \%): danh sách kiểm tra và các quy tắc loại trừ trong kỹ năng giúp mô hình bỏ bớt cảnh báo yếu.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{skill_effect.png}
+\caption{$F_1$ trên PURE khi dùng câu lệnh thuần và khi dùng \texttt{SKILL.md}}
+\label{fig:skill}
+\end{figure}
+
+\textbf{So sánh hai mô hình.} Neon tốt hơn Hydrogen một chút: $+\numModelDFPlain$ điểm \% $F_1$ khi dùng câu lệnh thuần (KTC 95\%: [\numModelLoPlain; \numModelHiPlain]) và $+\numModelDFSkill$ điểm \% khi có kỹ năng (KTC 95\%: [\numModelLoSkill; \numModelHiSkill]), nhưng chạy chậm gấp khoảng hai lần (\numDurTthree{} giây so với \numDurTone{} giây mỗi lượt). Như vậy \textbf{việc trang bị kỹ năng quan trọng hơn khoảng 3--4 lần so với việc chọn mô hình}.
 
 \section{So sánh theo loại khiếm khuyết (RQ3)}
-\textit{(Chờ bảng \texttt{by\_type\_metrics.tex}, \texttt{report/figures/recall\_heatmap.png} và \texttt{report/figures/miss\_rate\_by\_type.png}.)}
+\label{sec:rq3}
+Vì Recall của các công cụ LLM gần mức trần ở mọi loại lỗi, sự khác biệt giữa các loại thể hiện chủ yếu ở Precision và $F_1$ (Bảng~\ref{tab:pure_by_type}, Hình~\ref{fig:f1_heatmap} và~\ref{fig:miss}):
+\begin{itemize}
+  \item \textbf{Mâu thuẫn dễ nhất:} $F_1$ của LLM đạt \numFConTthree--\numFConTtwo\%; các trường hợp trùng lặp trong \texttt{peering} được mọi công cụ phát hiện.
+  \item \textbf{Thiếu sót khó nhất:} $F_1$ của LLM chỉ đạt \numFIncTone--\numFIncTfour\% (T0: \numFIncTzero\%), vì ranh giới giữa ``thiếu thông tin thật'' và ``có thể bổ sung thêm chi tiết'' mang tính phán đoán cao.
+  \item \textbf{Mơ hồ:} kỹ năng giúp nhiều nhất (T1 \numFAmbTone\% $\rightarrow$ T2 \numFAmbTtwo\%; T3 \numFAmbTthree\% $\rightarrow$ T4 \numFAmbTfour\%). Đáng chú ý, bộ dò luật T0 đạt \numFAmbTzero\%, ngang công cụ LLM tốt nhất, vì lỗi mơ hồ thường gắn với từ khóa (``easy'', ``fast'', ``user-friendly'').
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Precision, Recall và $F_1$ theo loại khiếm khuyết trên PURE}
+\label{tab:pure_by_type}
+\small
+\input{../result/tables/pure_by_type.tex}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[width=\textwidth]{f1_heatmap.png}
+\caption{$F_1$ theo loại lỗi}
+\label{fig:f1_heatmap}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[width=\textwidth]{miss_rate_by_type.png}
+\caption{Tỷ lệ bỏ sót theo loại lỗi}
+\label{fig:miss}
+\end{subfigure}
+\caption{Kết quả theo loại khiếm khuyết trên PURE}
+\end{figure}
 
 \section{Tính ổn định qua các lượt chạy lặp (RQ4)}
-\textit{(Chờ chỉ số Jaccard, Fleiss' $\kappa$ và biểu đồ \texttt{report/figures/stability.png}.)}
+\label{sec:rq4}
+Kết quả ổn định cao (Hình~\ref{fig:stability}): chỉ số Jaccard trung bình giữa các cặp lượt chạy đạt \numJacTtwo--\numJacTone{} và Fleiss' $\kappa$ trên các cặp \texttt{(req\_id, type)} đạt \numFleissTthree--\numFleissTone. Độ lệch chuẩn $F_1$ giữa 3 lượt không quá \numFsdTthree{} điểm \%, nhỏ hơn nhiều so với tác động của kỹ năng. Vì vậy các kết luận ở RQ1--RQ3 không phụ thuộc vào một lượt chạy may rủi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{stability.png}
+\caption{Độ ổn định của T1--T4 qua 3 lượt chạy lặp trên PURE}
+\label{fig:stability}
+\end{figure}
+
+\section{Tài liệu cấy lỗi: phép kiểm tra hợp lý}
+\label{sec:seeded_sanity}
+Trên \texttt{seeded\_lms}, mọi công cụ LLM đạt $F_1$ từ \numFSeedTone\% đến \numFSeedTfour\% (T0: \numFSeedTzero\%). Lỗi cấy theo mẫu sách giáo khoa nên quá dễ với LLM; tài liệu này chỉ xác nhận các công cụ phát hiện được khiếm khuyết điển hình, không dùng để so sánh công cụ. Hai phân tích độ nhạy cho thấy kết luận không đổi: coi \texttt{SD-023} là lỗi thật làm $F_1$ thay đổi tối đa \numSDMaxShift{} điểm \%, và việc lộ số lượng lỗi trước khi sửa (mục~\ref{sec:threats}) chỉ làm $F_1$ tăng tối đa \numLeakMaxShift{} điểm \%.
+
+\section{Chi phí thực thi}
+Toàn bộ 48 lượt chạy T1--T4 mất \numAgyMinutes{} phút và \numAgyMTokens{} triệu token. Mỗi lượt Hydrogen mất trung bình \numDurTone--\numDurTtwo{} giây (\numTokTone--\numTokTtwo{} nghìn token), mỗi lượt Neon \numDurTfour--\numDurTthree{} giây (\numTokTthree--\numTokTfour{} nghìn token). Kỹ năng chỉ tăng nhẹ chi phí (đọc thêm \texttt{SKILL.md}).
 
 % ============================================================
 %  CHƯƠNG 6: THẢO LUẬN
 % ============================================================
 \chapter{Thảo luận}
 
-\section{Phân tích lỗi chi tiết (False Positives \& False Negatives)}
-\textit{(Sẽ phân loại khoảng 30 cảnh báo giả và 30 trường hợp bỏ sót từ \texttt{result/error\_samples.json} kèm 4--6 ví dụ cụ thể trong Phase 6.)}
+\section{Vì sao Precision thấp? Phân tích lỗi}
+\label{sec:error_analysis}
+Câu hỏi then chốt là: các cảnh báo ``thừa'' của công cụ là nhiễu, hay là khiếm khuyết thật mà nhãn chuẩn bỏ qua? Nhóm lấy mẫu 30 trường hợp bất đồng trên PURE: toàn bộ 5 nhãn chuẩn mà có lượt chạy LLM bỏ sót, cùng 25 trong 172 cảnh báo chỉ do công cụ đưa ra (lấy mẫu theo loại lỗi, seed cố định). Các trường hợp được trộn và ẩn nguồn, rồi được đánh giá theo cùng tiêu chí của hướng dẫn gắn nhãn.
+
+\textbf{Người rà soát thứ hai (AI, không biết nguồn).} Một tác tử Claude Opus mới đánh giá 30 trường hợp. Trong \numAIRevN{} cảnh báo chỉ do công cụ đưa ra: \numAIRevReal{} được đánh giá là khiếm khuyết thật, \numAIRevBorder{} ở ranh giới và \numAIRevNot{} không phải khiếm khuyết. Như vậy khoảng \numAIRevRealLo--\numAIRevRealHi\% cảnh báo ``thừa'' có thể là lỗi thật mà nhãn chuẩn đã bỏ qua, nên Precision thật của các công cụ có lẽ cao hơn con số ở Bảng~\ref{tab:overall_pure}. Ngược lại, \numAIRevExpReal/\numAIRevExpN{} nhãn chuẩn bị công cụ bỏ sót được xác nhận là lỗi thật. Nguyên nhân chính của cảnh báo sai là \textbf{đòi hỏi quá mức} (\numAIRevOverLiteral{} trường hợp: yêu cầu đã rõ và kiểm chứng được nhưng công cụ vẫn đòi bổ sung xử lý lỗi hoặc điều kiện) và \textbf{gắn cờ văn bản không phải yêu cầu} (\numAIRevNonReq{} trường hợp: ghi chú, lý do hoặc tiêu đề bị trộn vào yêu cầu khi trích xuất PURE).
+
+\ifhumancheck
+\textbf{Kiểm tra bởi người.} Nhóm đánh giá \numHCRealRate\% cảnh báo chỉ do công cụ đưa ra là khiếm khuyết thật. Nếu tính tỷ lệ này cho từng loại lỗi, Precision điều chỉnh trên PURE là T1 \numPAdjTone\%, T2 \numPAdjTtwo\%, T3 \numPAdjTthree\%, T4 \numPAdjTfour\% và T0 \numPAdjTzero\% (so với \numPTone\%, \numPTtwo\%, \numPTthree\%, \numPTfour\% và \numPTzero\% khi so khớp chặt).
+\else
+\textbf{[Đang chờ kết quả kiểm tra bởi người: tỷ lệ cảnh báo thừa được nhóm xác nhận là lỗi thật và Precision điều chỉnh.]}
+\fi
+
+\begin{examplebox}[Ví dụ phân tích lỗi trên PURE]
+\begin{itemize}
+  \item \textbf{Lỗi thật mà nhãn chuẩn bỏ qua} (\texttt{PE-004}, cả 12 lượt chạy LLM đều gắn cờ): ``\textit{Resource provisioning, delegation and reservation policies are in place}''. Yêu cầu không nêu chính sách nào nên không thể kiểm chứng. Tương tự với \texttt{PE-023} ``\textit{Policies are in place to perform renegotiation\ldots}''.
+  \item \textbf{Lỗi thật mà công cụ bỏ sót} (\texttt{PE-007}): ``\textit{Malicious requests are detected and rejected}''. Không có tiêu chí xác định thế nào là ``độc hại'', nên lập trình viên và kiểm thử viên không thể thống nhất phải phát hiện gì.
+  \item \textbf{Đòi hỏi quá mức} (\texttt{GJ-013}): ``\textit{The system shall be able to retrieve 200 products per second}'' bị gắn là \texttt{weak\_phrase}, dù con số 200 sản phẩm/giây đã làm yêu cầu kiểm chứng được.
+  \item \textbf{Văn bản không phải yêu cầu} (\texttt{GJ-005}): cụm ``\textit{easy of use}'' bị gắn là mơ hồ, nhưng nó nằm trong câu giải thích; bản thân yêu cầu ``\textit{Must use a SQL based database}'' đã rõ.
+  \item \textbf{Mâu thuẫn không có cơ sở} (\texttt{GJ-044}): ``\textit{another usb drive}'' (nơi sao lưu) bị cho là mâu thuẫn thuật ngữ với ``USB system'' (thiết bị chủ), dù đây là hai đối tượng khác nhau.
+\end{itemize}
+\end{examplebox}
+
+\section{Hàm ý thực tiễn}
+\begin{itemize}
+  \item \textbf{Dùng LLM như bộ sàng lọc có độ bao phủ cao:} với kỹ năng, công cụ bỏ sót dưới \numMissTfour\% khiếm khuyết và người rà soát chỉ cần đọc khoảng \numEffortTfour{} cảnh báo cho mỗi khiếm khuyết trong nhãn chuẩn. Đây là cách dùng phù hợp: AI đề xuất, con người quyết định.
+  \item \textbf{Luôn trang bị kỹ năng:} kỹ năng là cách rẻ nhất để tăng Precision (khoảng $+12$ điểm \% $F_1$) và có tác dụng như nhau ở cả hai mô hình.
+  \item \textbf{Kết hợp với bộ dò luật:} T0 rẻ, tất định và mạnh với lỗi mơ hồ dựa trên từ khóa, nên có thể chạy trước như bước lọc nhanh.
+  \item \textbf{Làm sạch tài liệu đầu vào:} nhiều cảnh báo sai đến từ ghi chú và tiêu đề lẫn vào yêu cầu, nên tách rõ phần yêu cầu sẽ giảm nhiễu.
+\end{itemize}
 
 \section{Các mối đe dọa tính hợp lệ (\textit{Threats to Validity})}
+\label{sec:threats}
 \begin{itemize}
-  \item \textbf{Chuyên gia AI thay thế chuyên gia con người:} Tuy sử dụng 2 lượt độc lập của Claude (tách biệt với họ mô hình công cụ) kèm đo $\kappa$ và phân xử, nhãn chuẩn vẫn phản ánh phán đoán của AI thay vì kỹ sư yêu cầu thực tế tại doanh nghiệp.
+  \item \textbf{Nhãn chuẩn do AI tạo:} nhãn chuẩn do Claude Opus tạo qua 2 lượt độc lập và phân xử, không phải do kỹ sư yêu cầu chuyên nghiệp. Nhóm giảm thiểu rủi ro này bằng đo $\kappa$, kiểm định trên tài liệu cấy lỗi, người rà soát thứ hai không biết nguồn và kiểm tra bởi người (mục~\ref{sec:human_check}). Phân tích lỗi cho thấy nhãn chuẩn có xu hướng \textit{khắt khe}, nên Precision báo cáo là cận dưới.
+  \item \textbf{Chỉ hai mô hình cùng một nhà cung cấp:} T1--T4 đều là mô hình Gemini (hai mô hình trùng khoảng 80\% phát hiện), nên kết luận chỉ áp dụng chắc chắn cho họ mô hình này. Tác động của kỹ năng lặp lại ở cả hai mô hình với độ lớn gần như nhau, nhưng cần kiểm chứng thêm với mô hình của nhà cung cấp khác.
   \item \textbf{Rò rỉ dữ liệu huấn luyện (\textit{Data Contamination}):} Bộ PURE được công bố công khai từ năm 2017 nên các LLM hiện đại có thể đã tiếp xúc một phần trong quá trình tiền huấn luyện; tài liệu mới \texttt{seeded\_lms} được thiết kế nhằm kiểm soát rủi ro này.
   \item \textbf{Tính tự nhiên của lỗi cấy nhân tạo:} 30 lỗi trong \texttt{seeded\_lms} được thiết kế theo mẫu chuẩn hóa nên rõ ràng hơn lỗi trong tài liệu thực tế. Bằng chứng: bộ dò luật T0 chỉ dùng danh sách từ chung vẫn đạt Precision $0{,}84$ trên \texttt{seeded\_lms} so với $0{,}40$ trên PURE. Vì vậy kết quả trên PURE được xem là thước đo chính.
-  \item \textbf{Rò rỉ số lượng lỗi trên tập cấy lỗi:} Siêu dữ liệu \texttt{source} của \texttt{seeded\_lms.json} ban đầu ghi số yêu cầu lỗi. 12 lượt chạy T1--T4 trên tài liệu này đã được chạy lại sau khi xóa trường đó; các lượt bị lộ được giữ ở \texttt{result/run\_leaked/} để so sánh. Ảnh hưởng nhỏ: Recall trên tập cấy lỗi đổi từ 30/30 xuống 28--30/30. Kết quả trên PURE không bị ảnh hưởng.
+  \item \textbf{Rò rỉ số lượng lỗi trên tập cấy lỗi:} Siêu dữ liệu \texttt{source} của \texttt{seeded\_lms.json} ban đầu ghi số yêu cầu lỗi. 12 lượt chạy T1--T4 trên tài liệu này đã được chạy lại sau khi xóa trường đó; các lượt bị lộ được giữ ở \texttt{result/\allowbreak run\_leaked/\allowbreak } để so sánh. Ảnh hưởng nhỏ: Recall trên tập cấy lỗi đổi từ 30/30 xuống 28--30/30. Kết quả trên PURE không bị ảnh hưởng.
   \item \textbf{Chuẩn cấy lỗi không bao gồm lỗi vô tình:} Chuẩn của \texttt{seeded\_lms} giữ đúng \texttt{seed\_key.json}; khiếm khuyết thật nằm trong yêu cầu ``sạch'' (như \texttt{SD-023}) sẽ bị tính là cảnh báo giả nếu công cụ phát hiện ra.
   \item \textbf{Chuẩn và kỹ năng cùng một phân loại:} Hướng dẫn gắn nhãn và \texttt{SKILL.md} chia sẻ cùng phân loại và quy tắc chuẩn hóa, nên một phần lợi ích của kỹ năng (RQ2) có thể đến từ việc ``khớp quy ước'' với chuẩn thay vì phát hiện tốt hơn. Các ví dụ trong \texttt{SKILL.md} đã được thay bằng ví dụ trung lập ngoài bộ dữ liệu để tránh rò rỉ đáp án.
   \item \textbf{Kích thước mẫu hạn chế:} Tổng 147 yêu cầu trên 4 tài liệu là quy mô vừa phải; báo cáo sử dụng khoảng tin cậy Bootstrap 95\% để lượng hóa độ bất định thống kê.
@@ -512,13 +645,21 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
 \chapter{Kết luận và hướng phát triển}
 
 \section{Kết luận}
-\textit{(Tổng kết câu trả lời định lượng cho RQ1--RQ4 sau khi hoàn tất Phase 5--6.)}
+Báo cáo đánh giá 4 cấu hình tác tử LLM (2 mô hình Gemini, có và không có kỹ năng) cùng một bộ dò luật trên 107 yêu cầu thật của bộ PURE, đối chiếu với nhãn chuẩn đã đóng băng trước khi chạy công cụ:
+\begin{itemize}
+  \item \textbf{RQ1:} công cụ LLM có tỷ lệ phát hiện đúng rất cao (Recall \numRTfour--\numRTone\%, miss rate $\le$ \numMissTfour\%) nhưng Precision thấp (\numPTone--\numPTfour\%) do gắn cờ nhiều hơn nhãn chuẩn 2--4 lần; $F_1$ tốt nhất là \numFTfour\% (T4).
+  \item \textbf{RQ2:} kỹ năng \texttt{SKILL.md} tăng $F_1$ khoảng 12 điểm \% ở cả hai mô hình, với ý nghĩa thống kê, chủ yếu nhờ tăng Precision.
+  \item \textbf{RQ3:} thiếu sót là loại khó nhất, mâu thuẫn là loại dễ nhất; với lỗi mơ hồ, bộ dò luật đơn giản đã cạnh tranh được với LLM.
+  \item \textbf{RQ4:} kết quả ổn định qua các lượt lặp (Jaccard \numJacTtwo--\numJacTone).
+\end{itemize}
+Phân tích lỗi cho thấy một phần đáng kể cảnh báo ``thừa'' là khiếm khuyết thật, nên công cụ LLM có kỹ năng phù hợp nhất với vai trò \textbf{trợ lý sàng lọc} cho người rà soát yêu cầu.
 
 \section{Hướng phát triển}
 \begin{itemize}
-  \item Mở rộng đánh giá với chuyên gia con người (kỹ sư phân tích nghiệp vụ) trên các tài liệu SRS tiếng Việt thực tế.
-  \item Kết hợp kiểm tra quy tắc tất định (\texttt{T0}) ở bước tiền xử lý với tác tử LLM trang bị kỹ năng ngữ nghĩa để cân bằng tốc độ và độ bao phủ.
-  \item Tích hợp quy trình phát hiện khiếm khuyết vào luồng CI/CD kiểm duyệt tài liệu Markdown/ReqIF tự động.
+  \item Xây dựng nhãn chuẩn do kỹ sư yêu cầu gắn nhãn đầy đủ, và mở rộng sang tài liệu SRS tiếng Việt thực tế.
+  \item Đánh giá thêm mô hình của các nhà cung cấp khác để kiểm chứng tính tổng quát của tác động kỹ năng.
+  \item Kết hợp bộ dò luật (\texttt{T0}) làm bước lọc nhanh với tác tử LLM có kỹ năng để cân bằng chi phí và độ bao phủ.
+  \item Tích hợp vào quy trình CI/CD kiểm duyệt tài liệu yêu cầu (Markdown/ReqIF) và đo lợi ích trên thời gian rà soát thực tế.
 \end{itemize}
 
 % ============================================================
@@ -535,7 +676,7 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
   ISO/IEC/IEEE. (2018). \textit{ISO/IEC/IEEE 29148:2018: Systems and software engineering --- Life cycle processes --- Requirements engineering}. International Organization for Standardization.
 
   \bibitem{berry2003}
-  Berry, D. M., Kamsties, E., \& Krieger, M. M. (2003). \textit{From Contract Drafting to Software Specification: Linguistic Sources of Ambiguity}. University of Waterloo Technical Report / Fraunhofer IESE Report 139.03/E.
+  Berry, D. M., Kamsties, E., \& Krieger, M. M. (2003). \textit{From Contract Drafting to Software Specification: Linguistic Sources of Ambiguity} (A Handbook, Version 1.0). University of Waterloo. \url{https://cs.uwaterloo.ca/~dberry/handbook/ambiguityHandbook.pdf}
 
   \bibitem{ferrari2017}
   Ferrari, A., Spagnolo, G. O., \& Gnesi, S. (2017). PURE: A Dataset of Public Requirements Documents. \textit{Proceedings of the 25th IEEE International Requirements Engineering Conference (RE)}, pp. 502--505. DOI: 10.1109/RE.2017.29.
@@ -544,19 +685,19 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
   Femmer, H., Méndez Fernández, D., Wagner, S., \& Eder, S. (2017). Rapid quality assurance with Requirements Smells. \textit{Journal of Systems and Software}, 123, 190--213. DOI: 10.1016/j.jss.2016.02.047.
 
   \bibitem{fabbrini2001}
-  Fabbrini, F., Fusani, M., Gnesi, S., \& Lami, G. (2001). The Linguistic Approach to the Natural Language Requirements Quality: Benefit of the use of an Automatic Tool. \textit{Proceedings of the 26th Annual NASA Goddard Software Engineering Workshop}, pp. 97--105.
+  Fabbrini, F., Fusani, M., Gnesi, S., \& Lami, G. (2001). The Linguistic Approach to the Natural Language Requirements Quality: Benefit of the use of an Automatic Tool. \textit{Proceedings of the 26th Annual NASA Goddard Software Engineering Workshop}, Greenbelt, MD, USA.
 
   \bibitem{fabbrini2005}
-  Fabbrini, F., Fusani, M., Gnesi, S., \& Lami, G. (2005). An Automatic Tool for the Analysis of Natural Language Requirements (QuARS). \textit{Computer Systems Science and Engineering}, 20(1), 53--62.
+  Fabbrini, F., Fusani, M., Gnesi, S., Lami, G., \& Trentanni, G. (2005). An Automatic Tool for the Analysis of Natural Language Requirements. \textit{Computer Systems Science and Engineering}.
 
   \bibitem{zhao2021}
-  Zhao, L., Alhoshan, W., Ferrari, A., Letsholo, K. J., Ajagbe, M. A., Chioasca, E.-V., \& Batista-Navarro, R. T. (2021). Natural Language Processing for Requirements Engineering: A Systematic Mapping Study. \textit{ACM Computing Surveys}, 54(3), Article 55.
+  Zhao, L., Alhoshan, W., Ferrari, A., Letsholo, K. J., Ajagbe, M. A., Chioasca, E.-V., \& Batista-Navarro, R. T. (2021). Natural Language Processing (NLP) for Requirements Engineering (RE): A Systematic Mapping Study. \textit{ACM Computing Surveys}, 54(3).
 
   \bibitem{lubos2024}
-  Lubos, S., Felfernig, A., Tran, T. N. T., Garber, D., El Mansi, M., Erdeniz, S. P., \& Le, V.-M. (2024). Leveraging LLMs for the Quality Assurance of Software Requirements. \textit{Proceedings of the 32nd IEEE International Requirements Engineering Conference (RE)}.
+  Lubos, S., Felfernig, A., Tran, T. N. T., Garber, D., El Mansi, M., Erdeniz, S. P., \& Le, V.-M. (2024). Leveraging LLMs for the Quality Assurance of Software Requirements. \textit{Proceedings of the 32nd IEEE International Requirements Engineering Conference (RE)}, pp. 389--397.
 
   \bibitem{ronanki2025}
-  Ronanki, K., Cabrero-Daniel, B., Horkoff, J., \& Berger, C. (2025). Prompt Engineering Guidelines for Using Large Language Models in Requirements Engineering. \textit{Euromicro Conference Series on Software Engineering and Advanced Applications (SEAA)}.
+  Ronanki, K., Arvidsson, S., \& Axell, J. (2025). Prompt Engineering Guidelines for Using Large Language Models in Requirements Engineering. \textit{51st Euromicro Conference on Software Engineering and Advanced Applications (SEAA)}, Lecture Notes in Computer Science. DOI: 10.1007/978-3-032-04207-1\_17.
 \end{enumerate}
 
 % ============================================================
@@ -566,13 +707,13 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
 \chapter{Phụ lục: Kỹ năng, Câu lệnh và Dữ liệu mẫu}
 
 \section{Toàn văn kỹ năng \texttt{SKILL.md}}
-\lstinputlisting[caption={Tệp kỹ năng \texttt{prompt/SKILL.md}}]{../prompt/SKILL.md}
+\lstinputlisting[caption={Tệp kỹ năng \texttt{prompt/\allowbreak SKILL.md}}]{../prompt/SKILL.md}
 
 \section{Câu lệnh thuần (\texttt{plain\_prompt.txt}) và câu lệnh kèm kỹ năng (\texttt{skill\_prompt.txt})}
-\lstinputlisting[caption={Tệp \texttt{prompt/plain.txt}}]{../prompt/plain.txt}
-\lstinputlisting[caption={Tệp \texttt{prompt/skill.txt}}]{../prompt/skill.txt}
+\lstinputlisting[caption={Tệp \texttt{prompt/\allowbreak plain.txt}}]{../prompt/plain.txt}
+\lstinputlisting[caption={Tệp \texttt{prompt/\allowbreak skill.txt}}]{../prompt/skill.txt}
 
 \section{Ví dụ đầu ra JSON từ công cụ nền tảng \texttt{T0} trên \texttt{peering}}
-\lstinputlisting[caption={Trích đoạn kết quả JSON chuẩn hóa (\texttt{result/run/T0/peering/run\_1.json})}]{../result/run/T0/peering/run_1.json}
+\lstinputlisting[caption={Trích đoạn kết quả JSON chuẩn hóa (\texttt{result/\allowbreak run/\allowbreak T0/\allowbreak peering/\allowbreak run\_1.json})}]{../result/run/T0/peering/run_1.json}
 
 \end{document}

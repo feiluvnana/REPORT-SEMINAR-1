@@ -11,6 +11,7 @@
 \usetikzlibrary{arrows.meta,positioning}
 
 \input{../report/meta.tex}
+\input{../result/tables/numbers.tex}
 \graphicspath{{../report/figures/}{./}}
 \usetheme{HUST}
 
@@ -19,7 +20,7 @@
 % --- Slide 1: Title ---
 \begin{frame}[plain]
   \titlepage
-  \note{[Dương] Kính chào thầy và các bạn. Hôm nay Nhóm 4 xin trình bày báo cáo Seminar 1, đề tài A1: Dùng AI phát hiện mơ hồ, thiếu sót và mâu thuẫn trong tài liệu đặc tả yêu cầu phần mềm.}
+  \note{[Dương] Kính chào thầy và các bạn. Em là Nguyễn Tùng Dương, đại diện Nhóm 4, cùng hai bạn Trần Xuân Nam và Phạm Gia Khánh. Hôm nay nhóm trình bày đề tài A1: dùng AI để phát hiện lỗi mơ hồ, thiếu sót và mâu thuẫn trong tài liệu đặc tả yêu cầu phần mềm, và đo xem AI làm tốt đến đâu so với đánh giá của chuyên gia.}
 \end{frame}
 
 % --- Slide 2: Agenda ---
@@ -28,10 +29,10 @@
     \item \textbf{Đặt vấn đề \& Bài toán A1:} Tầm quan trọng của chất lượng SRS và 4 câu hỏi nghiên cứu (RQ1--RQ4)
     \item \textbf{Phân loại lỗi \& Dữ liệu:} 15 tiểu loại lỗi, bộ dữ liệu PURE (107) + \texttt{seeded\_lms} (40)
     \item \textbf{Phương pháp thực nghiệm:} Bộ công cụ T0--T4, kỹ năng \texttt{SKILL.md}, chuẩn chuyên gia \& độ đo
-    \item \textbf{Kết quả \& Phân tích lỗi:} \textit{(Cập nhật sau Phase 3--6)}
+    \item \textbf{Kết quả \& Phân tích lỗi:} Độ chính xác, tác động kỹ năng, loại lỗi khó nhất, độ ổn định
     \item \textbf{Hạn chế \& Kết luận:} Threats to validity, hướng phát triển và hỏi đáp
   \end{enumerate}
-  \note{[Dương] Bài trình bày gồm 5 phần chính, đi từ bối cảnh bài toán đến thiết kế thực nghiệm, kết quả và thảo luận.}
+  \note{[Dương] Bài trình bày gồm năm phần. Đầu tiên là vì sao bài toán quan trọng và câu hỏi nghiên cứu. Bạn Nam sẽ trình bày cách phân loại lỗi, dữ liệu và phương pháp. Bạn Khánh trình bày cách xây dựng nhãn chuẩn và kết quả chính. Cuối cùng em tổng kết phân tích lỗi, hạn chế và kết luận.}
 \end{frame}
 
 % --- Slide 3: Why it matters ---
@@ -56,7 +57,7 @@
       \end{block}
     \end{column}
   \end{columns}
-  \note{[Dương] Nhấn mạnh chi phí sửa lỗi muộn và lý do các công cụ từ điển như QuARS/Smella chưa đủ để thay thế kiểm duyệt ngữ nghĩa.}
+  \note{[Dương] Tài liệu đặc tả yêu cầu, hay SRS, phần lớn viết bằng ngôn ngữ tự nhiên, nên rất dễ có câu mơ hồ, thiếu thông tin hoặc mâu thuẫn nhau. Lỗi ở giai đoạn này nếu để lọt xuống thiết kế, lập trình và kiểm thử thì chi phí sửa tăng lên rất nhiều. Đọc duyệt thủ công thì tốn thời gian, và người đọc thường vô thức tự hiểu theo một nghĩa nên bỏ qua chỗ mơ hồ. Các công cụ truyền thống như QuARS hay Smella dò theo từ điển và luật: nhanh, nhưng chỉ bắt được từ khóa bề mặt, không hiểu ngữ cảnh, và khó phát hiện mâu thuẫn giữa nhiều yêu cầu. Câu hỏi đặt ra là các tác tử AI hiện nay có làm tốt hơn không.}
 \end{frame}
 
 % --- Slide 4: Problem A1 + RQ1-RQ4 ---
@@ -71,7 +72,7 @@
     \item \textbf{RQ3 (Theo loại lỗi):} Loại khiếm khuyết nào (mơ hồ / thiếu sót / mâu thuẫn) khó phát hiện nhất?
     \item \textbf{RQ4 (Độ ổn định):} Kết quả giữa các lượt chạy lặp có ổn định không?
   \end{itemize}
-  \note{[Dương] Giới thiệu trọng tâm của A1 là một nghiên cứu thực nghiệm có đối chứng, trả lời 4 câu hỏi nghiên cứu RQ1 đến RQ4.}
+  \note{[Dương] Đề tài A1 yêu cầu dùng AI phát hiện ba loại lỗi này, rồi so với đánh giá của chuyên gia trên dữ liệu công khai, đo tỷ lệ phát hiện đúng và tỷ lệ bỏ sót. Nhóm cụ thể hóa thành bốn câu hỏi: RQ1, AI chính xác đến đâu; RQ2, việc trang bị cho AI một kỹ năng, gồm bảng phân loại, danh sách kiểm tra và định dạng đầu ra, có giúp ích không; RQ3, loại lỗi nào khó nhất; và RQ4, kết quả có ổn định khi chạy lại không. Sau đây em mời bạn Nam.}
 \end{frame}
 
 % --- Slide 5: Taxonomy + Real PURE examples ---
@@ -81,16 +82,16 @@
     \toprule
     \textbf{Loại lỗi} & \textbf{Tiểu loại} & \textbf{Ví dụ thực tế từ PURE} \\
     \midrule
-    \textbf{Ambiguity} & \texttt{vague\_term}, \texttt{referential}, \texttt{syntactic}, \texttt{coordination}, \texttt{weak\_phrase} & \textbf{\texttt{KP-019}:} \textit{``Sequence's length must not be more than a line (59 characters)''} / \textbf{\texttt{GJ-037}:} \textit{``easy to read error messages''}. \\
+    \textbf{Ambiguity} & \texttt{vague\_term}, \texttt{referential}, \texttt{syntactic}, \texttt{coordination}, \texttt{weak\_phrase} & \textbf{\texttt{GJ-033}:} \textit{``The system shall be easy to use''} / \textbf{\texttt{GJ-037}:} \textit{``easy to read error messages''} (không đo được). \\
     \midrule
-    \textbf{Incompleteness} & \texttt{tbd}, \texttt{missing\_actor}, \texttt{missing\_condition}, \texttt{missing\_error\_handling}, \texttt{missing\_value\_or\_unit}, \texttt{missing\_consequence} & \textbf{\texttt{PE-001}:} \textit{``The format for service information description is defined''} (bị động thiếu chủ thể định nghĩa). \\
+    \textbf{Incompleteness} & \texttt{tbd}, \texttt{missing\_actor}, \texttt{missing\_condition}, \texttt{missing\_error\_handling}, \texttt{missing\_value\_or\_unit}, \texttt{missing\_consequence} & \textbf{\texttt{KP-019}:} \textit{``Sequence's length must not be more than a line (59 characters)''}: giới hạn đã rõ, nhưng không nêu hệ thống làm gì khi vượt quá (\texttt{missing\_error\_handling}). \\
     \midrule
     \textbf{Inconsistency} & \texttt{conflicting\_values}, \texttt{conflicting\_rules}, \texttt{terminology}, \texttt{duplicate} & \textbf{\texttt{PE-002} vs \texttt{PE-001}:} Lặp lại nguyên văn \textit{``The format for service information description is defined''}. \\
     \bottomrule
   \end{tabular}
   \vspace{0.15cm}
   {\footnotesize \textbf{Quy tắc chuẩn hóa:} Tối đa 1 phát hiện/\texttt{(req\_id, type)}; mâu thuẫn/trùng lặp neo vào \texttt{req\_id} xuất hiện sau và ghi ID trước vào \texttt{related\_ids}.}
-  \note{[Nam] Trình bày bộ phân loại theo chuẩn ISO 29148 và Berry et al. (2003), minh họa bằng chính các câu lấy từ KeePass, Gamma J và Peering.}
+  \note{[Nam] Nhóm dùng bảng phân loại dựa trên chuẩn ISO 29148 và sổ tay về tính mơ hồ của Berry và cộng sự, gồm 3 loại và 15 tiểu loại. Ví dụ mơ hồ: ``The system shall be easy to use'', không đo được thế nào là dễ dùng. Ví dụ thiếu sót: KP-019 giới hạn độ dài 59 ký tự, nhưng không nói hệ thống làm gì khi vượt quá. Ví dụ mâu thuẫn: PE-002 lặp lại nguyên văn PE-001. Quy tắc chấm: mỗi yêu cầu có tối đa một phát hiện cho mỗi loại, và lỗi mâu thuẫn được gắn vào yêu cầu xuất hiện sau.}
 \end{frame}
 
 % --- Slide 6: Method overview TikZ ---
@@ -120,7 +121,7 @@
       \item \texttt{evaluate.py} kiểm tra SHA-256 trong \texttt{HASHES.txt} trước khi tính độ đo.
     \end{itemize}
   \end{block}
-  \note{[Nam] Giải thích cơ chế đóng băng SHA-256 trước khi chạy Phase 4 để tránh việc sửa đáp án sau khi thấy kết quả công cụ.}
+  \note{[Nam] Quy trình gồm năm bước. Một, chuẩn bị dữ liệu. Hai, tạo nhãn chuẩn. Ba, đóng băng nhãn chuẩn bằng mã băm SHA-256, trước khi chạy bất kỳ công cụ nào, để không ai có thể sửa đáp án sau khi thấy kết quả. Bốn, chạy các công cụ, mỗi cấu hình lặp ba lần. Năm, chấm điểm hoàn toàn bằng script. Các công cụ chạy trong thư mục tạm, bị chặn quyền đọc tệp ngoài, chặn web, và mọi lời gọi công cụ đều được kiểm toán.}
 \end{frame}
 
 % --- Slide 7: Dataset ---
@@ -152,7 +153,7 @@
       \end{block}
     \end{column}
   \end{columns}
-  \note{[Nam] Nêu lý do kết hợp PURE (dữ liệu thực tế công khai) với \texttt{seeded\_lms} (dữ liệu mới chưa từng xuất hiện trong tập huấn luyện LLM).}
+  \note{[Nam] Dữ liệu gồm ba tài liệu thật từ bộ PURE, bộ dữ liệu SRS công khai được công bố tại hội nghị RE 2017, tổng 107 yêu cầu, và một tài liệu nhóm tự viết về hệ thống quản lý thư viện với 40 yêu cầu, trong đó cấy sẵn 30 lỗi, mỗi loại 10 lỗi. Tài liệu cấy lỗi có đáp án chính xác và chưa từng xuất hiện trên mạng, nên dùng để kiểm tra hợp lý. Tuy nhiên, như sẽ thấy, nó quá dễ nên thước đo chính là PURE.}
 \end{frame}
 
 % --- Slide 8: AI tools T0-T4 ---
@@ -167,7 +168,7 @@
     \textbf{T3 / T4} & \texttt{agy} (\texttt{gemini-4-neon-high}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Gemini 4 Neon. \\
     \bottomrule
   \end{tabular}
-  \note{[Nam] Trình bày hai cặp mô hình Gemini (Hydrogen và Neon) tách biệt họ mô hình với chuyên gia Claude Opus, cùng chạy ở chế độ Plain và +SKILL.md.}
+  \note{[Nam] Nhóm so sánh năm cấu hình. T0 là bộ dò luật đơn giản làm mốc. T1 và T3 là hai mô hình Gemini, Hydrogen và Neon, chỉ nhận câu lệnh thuần. T2 và T4 là cùng hai mô hình đó nhưng được nạp thêm tệp kỹ năng SKILL.md. Hai câu lệnh giống hệt nhau, chỉ khác dòng yêu cầu đọc kỹ năng, nên mọi khác biệt giữa T1 và T2 là do kỹ năng. Sau đây em mời bạn Khánh.}
 \end{frame}
 
 % --- Slide 9: Expert ground-truth protocol ---
@@ -179,7 +180,7 @@
     \item \textbf{Phân xử:} Giải quyết mọi bất đồng giữa Pass 1 và Pass 2, ghi vào \texttt{adjudication\_log.md} $\rightarrow$ \texttt{final\_gt.json}.
     \item \textbf{Đóng băng:} Ghi mã băm SHA-256 vào \texttt{dataset/ground\_truth/HASHES.txt}.
   \end{enumerate}
-  \note{[Khánh] Giải thích vai trò của Pass 2 trong việc kiểm định độ tin cậy trên tập cấy lỗi vì tác giả viết \texttt{seed\_defects.py} đã biết trước đáp án.}
+  \note{[Khánh] Nhãn chuẩn do mô hình Claude Opus tạo, khác họ mô hình với các công cụ Gemini để tránh thiên lệch. Hai lượt gắn nhãn chạy độc lập, không thấy kết quả của nhau. Nhóm đo mức đồng thuận bằng Cohen's kappa, phân xử từng bất đồng có ghi lý do, rồi đóng băng. Lượt thứ hai cũng được kiểm định trên tài liệu cấy lỗi, vì người viết script cấy lỗi đã biết trước đáp án.}
 \end{frame}
 
 % --- Slide 10: Metrics ---
@@ -204,74 +205,190 @@
       \end{block}
     \end{column}
   \end{columns}
-  \note{[Khánh] Trình bày công thức các độ đo, đặc biệt nhấn mạnh Recall (correct detection rate) và Miss Rate theo yêu cầu đề tài A1.}
+  \note{[Khánh] Một phát hiện được tính là đúng khi trùng mã yêu cầu và loại lỗi với nhãn chuẩn. Từ đó tính Precision: trong các cảnh báo, bao nhiêu phần trăm là đúng; Recall, hay tỷ lệ phát hiện đúng: trong các lỗi thật, công cụ tìm được bao nhiêu; miss rate, tỷ lệ bỏ sót, bằng một trừ Recall; và F1 cân bằng hai chỉ số. Độ bất định được ước lượng bằng bootstrap, độ ổn định bằng Jaccard và Fleiss' kappa.}
 \end{frame}
 
-% --- Slides 11-16: Placeholders awaiting Phase 3-6 ---
-\begin{frame}{Kết quả tổng hợp \& Độ tin cậy chuẩn (Chờ Phase 3--5)}
-  \begin{block}{Trạng thái hiện tại}
-    Công cụ nền tảng \textbf{T0} đã chạy xong trên cả 4 tài liệu (KeePass: 12, Peering: 21, Gamma J: 13, Seeded LMS: 19 phát hiện). Bảng số liệu đối chiếu P/R/Miss Rate/$F_1$ và biểu đồ \texttt{report/figures/*.png} sẽ được điền sau khi hoàn tất chuẩn chuyên gia Claude và chạy T1--T4.
-  \end{block}
-  \note{[Khánh] Cập nhật tiến độ: T0 đã có kết quả, đang chờ khôi phục quota Claude để chốt chuẩn GT và chạy T1-T4.}
-\end{frame}
-
-% --- Slide 17: Limitations ---
-\begin{frame}{Hạn chế và mối đe dọa tính hợp lệ}
-  \begin{itemize}
-    \item \textbf{Chuyên gia AI thay cho chuyên gia người:} Đã giảm thiểu bằng 2 lượt Claude độc lập, $\kappa$ và tách biệt họ mô hình công cụ.
-    \item \textbf{Rò rỉ dữ liệu PURE trong tiền huấn luyện:} Được kiểm soát bằng tài liệu mới hoàn toàn \texttt{seeded\_lms}.
-    \item \textbf{Kích thước mẫu vừa phải (147 yêu cầu):} Lượng hóa bất định bằng Bootstrap 95\% CI ở mức yêu cầu.
-    \item \textbf{Tính tự nhiên của lỗi cấy:} Các mẫu cấy trong \texttt{seeded\_lms} có cấu trúc rõ ràng hơn một số lỗi ngữ cảnh thực tế.
-  \end{itemize}
-  \note{[Khánh] Nêu thẳng thắn các hạn chế khoa học và biện pháp giảm thiểu đã áp dụng trong thiết kế.}
-\end{frame}
-
-% --- Slide 18: Conclusion & Q&A ---
-\begin{frame}{Kết luận \& Hỏi đáp}
-  \begin{block}{Tổng kết hiện trạng thực hiện}
-    \begin{itemize}
-      \item Đã hoàn thành toàn bộ hạ tầng dữ liệu (147 yêu cầu), kỹ năng \texttt{SKILL.md}, câu lệnh đối chứng, công cụ nền tảng \texttt{T0}, bộ sinh độ đo \& biểu đồ \texttt{evaluate.py} và khung báo cáo/slide HUST.
-      \item Bước tiếp theo: Chạy chuẩn chuyên gia Claude (Phase 3), đóng băng SHA-256, chạy T1--T4 và hoàn thiện phân tích kết quả.
-    \end{itemize}
-  \end{block}
-  \centering
-  \vspace{0.3cm}
-  {\Large\bfseries\color{hustred} Cảm ơn thầy và các bạn đã lắng nghe!}\\[0.15cm]
-  {\small Mời thầy và các bạn đặt câu hỏi.}
-  \note{[Dương] Cảm ơn thầy và các bạn; sẵn sàng trả lời câu hỏi.}
-\end{frame}
-
-% --- Slide 19: Live-demo backup slide ---
-\begin{frame}{Phụ lục trình chiếu: Demo dự phòng (\texttt{SKILL.md} JSON)}
+% --- Slide 11: Ground-truth reliability ---
+\begin{frame}{Độ tin cậy của nhãn chuẩn}
   \begin{columns}[T]
-    \begin{column}{0.42\textwidth}
-      \begin{block}{Đầu vào (\texttt{keepass.json})}
-        \ttfamily\scriptsize
-        \{\\
-        \hspace*{1em}"doc\_id": "keepass",\\
-        \hspace*{1em}"req\_id": "KP-019",\\
-        \hspace*{1em}"text": "Sequence's length must not be more than a line (59 characters)"\\
-        \}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Chuyên gia AI (Claude Opus)}
+        \begin{itemize}
+          \item 2 lượt độc lập: Cohen's $\kappa = 0{,}81$ trên 321 cặp PURE
+          \item 16 bất đồng được phân xử có ghi lý do
+          \item Tác tử mới, không biết số lỗi: tìm đúng \textbf{30/30} lỗi cấy, không báo thừa
+          \item Đóng băng SHA-256 \textbf{trước} khi chạy công cụ
+        \end{itemize}
       \end{block}
     \end{column}
-    \begin{column}{0.55\textwidth}
-      \begin{block}{Đầu ra JSON chuẩn theo \texttt{SKILL.md}}
-        \ttfamily\scriptsize
-        \{\\
-        \hspace*{1em}"doc\_id": "keepass",\\
-        \hspace*{1em}"findings": [\{\\
-        \hspace*{2em}"req\_id": "KP-019",\\
-        \hspace*{2em}"type": "ambiguity",\\
-        \hspace*{2em}"subtype": "vague\_term",\\
-        \hspace*{2em}"evidence": "more than a line",\\
-        \hspace*{2em}"related\_ids": [],\\
-        \hspace*{2em}"rationale": "Phrase 'more than a line' is subjective before adding (59 characters) and depends on display width."\\
-        \hspace*{1em}\}]\\
-        \}
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Kiểm tra bởi người}
+        \begin{itemize}
+          \item \numHCSlideA
+          \item \numHCSlideB
+        \end{itemize}
       \end{block}
     \end{column}
   \end{columns}
-  \note{[Dương] Slide dự phòng minh họa luồng 1 yêu cầu đầu vào chuyển thành JSON có cấu trúc theo đúng schema của SKILL.md.}
+  \note{[Khánh] Nhãn chuẩn do Claude Opus tạo, khác họ mô hình với các công cụ Gemini để tránh thiên lệch. Hai lượt độc lập đạt kappa 0,81, và trên tài liệu cấy lỗi chuyên gia tìm đủ 30/30 lỗi. Nhóm cũng tự kiểm tra một phần nhãn chuẩn; kết quả ở ô bên phải. Tất cả nhãn được đóng băng bằng mã băm trước khi chạy công cụ nên không thể chỉnh sau khi thấy kết quả.}
+\end{frame}
+
+% --- Slide 12: Results table ---
+\begin{frame}{Kết quả trên PURE (107 yêu cầu thật)}
+  \centering\scriptsize
+  \input{../result/tables/overall_pure.tex}
+  \vspace{0.3cm}
+  \begin{itemize}\small
+    \item LLM \textbf{gần như không bỏ sót} (miss rate $\le$ \numMissTfour\%) nhưng \textbf{gắn cờ quá nhiều}: T1 đưa ra \numFoundTone{} phát hiện/lượt so với \numGTPure{} của nhãn chuẩn
+    \item Không có kỹ năng, LLM ($F_1$ \numFTone--\numFTthree\%) \textbf{không hơn} bộ dò luật T0 (\numFTzero\%)
+  \end{itemize}
+  \note{[Khánh] Đây là bảng kết quả chính trên 107 yêu cầu thật của PURE, trung bình 3 lượt chạy. Recall của LLM gần 100 phần trăm, tức gần như không bỏ sót, nhưng Precision chỉ 25 đến 40 phần trăm vì công cụ gắn cờ nhiều gấp 2 đến 4 lần nhãn chuẩn. Điểm đáng chú ý: khi chưa có kỹ năng, LLM không tốt hơn bộ dò luật đơn giản T0.}
+\end{frame}
+
+% --- Slide 13: P/R/F1 chart ---
+\begin{frame}{Precision, Recall và $F_1$ theo công cụ (RQ1)}
+  \centering
+  \includegraphics[height=0.66\textheight]{prf1_by_tool.png}\\[0.1cm]
+  {\small Người rà soát đọc \numEffortTone{} cảnh báo/khiếm khuyết với T1, chỉ \numEffortTfour{} với T4. Mọi công cụ đều vượt mốc ``gắn cờ tất cả'' ($F_1$ \numFFlagAll\%).}
+  \note{[Khánh] Cột cam là Recall, gần chạm 100 với mọi công cụ LLM. Cột xanh dương là Precision, thấp. Đường nét đứt là F1 khi gắn cờ mọi yêu cầu, khoảng 28 phần trăm; mọi công cụ đều cao hơn, nghĩa là chúng có chọn lọc thật. Về thực tế: với T1, người rà soát đọc khoảng 4 cảnh báo mới gặp một lỗi; với T4 chỉ khoảng 2,5.}
+\end{frame}
+
+% --- Slide 14: Skill effect ---
+\begin{frame}{Tác động của kỹ năng \texttt{SKILL.md} (RQ2)}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \includegraphics[width=\textwidth]{skill_effect.png}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \begin{itemize}\small
+        \item Hydrogen: $\Delta F_1 = +\numSkillDFHydro$ điểm (KTC 95\%: \numSkillLoHydro--\numSkillHiHydro)
+        \item Neon: $\Delta F_1 = +\numSkillDFNeon$ điểm (KTC 95\%: \numSkillLoNeon--\numSkillHiNeon)
+        \item Nhờ \textbf{Precision} tăng khoảng 11 điểm, Recall chỉ giảm 5--6 điểm
+        \item Neon chỉ hơn Hydrogen $+$\numModelDFPlain{} / $+$\numModelDFSkill{} điểm, nhưng chậm gấp 2 lần
+        \item \textbf{Kỹ năng quan trọng hơn chọn mô hình}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \note{[Nam] Kỹ năng tăng F1 khoảng 12 điểm ở cả hai mô hình, và khoảng tin cậy không chứa 0 nên có ý nghĩa thống kê. Lợi ích đến từ việc bớt cảnh báo yếu: Precision tăng khoảng 11 điểm, Recall chỉ giảm 5 đến 6 điểm. So sánh hai mô hình: Neon chỉ hơn Hydrogen 3 đến 4 điểm và chạy chậm gấp đôi. Vậy trang bị kỹ năng quan trọng hơn chọn mô hình.}
+\end{frame}
+
+% --- Slide 15: By defect type ---
+\begin{frame}{Loại khiếm khuyết nào khó nhất? (RQ3)}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\textwidth]{f1_heatmap.png}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{itemize}\small
+        \item \textbf{Mâu thuẫn dễ nhất:} $F_1$ \numFConTthree--\numFConTtwo\%
+        \item \textbf{Thiếu sót khó nhất:} $F_1$ \numFIncTone--\numFIncTfour\% (T0: \numFIncTzero\%). Ranh giới giữa ``thiếu thật'' và ``có thể bổ sung'' mang tính phán đoán
+        \item \textbf{Mơ hồ:} kỹ năng giúp nhiều nhất (\numFAmbTone\% $\rightarrow$ \numFAmbTtwo\%); bộ dò từ khóa T0 đã đạt \numFAmbTzero\%
+        \item Recall của LLM $\ge$ 91\% ở mọi loại, nên khác biệt nằm ở Precision
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \note{[Nam] Bản đồ nhiệt thể hiện F1 theo loại lỗi. Mâu thuẫn và trùng lặp là dễ nhất. Thiếu sót là khó nhất, vì ranh giới giữa thiếu thông tin thật và có thể bổ sung thêm chi tiết mang tính phán đoán. Với lỗi mơ hồ, bộ dò từ khóa T0 đã làm rất tốt, nên có thể dùng T0 như bước lọc nhanh.}
+\end{frame}
+
+% --- Slide 16: Stability, sanity check, cost ---
+\begin{frame}{Độ ổn định, kiểm tra hợp lý và chi phí (RQ4)}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\textwidth]{stability.png}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{itemize}\small
+        \item \textbf{Ổn định cao:} Jaccard \numJacTtwo--\numJacTone, Fleiss' $\kappa$ \numFleissTthree--\numFleissTone{} qua 3 lượt
+        \item \textbf{Tài liệu cấy lỗi:} mọi LLM đạt $F_1$ \numFSeedTone--\numFSeedTfour\% $\Rightarrow$ chỉ dùng để kiểm tra hợp lý
+        \item \textbf{Chi phí:} 48 lượt, \numAgyMinutes{} phút, \numAgyMTokens{} triệu token; \numDurTone{} giây/lượt (Hydrogen), \numDurTthree{} giây/lượt (Neon)
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \note{[Nam] Kết quả rất ổn định giữa 3 lượt chạy, Jaccard từ 0,82 đến 0,93, nên kết luận không phụ thuộc vào một lượt may rủi. Trên tài liệu cấy lỗi, mọi LLM đều gần 100 phần trăm: lỗi theo mẫu sách giáo khoa quá dễ, nên tài liệu này chỉ để kiểm tra hợp lý. Toàn bộ thực nghiệm tốn khoảng 2 giờ và 1,8 triệu token.}
+\end{frame}
+
+% --- Slide 17: Error analysis ---
+\begin{frame}{Vì sao Precision thấp? Phân tích lỗi}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \begin{block}{30 trường hợp bất đồng (ẩn nguồn)}
+        \small
+        \begin{itemize}
+          \item Người rà soát AI: \numAIRevReal/\numAIRevN{} cảnh báo thừa là \textbf{lỗi thật}, \numAIRevBorder{} ở ranh giới
+          \item $\Rightarrow$ khoảng \numAIRevRealLo--\numAIRevRealHi\% cảnh báo thừa có thể là lỗi thật bị nhãn chuẩn bỏ qua
+          \item \numHCSlideC
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.51\textwidth}
+      \scriptsize
+      \begin{exampleblock}{Lỗi thật nhãn chuẩn bỏ qua (\texttt{PE-004}, 12/12 lượt gắn cờ)}
+        ``Resource provisioning, delegation and reservation policies are in place'': không nêu chính sách nào.
+      \end{exampleblock}
+      \begin{alertblock}{Đòi hỏi quá mức (\texttt{GJ-013})}
+        ``The system shall be able to retrieve 200 products per second'': bị coi là \texttt{weak\_phrase} dù đã có con số.
+      \end{alertblock}
+      \begin{alertblock}{Không phải yêu cầu (\texttt{GJ-005})}
+        Cụm ``easy of use'' nằm trong câu giải thích, không nằm trong yêu cầu.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \note{[Dương] Câu hỏi quan trọng: các cảnh báo thừa là nhiễu hay lỗi thật? Nhóm lấy 30 trường hợp bất đồng và ẩn nguồn khi đánh giá. Khoảng một phần ba đến một nửa cảnh báo thừa thực chất là lỗi thật mà nhãn chuẩn bỏ qua, ví dụ PE-004 không nêu chính sách nào. Cảnh báo sai chủ yếu do đòi hỏi quá mức, hoặc do công cụ gắn cờ ghi chú không phải yêu cầu. Nghĩa là Precision thật của công cụ cao hơn con số trong bảng.}
+\end{frame}
+
+% --- Slide 18: Limitations ---
+\begin{frame}{Hạn chế và mối đe dọa tính hợp lệ}
+  \begin{itemize}
+    \item \textbf{Nhãn chuẩn do AI tạo:} giảm thiểu bằng 2 lượt độc lập, $\kappa$, kiểm định cấy lỗi, người rà soát thứ hai và kiểm tra bởi người. Nhãn chuẩn khá khắt khe nên Precision báo cáo là cận dưới.
+    \item \textbf{Chỉ 2 mô hình Gemini:} kết luận chắc chắn cho họ mô hình này; tác động kỹ năng lặp lại ở cả hai mô hình.
+    \item \textbf{Tài liệu cấy lỗi quá dễ:} PURE là thước đo chính.
+    \item \textbf{Rò rỉ đáp án đã phát hiện và sửa:} ví dụ trong \texttt{SKILL.md}, luật T0, số lượng lỗi trong \texttt{seeded\_lms}; lượt chạy bị ảnh hưởng đã được chạy lại.
+    \item \textbf{Quy mô nhỏ (107 yêu cầu thật):} có KTC bootstrap 95\%; PURE có thể đã nằm trong dữ liệu huấn luyện của LLM.
+  \end{itemize}
+  \note{[Dương] Nhóm nêu thẳng các hạn chế: nhãn chuẩn do AI tạo, nhưng đã có nhiều lớp kiểm tra, kể cả kiểm tra bởi người. Chỉ có hai mô hình Gemini, nên kết luận gắn với họ mô hình này. Trong quá trình làm, nhóm phát hiện và sửa ba chỗ rò rỉ đáp án; các lượt chạy bị ảnh hưởng đã được chạy lại.}
+\end{frame}
+
+% --- Slide 19: Conclusion & Q&A ---
+\begin{frame}{Kết luận \& Hỏi đáp}
+  \begin{block}{Trả lời 4 câu hỏi nghiên cứu}
+    \begin{itemize}\small
+      \item \textbf{RQ1:} LLM gần như không bỏ sót (Recall $\ge$ \numRTfour\%) nhưng Precision thấp (\numPTone--\numPTfour\%); $F_1$ tốt nhất \numFTfour\% (T4)
+      \item \textbf{RQ2:} kỹ năng tăng $F_1$ khoảng 12 điểm ở cả hai mô hình, có ý nghĩa thống kê
+      \item \textbf{RQ3:} thiếu sót khó nhất, mâu thuẫn dễ nhất
+      \item \textbf{RQ4:} ổn định cao qua các lượt chạy (Jaccard $\ge$ \numJacTtwo)
+    \end{itemize}
+    \textbf{Khuyến nghị:} dùng LLM có kỹ năng làm \textbf{trợ lý sàng lọc} (AI đề xuất, người quyết định), kết hợp bộ dò luật để lọc nhanh.
+  \end{block}
+  \centering
+  \vspace{0.2cm}
+  {\Large\bfseries\color{hustred} Cảm ơn thầy và các bạn đã lắng nghe!}\\[0.1cm]
+  {\small Mời thầy và các bạn đặt câu hỏi.}
+  \note{[Dương] Tóm lại: LLM gần như không bỏ sót nhưng gắn cờ quá nhiều; kỹ năng là cách rẻ và hiệu quả để giảm nhiễu; thiếu sót là loại khó nhất; kết quả ổn định. Khuyến nghị dùng LLM có kỹ năng như trợ lý sàng lọc, con người là người quyết định cuối cùng. Cảm ơn thầy và các bạn, nhóm xin nhận câu hỏi.}
+\end{frame}
+
+% --- Slide 20: Live-demo backup slide (real T4 output) ---
+\begin{frame}{Phụ lục: Demo dự phòng (đầu ra thật của T4)}
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \begin{block}{Đầu vào (\texttt{peering.json})}
+        \ttfamily\scriptsize
+        \{"req\_id": "PE-004",\\
+        \hspace*{1em}"text": "Resource provisioning, delegation and reservation policies are in place"\}
+      \end{block}
+    \end{column}
+    \begin{column}{0.57\textwidth}
+      \begin{block}{Đầu ra (\texttt{result/run/T4/peering/run\_1.json})}
+        \ttfamily\scriptsize
+        \{"req\_id": "PE-004",\\
+        \hspace*{1em}"type": "incompleteness",\\
+        \hspace*{1em}"subtype": "missing\_actor",\\
+        \hspace*{1em}"evidence": "are in place",\\
+        \hspace*{1em}"related\_ids": [],\\
+        \hspace*{1em}"rationale": "Omits which actor or system component defines, manages, and enforces the resource provisioning, delegation, and reservation policies, as well as the concrete policy rules."\}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \note{[Dương] Slide dự phòng nếu demo trực tiếp lỗi: đây là đầu ra thật của T4 (Neon + kỹ năng) cho yêu cầu PE-004, đúng lược đồ JSON của kỹ năng.}
 \end{frame}
 
 \end{document}

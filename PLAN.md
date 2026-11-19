@@ -225,12 +225,12 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ✅ done 2026-11-19T01:59Z; re-frozen 06:23Z after the prompt change (GT + SKILL.md + prompts) |
 | 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; smoke run OK; full T1–T4 run in progress (2026-11-19) |
 | 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ✅ done 2026-11-19: `result/metrics.csv`, `result/extra_analysis.json`, tables `overall_pure/overall_all/pure_by_type.tex`, 5 PURE charts in `report/figures/` |
-| 10 | Error analysis | 9 | ☐ |
+| 10 | Error analysis | 9 | ✅ blind AI second reviewer on 30 cases (`result/error_categories.json`); human check sheets ready (`dataset/human_check/`), scored by `score_human_check.py` when filled |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slide/hust_logo.png`, `report/figures/hust_logo.png`, `slide/hust_banner_white.png` from hust.edu.vn) |
-| 12 | `main.tex` → `main.pdf` | 9, 10, 11 | ⏳ Ch. 1–4, References & Appendix written + `xelatex` verified; Ch. 5–7 await Phase 3–6 results |
-| 13 | `beamerthemeHUST.sty` + `slides.tex` → PDFs | 9, 10, 11 | ⏳ HUST theme + Slides 1–10, 17–18 + notes written & `xelatex` verified; results slides await Phase 3–6 |
+| 12 | `main.tex` → `main.pdf` | 9, 10, 11 | ✅ Ch. 5–7 written; all numbers via `result/tables/numbers.tex`; human-check paragraphs switch on automatically |
+| 13 | `beamerthemeHUST.sty` + `slides.tex` → PDFs | 9, 10, 11 | ✅ 20 slides + full Vietnamese speaker script in notes |
 | 14 | Write `README.md` in Vietnamese (overview, layout, reproduction steps, status) | 12, 13 | ✅ done (refresh final metrics summary after step 15 if needed) |
-| 15 | Final check: numbers in report = slides = `metrics.csv`; references verified; PDFs compile without errors | 12, 13, 14 | ☐ |
+| 15 | Final check: numbers in report = slides = `metrics.csv`; references verified; PDFs compile without errors | 12, 13, 14 | ✅ `check_consistency.py --allow-pending-human` passes; 10 references checked online, 4 corrected. **Re-run without the flag after the human check** |
 
 ### Changes made on 2026-11-19 (review)
 - **SKILL.md leak fixed:** its examples had been copied from the seeded defects (5 vs 8 loans, 14 vs 21 days, bcrypt vs AES, Member vs Patron, …). They were replaced with neutral examples from other domains. Both prompts' schema example (`KP-019` "more than a line", a real PURE item) became `XX-001` "user-friendly".
@@ -264,6 +264,10 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - Stability (PURE): Jaccard 0.82–0.93, Fleiss κ 0.77–0.89.
 - Seeded doc at the ceiling (F1 0.96–1.00); SD-023 sensitivity changes F1 by ≤ 0.02; the count leak inflated seeded F1 by ≤ 0.04.
 - The SD over repeats is the sample SD (ddof=1). Charts are PURE-scoped with Vietnamese labels and a validated palette; the recall heatmap was replaced by an F1 heatmap, since LLM recall is at the ceiling.
+
+### Remaining after the human check
+1. Team fills `dataset/human_check/part_a.csv` and `part_b.csv` (README §7).
+2. `score_human_check.py` → `export_numbers.py` → rebuild the 3 PDFs → `check_consistency.py` (without `--allow-pending-human`) → commit and push.
 
 ## 7. Agent Assignment
 | Work | Agent |

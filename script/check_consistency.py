@@ -56,6 +56,8 @@ def check_git_no_coauthor() -> list[str]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pre-freeze", action="store_true")
+    ap.add_argument("--allow-pending-human", action="store_true",
+                    help="accept a report/slides whose human-check section is still marked as pending")
     args = ap.parse_args()
 
     errors: list[str] = []
@@ -86,17 +88,37 @@ def main() -> None:
                 errors.append(f"Missing chart: report/figures/{chart}")
         for tex in [REPORT_DIR / "main.tex", SLIDE_DIR / "slides.tex"]:
             content = tex.read_text(encoding="utf-8")
-            for marker in ["Đang chờ kết quả", "Chờ kết quả", "Chờ Phase", "Sẽ bổ sung"]:
+            for marker in ["Chờ kết quả", "Chờ bảng", "Chờ số liệu", "Chờ Phase", "Sẽ bổ sung", "Sẽ phân loại", "TODO"]:
                 if marker in content:
                     errors.append(f"{tex.name} still contains placeholder text: {marker!r}")
+            if "numbers.tex" not in content:
+                errors.append(f"{tex.name} does not \\input result/tables/numbers.tex")
+
+        # Every quoted number comes from numbers.tex: it must match the current result files exactly.
+        from export_numbers import build_text
+        numbers = RESULT_DIR / "tables" / "numbers.tex"
+        fresh = build_text()
+        if not numbers.exists() or numbers.read_text(encoding="utf-8") != fresh:
+            errors.append("result/tables/numbers.tex is stale: run script/export_numbers.py and rebuild the PDFs")
+        else:
+            for pdf in [REPORT_DIR / "main.pdf", SLIDE_DIR / "slides.pdf", SLIDE_DIR / "slides-notes.pdf"]:
+                if pdf.exists() and pdf.stat().st_mtime + 1 < numbers.stat().st_mtime:
+                    errors.append(f"{pdf.relative_to(ROOT)} is older than numbers.tex: rebuild it")
+        from export_numbers import update_readme
+        if not update_readme(fresh, write=False):
+            errors.append("README.md results block is stale: run script/export_numbers.py")
+        pending = "\\newcommand{\\numHumanCheckDone}{0}" in fresh
+        if pending and not args.allow_pending_human:
+            errors.append("human check still pending (fill dataset/human_check/*.csv, run score_human_check.py), "
+                          "or pass --allow-pending-human")
 
     if errors:
         for e in errors:
             print(f"FAIL: {e}", file=sys.stderr)
         sys.exit(1)
 
-    mode = "PRE-FREEZE" if args.pre_freeze else "FULL"
-    print(f"CONSISTENCY_OK ({mode}): TeX references, PDFs, and git commit hygiene verified.")
+    mode = "PRE-FREEZE" if args.pre_freeze else ("FULL, human check pending" if args.allow_pending_human else "FULL")
+    print(f"CONSISTENCY_OK ({mode}): TeX references, PDFs, numbers, hashes and git commit hygiene verified.")
 
 
 if __name__ == "__main__":
