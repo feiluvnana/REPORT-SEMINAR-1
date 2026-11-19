@@ -2,10 +2,10 @@
 
 Usage:
   # Before Phase 3-6 results exist (checks paths, PDFs, and no Co-Authored-By trailers):
-  REPORT/.venv/bin/python REPORT/eval/check_consistency.py --pre-freeze
+  REPORT/.venv/bin/python REPORT/script/check_consistency.py --pre-freeze
 
   # Full Step 15 check (requires frozen GT, metrics.csv, tables, charts, final TeX):
-  REPORT/.venv/bin/python REPORT/eval/check_consistency.py
+  REPORT/.venv/bin/python REPORT/script/check_consistency.py
 """
 import argparse
 import csv
@@ -21,7 +21,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
+from paths import ROOT, REPORT_DIR, SLIDE_DIR, FIG_DIR, RESULT_DIR  # noqa: E402
 
 
 def check_tex_refs(tex_path: Path, base_dir: Path, pic_dirs: list[Path]) -> list[str]:
@@ -60,31 +60,31 @@ def main() -> None:
 
     errors: list[str] = []
     errors.extend(check_git_no_coauthor())
-    errors.extend(check_tex_refs(ROOT / "main.tex", ROOT, [ROOT / "pic", ROOT]))
-    errors.extend(check_tex_refs(ROOT / "slides/slides.tex", ROOT / "slides", [ROOT / "pic", ROOT / "slides"]))
+    errors.extend(check_tex_refs(REPORT_DIR / "main.tex", REPORT_DIR, [FIG_DIR, REPORT_DIR]))
+    errors.extend(check_tex_refs(SLIDE_DIR / "slides.tex", SLIDE_DIR, [FIG_DIR, SLIDE_DIR]))
 
-    for pdf in [ROOT / "main.pdf", ROOT / "slides/slides.pdf", ROOT / "slides/slides-notes.pdf"]:
+    for pdf in [REPORT_DIR / "main.pdf", SLIDE_DIR / "slides.pdf", SLIDE_DIR / "slides-notes.pdf"]:
         if not pdf.exists():
             errors.append(f"Missing compiled PDF: {pdf}")
 
     if not args.pre_freeze:
         if not verify_hashes():
             errors.append("HASHES.txt verification failed.")
-        metrics_csv = ROOT / "eval/results/metrics.csv"
+        metrics_csv = RESULT_DIR / "metrics.csv"
         if not metrics_csv.exists():
-            errors.append("Missing eval/results/metrics.csv")
+            errors.append("Missing result/metrics.csv")
         else:
             with metrics_csv.open(encoding="utf-8") as fh:
                 rows = list(csv.DictReader(fh))
             if not rows:
-                errors.append("eval/results/metrics.csv is empty.")
+                errors.append("result/metrics.csv is empty.")
         for chart in [
             "prf1_by_tool.png", "recall_heatmap.png", "skill_effect.png",
             "stability.png", "miss_rate_by_type.png",
         ]:
-            if not (ROOT / "pic" / chart).exists():
-                errors.append(f"Missing chart: pic/{chart}")
-        for tex in [ROOT / "main.tex", ROOT / "slides/slides.tex"]:
+            if not (FIG_DIR / chart).exists():
+                errors.append(f"Missing chart: report/figures/{chart}")
+        for tex in [REPORT_DIR / "main.tex", SLIDE_DIR / "slides.tex"]:
             content = tex.read_text(encoding="utf-8")
             for marker in ["Đang chờ kết quả", "Chờ kết quả", "Chờ Phase", "Sẽ bổ sung"]:
                 if marker in content:

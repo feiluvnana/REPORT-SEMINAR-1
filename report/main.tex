@@ -40,7 +40,7 @@
 \captionsetup[table]{labelsep=space, font=small, labelfont=bf}
 \captionsetup[subfigure]{labelformat=simple}
 
-\graphicspath{{pic/}}
+\graphicspath{{figures/}}
 
 % ============================================================
 %  PAGE LAYOUT
@@ -344,12 +344,12 @@ Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật v�
 \section{Giao thức tạo chuẩn chuyên gia và đóng băng dữ liệu}
 Để giảm thiểu thiên lệch tự ưu tiên (\textit{self-preference bias}), vai trò chuyên gia được gán cố định cho mô hình \textbf{Claude Opus}, tách biệt hoàn toàn với họ mô hình Gemini của các công cụ đánh giá. Quy trình gồm 5 bước:
 \begin{enumerate}
-  \item \textbf{Hướng dẫn gắn nhãn:} Cả hai lượt dùng chung \texttt{ground\_truth/annotation\_guideline.md} gồm phân loại, tiêu chí phán đoán (\textit{chỉ gắn nhãn khi người rà soát cẩn thận sẽ yêu cầu tác giả sửa}) và quy tắc chuẩn hóa. Tài liệu này tách biệt với \texttt{SKILL.md} và chỉ dùng ví dụ trung lập không lấy từ bộ dữ liệu.
+  \item \textbf{Hướng dẫn gắn nhãn:} Cả hai lượt dùng chung \texttt{dataset/ground\_truth/annotation\_guideline.md} gồm phân loại, tiêu chí phán đoán (\textit{chỉ gắn nhãn khi người rà soát cẩn thận sẽ yêu cầu tác giả sửa}) và quy tắc chuẩn hóa. Tài liệu này tách biệt với \texttt{SKILL.md} và chỉ dùng ví dụ trung lập không lấy từ bộ dữ liệu.
   \item \textbf{Lượt 1 (Pass 1):} Một tác tử Claude Opus mới, chỉ được đọc thư mục tạm chứa 3 tài liệu PURE và hướng dẫn gắn nhãn, gắn nhãn 107 yêu cầu thành \texttt{expert\_pass1.json}.
   \item \textbf{Lượt 2 (Pass 2):} Một tác tử Claude Opus hoàn toàn mới (không được truy cập kết quả lượt 1 hay \texttt{seed\_key.json}) gắn nhãn toàn bộ 147 yêu cầu thành \texttt{expert\_pass2.json}.
   \item \textbf{Đo tự nhất quán và kiểm định:} Tính hệ số \textbf{Cohen's $\kappa$} giữa lượt 1 và lượt 2 trên $107 \times 3 = 321$ cặp nhị phân \texttt{(req\_id, type)} của bộ PURE; đồng thời đo Recall của lượt 2 trên tập \texttt{seeded\_lms} đối chiếu với \texttt{seed\_key.json}.
   \item \textbf{Phân xử (\textit{Adjudication}):} Giải quyết mọi bất đồng giữa hai lượt trên PURE và ghi nhận lý do vào \texttt{adjudication\_log.md} để chốt \texttt{final\_gt.json} (riêng \texttt{seeded\_lms} giữ nguyên đáp án chính xác từ \texttt{seed\_key.json}).
-  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
+  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{dataset/ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
 \end{enumerate}
 
 \section{Quy tắc khớp và các độ đo đánh giá}
@@ -397,7 +397,7 @@ Nghiên cứu sử dụng tổng cộng \textbf{147 yêu cầu} từ 4 tài li�
 \end{table}
 
 \section{Thiết kế tập dữ liệu cấy lỗi kiểm soát (\texttt{seeded\_lms})}
-Tài liệu \texttt{seeded\_lms} được tạo tự động qua mã \texttt{eval/seed\_defects.py} từ 40 yêu cầu gốc viết chặt chẽ (đầy đủ tác nhân, giá trị, đơn vị và xử lý lỗi). Mã nguồn thay thế 30 yêu cầu trong số đó bằng các phiên bản lỗi thuộc 12 tiểu loại cụ thể (Bảng~\ref{tab:seeded_dist}), đồng thời bảo toàn 10 yêu cầu sạch dùng làm đối chứng cho cả lỗi giả lẫn các cặp mâu thuẫn (mỗi yêu cầu \texttt{inconsistency} đều mâu thuẫn trực tiếp với một yêu cầu sạch xuất hiện trước đó).
+Tài liệu \texttt{seeded\_lms} được tạo tự động qua mã \texttt{script/seed\_defects.py} từ 40 yêu cầu gốc viết chặt chẽ (đầy đủ tác nhân, giá trị, đơn vị và xử lý lỗi). Mã nguồn thay thế 30 yêu cầu trong số đó bằng các phiên bản lỗi thuộc 12 tiểu loại cụ thể (Bảng~\ref{tab:seeded_dist}), đồng thời bảo toàn 10 yêu cầu sạch dùng làm đối chứng cho cả lỗi giả lẫn các cặp mâu thuẫn (mỗi yêu cầu \texttt{inconsistency} đều mâu thuẫn trực tiếp với một yêu cầu sạch xuất hiện trước đó).
 
 \begin{table}[H]
 \centering
@@ -432,13 +432,13 @@ Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.
 Kiểm thử thực nghiệm cho thấy cờ \texttt{--sandbox} của \texttt{agy} chỉ cô lập lệnh terminal, \textbf{không} chặn công cụ đọc tệp, và công cụ tìm kiếm web không thể tắt. Vì vậy nghiên cứu áp dụng 4 lớp bảo vệ chống rò rỉ đáp án:
 \begin{enumerate}
   \item \textbf{Quyền công cụ:} mọi lượt chạy dùng \texttt{--settings} với \texttt{toolPermission = request-review}, tự động từ chối mọi thao tác không nằm trong danh sách cho phép; riêng T2/T4 chỉ được phép đọc tệp \textit{bên trong} thư mục tạm của chính lượt chạy (nơi chứa \texttt{SKILL.md}).
-  \item \textbf{Cách ly vật lý:} \texttt{ground\_truth/} được chuyển ra ngoài kho mã trong suốt thời gian chạy và khôi phục khi kết thúc.
+  \item \textbf{Cách ly vật lý:} \texttt{dataset/ground\_truth/} được chuyển ra ngoài kho mã trong suốt thời gian chạy và khôi phục khi kết thúc.
   \item \textbf{Kiểm toán vết công cụ:} đầu ra \texttt{stream-json} ghi lại từng lời gọi công cụ; \texttt{parse\_tool\_output.py} loại bỏ lượt chạy nếu có tìm kiếm web, truy cập URL, trình duyệt, lệnh terminal, hoặc đọc tệp ngoài thư mục tạm, và với T2/T4 \textbf{bắt buộc} có lời gọi đọc \texttt{SKILL.md} (chứng minh kỹ năng thực sự được nạp).
   \item \textbf{Chỉ dẫn trong prompt:} cả hai prompt cấm tìm kiếm web và công cụ ngoài với cùng một câu chữ.
 \end{enumerate}
 Các lượt Plain chạy trong thư mục tạm chỉ chứa tài liệu đầu vào và truyền thêm \texttt{--disable-slash-commands}; máy chạy không cài kỹ năng toàn cục nào của \texttt{agy}, nên T1--T4 có cùng ngữ cảnh ngoài khác biệt về kỹ năng.
 
-Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{eval/parse\_tool\_output.py} để tách gói \texttt{stream-json} của CLI, kiểm toán vết công cụ và kiểm tra hợp lệ lược đồ; thời gian chạy và số token được lưu vào \texttt{run\_k.meta.json}. Lượt chạy lỗi (định dạng, quá thời gian hoặc không qua kiểm toán) được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
+Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{script/parse\_tool\_output.py} để tách gói \texttt{stream-json} của CLI, kiểm toán vết công cụ và kiểm tra hợp lệ lược đồ; thời gian chạy và số token được lưu vào \texttt{run\_k.meta.json}. Lượt chạy lỗi (định dạng, quá thời gian hoặc không qua kiểm toán) được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
 
 % ============================================================
 %  CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM (CHỜ SỐ LIỆU PHASE 3-6)
@@ -446,7 +446,7 @@ Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài l
 \chapter{Kết quả thực nghiệm}
 
 \begin{notebox}
-Chương này sẽ tự động cập nhật bằng các bảng \LaTeX\ từ \texttt{eval/results/tables/} và 5 biểu đồ từ \texttt{pic/} sau khi hoàn tất Phase 3 (chuẩn chuyên gia Claude + đóng băng SHA-256), Phase 4 (chạy các công cụ LLM) và Phase 5 (\texttt{eval/evaluate.py}).
+Chương này sẽ tự động cập nhật bằng các bảng \LaTeX\ từ \texttt{result/tables/} và 5 biểu đồ từ \texttt{report/figures/} sau khi hoàn tất Phase 3 (chuẩn chuyên gia Claude + đóng băng SHA-256), Phase 4 (chạy các công cụ LLM) và Phase 5 (\texttt{script/evaluate.py}).
 \end{notebox}
 
 \section{Độ tin cậy chuẩn chuyên gia ($\kappa$ và kiểm định trên \texttt{seeded\_lms})}
@@ -475,16 +475,16 @@ Theo thang Landis--Koch, $\kappa = 0{,}81$ thuộc mức ``gần như hoàn hả
 Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quyết định có lý do trong \texttt{adjudication\_log.md}, ưu tiên nhất quán với cách cả hai lượt đã xử lý cùng một mẫu ở nơi khác (ví dụ kiểm tra đầu vào không nêu hành vi khi lỗi được tính là \texttt{missing\_error\_handling}). Chuẩn cuối cùng (\texttt{final\_gt.json}) gồm \textbf{82 phát hiện}: \texttt{keepass} 11, \texttt{peering} 15, \texttt{gammaj} 26, \texttt{seeded\_lms} 30. Toàn bộ tệp chuẩn, \texttt{SKILL.md} và hai prompt được đóng băng SHA-256 ngày 19/11/2026, trước khi chạy bất kỳ công cụ LLM nào.
 
 \section{Hiệu năng phát hiện tổng thể (RQ1)}
-\textit{(Chờ bảng \texttt{overall\_metrics.tex} và biểu đồ \texttt{pic/prf1\_by\_tool.png} sau Phase 5.)}
+\textit{(Chờ bảng \texttt{overall\_metrics.tex} và biểu đồ \texttt{report/figures/prf1\_by\_tool.png} sau Phase 5.)}
 
 \section{Tác động của kỹ năng \texttt{SKILL.md} (RQ2)}
-\textit{(Chờ số liệu $\Delta F_1$ ghép cặp và biểu đồ \texttt{pic/skill\_effect.png} sau Phase 5.)}
+\textit{(Chờ số liệu $\Delta F_1$ ghép cặp và biểu đồ \texttt{report/figures/skill\_effect.png} sau Phase 5.)}
 
 \section{So sánh theo loại khiếm khuyết (RQ3)}
-\textit{(Chờ bảng \texttt{by\_type\_metrics.tex}, \texttt{pic/recall\_heatmap.png} và \texttt{pic/miss\_rate\_by\_type.png}.)}
+\textit{(Chờ bảng \texttt{by\_type\_metrics.tex}, \texttt{report/figures/recall\_heatmap.png} và \texttt{report/figures/miss\_rate\_by\_type.png}.)}
 
 \section{Tính ổn định qua các lượt chạy lặp (RQ4)}
-\textit{(Chờ chỉ số Jaccard, Fleiss' $\kappa$ và biểu đồ \texttt{pic/stability.png}.)}
+\textit{(Chờ chỉ số Jaccard, Fleiss' $\kappa$ và biểu đồ \texttt{report/figures/stability.png}.)}
 
 % ============================================================
 %  CHƯƠNG 6: THẢO LUẬN
@@ -492,7 +492,7 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
 \chapter{Thảo luận}
 
 \section{Phân tích lỗi chi tiết (False Positives \& False Negatives)}
-\textit{(Sẽ phân loại khoảng 30 cảnh báo giả và 30 trường hợp bỏ sót từ \texttt{eval/results/error\_samples.json} kèm 4--6 ví dụ cụ thể trong Phase 6.)}
+\textit{(Sẽ phân loại khoảng 30 cảnh báo giả và 30 trường hợp bỏ sót từ \texttt{result/error\_samples.json} kèm 4--6 ví dụ cụ thể trong Phase 6.)}
 
 \section{Các mối đe dọa tính hợp lệ (\textit{Threats to Validity})}
 \begin{itemize}
@@ -565,13 +565,13 @@ Trong 16 bất đồng, 9 được chấp nhận và 7 bị bác bỏ; mỗi quy
 \chapter{Phụ lục: Kỹ năng, Câu lệnh và Dữ liệu mẫu}
 
 \section{Toàn văn kỹ năng \texttt{SKILL.md}}
-\lstinputlisting[caption={Tệp kỹ năng \texttt{skill/req-defect-detector/SKILL.md}}]{skill/req-defect-detector/SKILL.md}
+\lstinputlisting[caption={Tệp kỹ năng \texttt{prompt/SKILL.md}}]{../prompt/SKILL.md}
 
 \section{Câu lệnh thuần (\texttt{plain\_prompt.txt}) và câu lệnh kèm kỹ năng (\texttt{skill\_prompt.txt})}
-\lstinputlisting[caption={Tệp \texttt{prompts/plain\_prompt.txt}}]{prompts/plain_prompt.txt}
-\lstinputlisting[caption={Tệp \texttt{prompts/skill\_prompt.txt}}]{prompts/skill_prompt.txt}
+\lstinputlisting[caption={Tệp \texttt{prompt/plain.txt}}]{../prompt/plain.txt}
+\lstinputlisting[caption={Tệp \texttt{prompt/skill.txt}}]{../prompt/skill.txt}
 
 \section{Ví dụ đầu ra JSON từ công cụ nền tảng \texttt{T0} trên \texttt{peering}}
-\lstinputlisting[caption={Trích đoạn kết quả JSON chuẩn hóa (\texttt{runs/T0/peering/run\_1.json})}]{runs/T0/peering/run_1.json}
+\lstinputlisting[caption={Trích đoạn kết quả JSON chuẩn hóa (\texttt{result/run/T0/peering/run\_1.json})}]{../result/run/T0/peering/run_1.json}
 
 \end{document}

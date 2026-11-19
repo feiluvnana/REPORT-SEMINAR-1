@@ -23,10 +23,8 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS_DIR = ROOT / "eval/results"
-TABLES_DIR = RESULTS_DIR / "tables"
-PIC_DIR = ROOT / "pic"
+from paths import ROOT, GT_DIR, RUN_DIR, TABLES_DIR, doc_path  # noqa: E402
+from paths import RESULT_DIR as RESULTS_DIR, FIG_DIR as PIC_DIR  # noqa: E402
 
 DOCS_PURE = ["keepass", "peering", "gammaj"]
 DOCS_ALL = ["keepass", "peering", "gammaj", "seeded_lms"]
@@ -34,11 +32,11 @@ TYPES = ["ambiguity", "incompleteness", "inconsistency"]
 
 
 def load_docs() -> dict[str, dict]:
-    return {d: json.loads((ROOT / f"data/{d}.json").read_text(encoding="utf-8")) for d in DOCS_ALL}
+    return {d: json.loads(doc_path(d).read_text(encoding="utf-8")) for d in DOCS_ALL}
 
 
 def load_gt() -> dict[str, list[dict]]:
-    raw = json.loads((ROOT / "ground_truth/final_gt.json").read_text(encoding="utf-8"))
+    raw = json.loads((GT_DIR / "final_gt.json").read_text(encoding="utf-8"))
     if "docs" in raw:
         return {k: v["findings"] for k, v in raw["docs"].items()}
     return {k: (v["findings"] if isinstance(v, dict) else v) for k, v in raw.items()}
@@ -233,14 +231,14 @@ def bootstrap_ci_f1(
 
 
 def discover_tools() -> list[str]:
-    runs_root = ROOT / "runs"
+    runs_root = RUN_DIR
     if not runs_root.exists():
         return []
     return sorted(p.name for p in runs_root.iterdir() if p.is_dir())
 
 
 def load_tool_runs(tool: str, docs: dict[str, dict]) -> list[dict[str, list[dict]]]:
-    tool_dir = ROOT / "runs" / tool
+    tool_dir = RUN_DIR / tool
     # Determine repeat indices present across all 4 docs
     rep_sets = []
     for d in DOCS_ALL:

@@ -1,7 +1,7 @@
 """Rule-based baseline SRS defect detector (T0 — Smella/QuARS-style smells).
 
-Runs deterministically over all 4 normalized documents in REPORT/data/ and writes
-REPORT/runs/T0/<doc>/run_1.json matching the shared findings schema.
+Runs deterministically over all 4 normalized documents in REPORT/dataset/ and writes
+REPORT/result/run/T0/<doc>/run_1.json matching the shared findings schema.
 """
 import json
 import re
@@ -13,7 +13,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
+from paths import ROOT, RUN_DIR, doc_path  # noqa: E402
 DOCS = ["keepass", "peering", "gammaj", "seeded_lms"]
 
 VAGUE_WORDS = [
@@ -127,9 +127,9 @@ def detect_doc(doc: dict) -> dict:
 
 def main() -> None:
     for doc_id in DOCS:
-        doc = json.loads((ROOT / f"data/{doc_id}.json").read_text(encoding="utf-8"))
+        doc = json.loads(doc_path(doc_id).read_text(encoding="utf-8"))
         out = detect_doc(doc)
-        out_dir = ROOT / f"runs/T0/{doc_id}"
+        out_dir = RUN_DIR / "T0" / doc_id
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "run_1.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
         by_type = {}

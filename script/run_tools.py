@@ -31,8 +31,8 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from check_gt import verify as verify_hashes  # noqa: E402
 
 PARSER = SCRIPT_DIR / "parse_tool_output.py"
-GT_DIR = ROOT / "ground_truth"
-STATUS_FILE = ROOT / "runs" / "run_status.csv"
+from paths import GT_DIR, RUN_DIR, SKILL_FILE, PLAIN_PROMPT, SKILL_PROMPT, doc_path  # noqa: E402
+STATUS_FILE = RUN_DIR / "run_status.csv"
 ALL_TOOLS = ["T1", "T2", "T3", "T4"]
 ALL_DOCS = ["keepass", "peering", "gammaj", "seeded_lms"]
 QUOTA_RE = re.compile(r"RESOURCE_EXHAUSTED|quota|rate[ _-]?limit|too many requests|\b429\b|exhausted", re.I)
@@ -115,7 +115,7 @@ def append_status(row: list) -> None:
 
 
 def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
-    out_dir = ROOT / "runs" / tool / doc_id
+    out_dir = RUN_DIR / tool / doc_id
     out_json = out_dir / f"run_{rep}.json"
     out_log = out_dir / f"run_{rep}.log"
     out_meta = out_dir / f"run_{rep}.meta.json"
@@ -124,20 +124,20 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
         print(f"SKIP existing: {tool}/{doc_id}/run_{rep}.json")
         return True
 
-    doc_path = ROOT / "data" / f"{doc_id}.json"
+    doc_file = doc_path(doc_id)
     use_skill = TOOL_CFG[tool]["skill"]
-    prompt_file = ROOT / "prompts" / ("skill_prompt.txt" if use_skill else "plain_prompt.txt")
-    doc_text = doc_path.read_text(encoding="utf-8")
+    prompt_file = SKILL_PROMPT if use_skill else PLAIN_PROMPT
+    doc_text = doc_file.read_text(encoding="utf-8")
     full_prompt = (prompt_file.read_text(encoding="utf-8")
                    + f"\n\nDocument JSON ({doc_id}.json):\n" + doc_text)
 
     scratch = Path(tempfile.mkdtemp(prefix=f"srs_run_{tool}_{doc_id}_r{rep}_"))
     try:
-        shutil.copy2(doc_path, scratch / f"{doc_id}.json")
+        shutil.copy2(doc_file, scratch / f"{doc_id}.json")
         if use_skill:
             skill_dst = scratch / "skill" / "req-defect-detector"
             skill_dst.mkdir(parents=True)
-            shutil.copy2(ROOT / "skill" / "req-defect-detector" / "SKILL.md", skill_dst / "SKILL.md")
+            shutil.copy2(SKILL_FILE, skill_dst / "SKILL.md")
 
         for attempt in (1, 2):
             wait_s = QUOTA_WAIT_S
@@ -161,7 +161,7 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
                 time.sleep(wait_s)
                 wait_s = min(wait_s * 2, QUOTA_WAIT_MAX_S)
 
-            parser_cmd = [sys.executable, str(PARSER), "--raw", str(out_log), "--doc", str(doc_path),
+            parser_cmd = [sys.executable, str(PARSER), "--raw", str(out_log), "--doc", str(doc_file),
                           "--out", str(out_json), "--workspace", str(scratch), "--meta", str(out_meta)]
             if use_skill:
                 parser_cmd.append("--require-skill")
@@ -184,7 +184,7 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
 
 
 def audit_logs() -> None:
-    hits = [p for p in sorted((ROOT / "runs").glob("T[1-4]/*/run_*.log"))
+    hits = [p for p in sorted(RUN_DIR.glob("T[1-4]/*/run_*.log"))
             if AUDIT_RE.search(p.read_text(encoding="utf-8", errors="replace"))]
     if hits:
         for p in hits:

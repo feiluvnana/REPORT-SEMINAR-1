@@ -1,10 +1,11 @@
 # Frozen UTC timestamp: 2026-11-19T06:23:26.682529+00:00
+# 2026-11-19: paths rewritten after the folder restructure (skill/ + prompts/ -> prompt/, ground_truth/ -> dataset/ground_truth/); digests and freeze time unchanged.
 dd5fc34683f78ddcf4694791a5b4c01a9b31962c0de0e1e11baa7e8a99d81cb4  adjudication_log.md
 3587728062fd03cff28f9a8745b11445c41453b66e8c0b6aa40d6cd2443e7031  annotation_guideline.md
 14a79b2228d5327e7acd26cdb4da46f440ec7cbc23b4d28c0138454a4f502ff4  expert_pass1.json
 f668d76b7863bea3527e536e34d733644d7b83e1aea184db7b29604dc7046518  expert_pass2.json
 0316c879c9901e1b681a7f0c4532c347f8ce4a73c817a92aeca87db1822aacc9  final_gt.json
 25e429c726226bccfdbb67e82ce7e5b7ac473f64e69990ec569a3c5cbb5065a5  seed_key.json
-6be9c148cfef0c80d170ea1032e7ce66a600b56e67840418de04047ade90d5b6  ../skill/req-defect-detector/SKILL.md
-e299714e701607ca1d7375b2d0b508f8b9603794b091a6f2ae70dfbffe4adffe  ../prompts/plain_prompt.txt
-711cb39e1e6f57f86e72e830154305265d33021b9cfcda9b8477ffa8920075c6  ../prompts/skill_prompt.txt
+6be9c148cfef0c80d170ea1032e7ce66a600b56e67840418de04047ade90d5b6  ../../prompt/SKILL.md
+e299714e701607ca1d7375b2d0b508f8b9603794b091a6f2ae70dfbffe4adffe  ../../prompt/plain.txt
+711cb39e1e6f57f86e72e830154305265d33021b9cfcda9b8477ffa8920075c6  ../../prompt/skill.txt

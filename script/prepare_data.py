@@ -8,8 +8,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data/raw/pure_xml/XMLZIPFile"
+from paths import RAW_DIR as RAW, doc_path  # noqa: E402
 DOCS = {"keepass": "2008 - keepass.xml", "peering": "2008 - peering.xml", "gammaj": "0000 - gamma j.xml"}
 TITLE_OVERRIDE = {"gammaj": "Web Store (Gamma J)"}  # first <title> in this file is nested/empty
 PREFIX = {"keepass": "KP", "peering": "PE", "gammaj": "GJ"}
@@ -29,5 +28,5 @@ for key, fname in DOCS.items():
         if t:
             reqs.append({"req_id": f"{PREFIX[key]}-{i:03d}", "text": t})
     out = {"doc_id": key, "title": title, "source": f"PURE dataset (Ferrari et al., 2017): {fname}", "requirements": reqs}
-    (ROOT / f"data/{key}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
+    doc_path(key).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
     print(key, title, len(reqs))

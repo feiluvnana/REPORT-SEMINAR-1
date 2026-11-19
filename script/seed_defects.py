@@ -1,8 +1,8 @@
 """Build the seeded Library Management System (LMS) SRS and its exact answer key.
 
 Generates:
-  - REPORT/data/seeded_lms.json       (40 requirements, no defect labels)
-  - REPORT/ground_truth/seed_key.json (30 canonical ground-truth findings: 10 per type)
+  - REPORT/dataset/seeded_lms.json    (40 requirements, no defect labels)
+  - REPORT/dataset/ground_truth/seed_key.json (30 canonical ground-truth findings: 10 per type)
 
 Each of the 10 seeded inconsistency findings is anchored on a later req_id and
 contradicts an earlier clean requirement listed in `related_ids`.
@@ -16,7 +16,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
+from paths import GT_DIR, doc_path  # noqa: E402
 
 # 40 requirements arranged across realistic LMS SRS modules.
 # Clean items appear early enough so every inconsistency seed pairs with an earlier clean item.
@@ -696,8 +696,8 @@ def main() -> None:
         "original_texts": originals,
     }
 
-    (ROOT / "data/seeded_lms.json").write_text(json.dumps(doc_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
-    (ROOT / "ground_truth/seed_key.json").write_text(json.dumps(key_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    doc_path("seeded_lms").write_text(json.dumps(doc_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    (GT_DIR / "seed_key.json").write_text(json.dumps(key_out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
 
     print("Generated seeded_lms.json (40 reqs) and seed_key.json (30 findings)")
     print("Type counts:", by_type)

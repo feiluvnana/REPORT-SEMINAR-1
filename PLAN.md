@@ -32,44 +32,23 @@ This is an empirical study: **tool + public dataset + expert ground truth + comp
 - **Each phase or tool run is done by a separate agent** (§7).
 - **Language:** the report and slides are written in Vietnamese. Code, data, and this plan are in English.
 - **Team details** are kept in one file (`meta.tex`) shared by the report and slides: Nhóm 4 — Nguyễn Tùng Dương (20251175M, nhóm trưởng), Trần Xuân Nam (20251177M), Phạm Gia Khánh (20252636M); lecturer TS. Nguyễn Thanh Hùng (Khoa Khoa học Máy tính, SoICT).
-- **HUST logo** is fetched from public HUST sources (hust.edu.vn or Wikimedia Commons) into `slides/` and `pic/`.
+- **HUST logo** is fetched from public HUST sources (hust.edu.vn or Wikimedia Commons) into `slide/` and `report/figures/`.
 - **Git commit hygiene:** never include any `Co-Authored-By:` or co-author trailer lines in commit messages.
 
-## 3. Folder Layout (`REPORT/`)
+## 3. Folder Layout (`REPORT/`, restructured 2026-11-19)
 
 ```
 REPORT/
-├── PLAN.md
-├── README.md                # Vietnamese repository guide & reproduction instructions
-├── meta.tex                 # lecturer, group, members, semester (shared by report + slides)
-├── data/
-│   ├── raw/pure_xml/        # PURE XML (downloaded from Zenodo)
-│   ├── keepass.json  peering.json  gammaj.json     # normalized: doc_id, title, source, requirements[{req_id,text}]
-│   └── seeded_lms.json      # seeded document (no labels inside)
-├── skill/req-defect-detector/SKILL.md
-├── prompts/                 # plain_prompt.txt, skill_prompt.txt (identical task wording)
-├── ground_truth/
-│   ├── expert_pass1.json    # Claude main session (PURE docs)
-│   ├── expert_pass2.json    # independent fresh Claude subagent (all 4 docs)
-│   ├── seed_key.json        # exact answer key for the seeded document
-│   ├── final_gt.json        # adjudicated ground truth
-│   ├── adjudication_log.md
-│   └── HASHES.txt           # SHA-256 + timestamp, written BEFORE any tool run
-├── runs/<tool>/<doc>/run_<k>.json  (+ .log raw stdout)
-├── eval/
-│   ├── prepare_data.py      # PURE XML → JSON
-│   ├── seed_defects.py      # builds seeded_lms.json + seed_key.json
-│   ├── baseline_rules.py    # T0
-│   ├── run_tools.sh         # runs T1–T4 × docs × 3 repeats
-│   ├── evaluate.py          # matching + metrics + charts
-│   ├── check_consistency.py # Step 15 consistency & git-commit check
-│   └── results/             # metrics.csv, tables/*.tex
-├── pic/                     # charts + logo (shared by report & slides)
-├── main.tex → main.pdf
-└── slides/
-    ├── beamerthemeHUST.sty
-    ├── hust_logo.png
-    └── slides.tex → slides.pdf, slides-notes.pdf
+├── README.md  PLAN.md  .gitattributes  .gitignore
+├── dataset/                 # inputs + answer key
+│   ├── raw/pure_xml/        # PURE XML (Zenodo)
+│   ├── keepass.json  peering.json  gammaj.json  seeded_lms.json
+│   └── dataset/ground_truth/        # expert_pass1/2, final_gt, seed_key, annotation_guideline, adjudication_log, HASHES.txt
+├── prompt/                  # plain.txt, skill.txt, SKILL.md (runner copies SKILL.md to skill/req-defect-detector/ in each scratch dir)
+├── script/                  # paths.py (all paths) + every .py/.sh
+├── result/                  # run/<tool>/<doc>/run_k.{json,log,meta.json} + run_status.csv, metrics.csv, *.json, tables/
+├── report/                  # main.tex, main.pdf, meta.tex (shared with slides), figures/ (charts + logo)
+└── slide/                   # slides.tex, slides-notes.tex, beamerthemeHUST.sty, logos, PDFs
 ```
 
 ## 4. Phases
@@ -100,7 +79,7 @@ Planned injections:
 | Incompleteness (10) | TBD / undefined value (4), missing actor (1), missing error handling (1), missing consequence or timeout (3), missing quantity (1) | "renew at most *TBD* times", "lock the account after 5 failed attempts" (no duration) |
 | Inconsistency (10) | conflicting values (5), conflicting rules (4), terminology ("patron" vs "member") (1) | max 5 loans vs "may borrow up to 8 items"; bcrypt hashing vs "AES so librarians can retrieve passwords" |
 
-**Status:** PURE part done: downloaded, `eval/prepare_data.py` run → 107 requirements, Gamma J title fixed. It uses regex parsing because Python's `pyexpat` is broken on this machine. **Remaining (step 2):** write `seed_defects.py`.
+**Status:** PURE part done: downloaded, `script/prepare_data.py` run → 107 requirements, Gamma J title fixed. It uses regex parsing because Python's `pyexpat` is broken on this machine. **Remaining (step 2):** write `seed_defects.py`.
 
 ### Phase 2 — Defect Taxonomy (shared by expert and tools)
 Based on IEEE 830 / ISO/IEC/IEEE 29148 quality attributes and Berry et al.'s *Ambiguity Handbook*.
@@ -134,18 +113,18 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 
 | ID | Tool | Model (non-Claude) | Setting | Command sketch |
 |---|---|---|---|---|
-| T0 | `baseline_rules.py` | — | Word lists + regex (vague words, TBD, passive voice without an actor, duplicates by text similarity) | `python3 eval/baseline_rules.py` |
+| T0 | `baseline_rules.py` | — | Word lists + regex (vague words, TBD, passive voice without an actor, duplicates by text similarity) | `python3 script/baseline_rules.py` |
 | T1 | agy | `gemini-4-hydrogen-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-hydrogen-high --output-format json -p "<plain + doc>"` |
 | T2 | agy | `gemini-4-hydrogen-high` | + skill | `agy --sandbox --model gemini-4-hydrogen-high --output-format json -p "<skill + doc>"` |
 | T3 | agy | `gemini-4-neon-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-neon-high --output-format json -p "<plain + doc>"` |
 | T4 | agy | `gemini-4-neon-high` | + skill | `agy --sandbox --model gemini-4-neon-high --output-format json -p "<skill + doc>"` |
 
 - 4 LLM configurations × 4 documents × **3 repeats** = **48 LLM runs**, plus T0.
-- Tools run in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands`; `skill` with `skill/req-defect-detector/SKILL.md`), never `ground_truth/`, using `--sandbox` so `agy` executes cleanly and returns JSON instead of entering planning mode.
+- Tools run in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands`; `skill` with `prompt/SKILL.md`), never `dataset/ground_truth/`, using `--sandbox` so `agy` executes cleanly and returns JSON instead of entering planning mode.
 - Plain and skill prompts share the same task sentence and output schema. The only difference is the taxonomy and checklist in the skill.
-- `run_tools.sh` saves raw CLI output (`.log`), unwraps `--output-format json` CLI envelopes and validates the findings schema (`eval/parse_tool_output.py`), and uses per-run timeouts (`--print-timeout 180s`). Invalid JSON or schema errors get one retry; a second failure is logged as a failed run, never silently dropped.
+- `run_tools.sh` saves raw CLI output (`.log`), unwraps `--output-format json` CLI envelopes and validates the findings schema (`script/parse_tool_output.py`), and uses per-run timeouts (`--print-timeout 180s`). Invalid JSON or schema errors get one retry; a second failure is logged as a failed run, never silently dropped.
 
-### Phase 5 — Metrics Script (`eval/evaluate.py`)
+### Phase 5 — Metrics Script (`script/evaluate.py`)
 - **Pre-matching normalization:** collapse duplicate `(req_id, type)` predictions and deduplicate symmetric inconsistency predictions (where two predicted inconsistency findings cross-reference each other via `related_ids`) so tools are not penalized for reporting both ends of a conflict pair.
 - **Matching**
   - **strict:** same `req_id` + same `type`. An inconsistency finding also matches if it is on any of the ground truth's `related_ids`.
@@ -159,7 +138,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - **Uncertainty:** bootstrap 95% CI over requirements (1000 resamples).
 - **Stability:** Jaccard overlap of findings between repeats, and Fleiss' κ across the 3 runs over `(req_id, type)` binary pairs (`147 × 3 = 441` overall; `107 × 3 = 321` PURE).
 - **Skill effect:** ΔF1 for T2 − T1 and T4 − T3, with a paired bootstrap.
-- **Outputs:** `results/metrics.csv`, LaTeX tables in `results/tables/`, and charts in `pic/`:
+- **Outputs:** `results/metrics.csv`, LaTeX tables in `results/tables/`, and charts in `report/figures/`:
   - P/R/F1 bar chart per tool
   - Recall heatmap, tool × defect type
   - Skill-effect chart
@@ -178,7 +157,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 
 ### Phase 7 — Report (`main.tex` → `main.pdf`)
 - Keep the template's colors and `tcolorbox` environments (`notebox`, `examplebox`, `definitionbox`), while replacing all content, headers, and `hypersetup` metadata. Compile with **xelatex** (`latexmk -xelatex`), using `\usepackage[english,vietnamese]{babel}` (so Vietnamese is the active main language for `\chaptername`/`\tablename`/`\contentsname`) and `fontspec`/removed `inputenc` & `T5 fontenc`.
-- Title page fields come from `meta.tex`: HUST logo (`pic/hust_logo.png`), Đại học Bách khoa Hà Nội, Trường CNTT&TT, Seminar 1, topic A1, lecturer, group, members.
+- Title page fields come from `meta.tex`: HUST logo (`report/figures/hust_logo.png`), Đại học Bách khoa Hà Nội, Trường CNTT&TT, Seminar 1, topic A1, lecturer, group, members.
 - Chapters:
   1. **Giới thiệu:** motivation (cost of requirement defects), problem A1, RQ1–RQ4, contributions
   2. **Cơ sở lý thuyết:** SRS quality (IEEE 830 / ISO 29148), the three defect types, NLP4RE tools (Smella, QuARS), LLMs, agents and skills
@@ -198,12 +177,12 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - Appendix: the full `SKILL.md`, prompts, and an example output JSON.
 
 ### Phase 8 — Presentation Slides (LaTeX Beamer, HUST style)
-- **Generated with LaTeX (Beamer)** and compiled with xelatex. Custom theme `slides/beamerthemeHUST.sty`:
+- **Generated with LaTeX (Beamer)** and compiled with xelatex. Custom theme `slide/beamerthemeHUST.sty`:
   - HUST red (RGB 204,21,39, sampled from the official logo) with a white/grey background
   - logo on the title slide and in the top-right corner of each slide
   - footer with the group name, topic A1, and slide number
-- Shares `meta.tex` and the `pic/` charts with the report, so the report and slides always show the same numbers.
-- Speaker notes use Beamer `\note{}`. A separate `slides-notes.pdf` is built via a thin `slides/slides-notes.tex` wrapper setting `\setbeameroption{show notes}`. Notes are written in Vietnamese and split across the 3 presenters (Dương, Nam, Khánh).
+- Shares `meta.tex` and the `report/figures/` charts with the report, so the report and slides always show the same numbers.
+- Speaker notes use Beamer `\note{}`. A separate `slides-notes.pdf` is built via a thin `slide/slides-notes.tex` wrapper setting `\setbeameroption{show notes}`. Notes are written in Vietnamese and split across the 3 presenters (Dương, Nam, Khánh).
 - Outline (~18 slides, ~15 minutes):
   1. Title
   2. Agenda
@@ -224,7 +203,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
   17. Limitations
   18. Conclusion & future work + Q&A
 - Live-demo backup slide: one requirement in, skill JSON out (shown as a static screenshot in case the live demo fails).
-- Output: `slides/slides.pdf` + `slides/slides-notes.pdf`.
+- Output: `slide/slides.pdf` + `slide/slides-notes.pdf`.
 
 ## 5. Tool Environment (verified 2026-11-17)
 | Tool | Path | Headless flag | Non-Claude models available |
@@ -239,15 +218,15 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 |---|---|---|---|
 | 1 | Create folders, download PURE, `prepare_data.py` (Gamma J title fixed) | — | ✅ done |
 | 2 | `seed_defects.py` → `seeded_lms.json` + `seed_key.json` | 1 | ✅ done (40 reqs, 30 canonical defects) |
-| 3 | Write `SKILL.md`, `plain_prompt.txt`, `skill_prompt.txt` | taxonomy | ✅ done |
-| 4 | Expert pass 1 (Claude Opus) | 1 | ✅ done (blind Opus subagent, 55 findings; guideline `ground_truth/annotation_guideline.md`) |
+| 3 | Write `SKILL.md`, `prompt/plain.txt`, `prompt/skill.txt` | taxonomy | ✅ done |
+| 4 | Expert pass 1 (Claude Opus) | 1 | ✅ done (blind Opus subagent, 55 findings; guideline `dataset/ground_truth/annotation_guideline.md`) |
 | 5 | Expert pass 2 (fresh Claude Opus subagent), in parallel with 4 | 2, 3 | ✅ done (78 findings; seeded recall 30/30) |
 | 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ✅ done (κ=0.814; 16 disagreements → 9 accepted/7 rejected; final GT 82 findings) |
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ✅ done 2026-11-19T01:59Z; re-frozen 06:23Z after the prompt change (GT + SKILL.md + prompts) |
 | 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; smoke run OK; full T1–T4 run in progress (2026-11-19) |
 | 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ runs on frozen GT; T0 evaluated (all-strict F1 0.487, PURE 0.411, seeded 0.653) |
 | 10 | Error analysis | 9 | ☐ |
-| 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slides/hust_logo.png`, `pic/hust_logo.png`, `slides/hust_banner_white.png` from hust.edu.vn) |
+| 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slide/hust_logo.png`, `report/figures/hust_logo.png`, `slide/hust_banner_white.png` from hust.edu.vn) |
 | 12 | `main.tex` → `main.pdf` | 9, 10, 11 | ⏳ Ch. 1–4, References & Appendix written + `xelatex` verified; Ch. 5–7 await Phase 3–6 results |
 | 13 | `beamerthemeHUST.sty` + `slides.tex` → PDFs | 9, 10, 11 | ⏳ HUST theme + Slides 1–10, 17–18 + notes written & `xelatex` verified; results slides await Phase 3–6 |
 | 14 | Write `README.md` in Vietnamese (overview, layout, reproduction steps, status) | 12, 13 | ✅ done (refresh final metrics summary after step 15 if needed) |
@@ -257,8 +236,8 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - **SKILL.md leak fixed:** its examples had been copied from the seeded defects (5 vs 8 loans, 14 vs 21 days, bcrypt vs AES, Member vs Patron, …). They were replaced with neutral examples from other domains. Both prompts' schema example (`KP-019` "more than a line", a real PURE item) became `XX-001` "user-friendly".
 - **T0 leak fixed:** dropped `"more than a line"`, the seeded `"allowed maximum"` phrase and the peering-specific passive-verb list. The rules are now generic.
 - **Expert passes:** both ran as blind Opus subagents with their own `annotation_guideline.md`, separate from SKILL.md. Pass 1 was not run in the main session, because that session had already seen the skill and seed key.
-- **Freeze also hashes** `skill/**/*.md` and `prompts/*.txt`.
-- **`run_tools.sh` fixes:** it moves `ground_truth/` out of the repo during runs, greps the logs for GT file names afterwards, and the macOS `seq 1 0` loop bug is fixed.
+- **Freeze also hashes** `prompt/SKILL.md` and `prompt/*.txt`.
+- **`run_tools.sh` fixes:** it moves `dataset/ground_truth/` out of the repo during runs, greps the logs for GT file names afterwards, and the macOS `seq 1 0` loop bug is fixed.
 - **agy behaviour** (agy 1.5.12, verified 2026-11-19; notes kept in Claude memory `agy-cli-facts`): `--sandbox` does not block `read_file`, and web search cannot be disabled, so the runner now uses:
   - `--settings` with `toolPermission: request-review`; T2/T4 are only allowed `read_file(<scratch>/**)`;
   - `stream-json` output, so `parse_tool_output.py` can audit tool calls (no web, browser or command tools, no reads outside scratch; T2/T4 must read SKILL.md);
@@ -266,6 +245,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
   - one identical no-web rule in both prompts.
 
   Re-frozen 2026-11-19T06:23Z, before any kept tool run.
+- **Folder restructure (2026-11-19, after the 48 runs):** lean layout of §3; all paths live in `script/paths.py`; HASHES.txt path entries rewritten (digests and freeze time unchanged).
 
 ## 7. Agent Assignment
 | Work | Agent |
@@ -299,10 +279,10 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 | Member | Trần Xuân Nam | 20251177M |
 | Member | Phạm Gia Khánh | 20252636M |
 
-HUST logo: fetched from hust.edu.vn (`/uploads/sys/logobk-mb.png`); emblem cropped to `slides/hust_logo.png` + `pic/hust_logo.png` (392×577); full white-text banner kept as `slides/hust_banner_white.png` for dark backgrounds.
+HUST logo: fetched from hust.edu.vn (`/uploads/sys/logobk-mb.png`); emblem cropped to `slide/hust_logo.png` + `report/figures/hust_logo.png` (392×577); full white-text banner kept as `slide/hust_banner_white.png` for dark backgrounds.
 
 ## 10. Deliverables
 - `REPORT/README.md`: Vietnamese project guide and reproduction documentation
 - `REPORT/main.pdf`: the full report (Vietnamese)
-- `REPORT/slides/slides.pdf` + `slides-notes.pdf`: LaTeX Beamer presentation with HUST theme and speaker notes
+- `REPORT/slide/slides.pdf` + `slides-notes.pdf`: LaTeX Beamer presentation with HUST theme and speaker notes
 - Reproducible artifacts: data, skill, prompts, frozen ground truth, raw runs, evaluation scripts, and charts

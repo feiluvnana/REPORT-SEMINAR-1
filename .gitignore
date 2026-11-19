@@ -10,7 +10,7 @@ __pycache__/
 *.swo
 *~
 
-# LaTeX / Beamer build & auxiliary files (keep deliverables *.pdf; keep runs/**/*.log)
+# LaTeX / Beamer build & auxiliary files (keep deliverables *.pdf; keep result/run/**/*.log)
 *.aux
 *.toc
 main.toc
@@ -31,5 +31,5 @@ main.toc
 *.bcf
 *.run.xml
 *.synctex.gz
-/main.log
-/slides/*.log
+/report/*.log
+/slide/*.log

@@ -3,13 +3,13 @@ Pass 2 recall on seeded_lms, disagreement report, and SHA-256 freeze.
 
 Usage:
   # 1. Check kappa, seeded recall, and emit disagreement list:
-  REPORT/.venv/bin/python eval/check_gt.py --analyze
+  REPORT/.venv/bin/python script/check_gt.py --analyze
 
   # 2. Freeze ground_truth/*.json into ground_truth/HASHES.txt (after adjudication):
-  REPORT/.venv/bin/python eval/check_gt.py --freeze
+  REPORT/.venv/bin/python script/check_gt.py --freeze
 
   # 3. Verify HASHES.txt integrity:
-  REPORT/.venv/bin/python eval/check_gt.py --verify
+  REPORT/.venv/bin/python script/check_gt.py --verify
 """
 import argparse
 import datetime
@@ -23,14 +23,14 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(__file__).resolve().parents[1]
-GT_DIR = ROOT / "ground_truth"
+import os
+from paths import ROOT, GT_DIR, PROMPT_DIR, doc_path  # noqa: E402
 PURE_DOCS = ["keepass", "peering", "gammaj"]
 TYPES = ["ambiguity", "incompleteness", "inconsistency"]
 
 
 def load_doc_reqs(doc_id: str) -> list[dict]:
-    return json.loads((ROOT / f"data/{doc_id}.json").read_text(encoding="utf-8"))["requirements"]
+    return json.loads(doc_path(doc_id).read_text(encoding="utf-8"))["requirements"]
 
 
 def load_gt_map(path: Path) -> dict[str, list[dict]]:
@@ -123,7 +123,7 @@ def freeze() -> None:
         if p.is_file() and p.name != "HASHES.txt"
     )
     # Also freeze the tool inputs so the skill/prompts cannot be tuned after seeing GT.
-    extra = sorted((ROOT / "skill").rglob("*.md")) + sorted((ROOT / "prompts").glob("*.txt"))
+    extra = sorted(PROMPT_DIR.glob("*.md")) + sorted(PROMPT_DIR.glob("*.txt"))
     if not (GT_DIR / "final_gt.json").exists():
         sys.exit("Refusing to freeze: ground_truth/final_gt.json does not exist yet.")
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -133,7 +133,7 @@ def freeze() -> None:
         lines.append(f"{digest}  {p.name}")
     for p in extra:
         digest = hashlib.sha256(p.read_bytes()).hexdigest()
-        lines.append(f"{digest}  ../{p.relative_to(ROOT)}")
+        lines.append(f"{digest}  {Path(os.path.relpath(p, GT_DIR)).as_posix()}")
     targets = targets + extra
     (GT_DIR / "HASHES.txt").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print(f"Froze {len(targets)} ground_truth files to ground_truth/HASHES.txt at {now}")

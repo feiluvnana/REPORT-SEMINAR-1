@@ -10,8 +10,8 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 
-\input{../meta.tex}
-\graphicspath{{../pic/}{./}}
+\input{../report/meta.tex}
+\graphicspath{{../report/figures/}{./}}
 \usetheme{HUST}
 
 \begin{document}
@@ -116,7 +116,7 @@
   \begin{block}{Đảm bảo tính khách quan}
     \begin{itemize}
       \item Chuyên gia (\textbf{Claude}) tách biệt họ mô hình với các công cụ đánh giá.
-      \item Mọi công cụ chạy trong thư mục tạm chỉ đọc, hoàn toàn không thấy \texttt{ground\_truth/}.
+      \item Mọi công cụ chạy trong thư mục tạm chỉ đọc, hoàn toàn không thấy \texttt{dataset/ground\_truth/}.
       \item \texttt{evaluate.py} kiểm tra SHA-256 trong \texttt{HASHES.txt} trước khi tính độ đo.
     \end{itemize}
   \end{block}
@@ -177,7 +177,7 @@
     \item \textbf{Pass 2:} Tác tử Claude độc lập thứ hai (không thấy Pass 1 và \texttt{seed\_key.json}) gắn nhãn cả 4 tài liệu (147 yêu cầu) $\rightarrow$ \texttt{expert\_pass2.json}.
     \item \textbf{Đo tự nhất quán:} Script \texttt{check\_gt.py} tính \textbf{Cohen's $\kappa$} trên $107 \times 3 = 321$ cặp \texttt{(req\_id, type)} của PURE và kiểm tra Recall của Pass 2 trên \texttt{seeded\_lms}.
     \item \textbf{Phân xử:} Giải quyết mọi bất đồng giữa Pass 1 và Pass 2, ghi vào \texttt{adjudication\_log.md} $\rightarrow$ \texttt{final\_gt.json}.
-    \item \textbf{Đóng băng:} Ghi mã băm SHA-256 vào \texttt{ground\_truth/HASHES.txt}.
+    \item \textbf{Đóng băng:} Ghi mã băm SHA-256 vào \texttt{dataset/ground\_truth/HASHES.txt}.
   \end{enumerate}
   \note{[Khánh] Giải thích vai trò của Pass 2 trong việc kiểm định độ tin cậy trên tập cấy lỗi vì tác giả viết \texttt{seed\_defects.py} đã biết trước đáp án.}
 \end{frame}
@@ -210,7 +210,7 @@
 % --- Slides 11-16: Placeholders awaiting Phase 3-6 ---
 \begin{frame}{Kết quả tổng hợp \& Độ tin cậy chuẩn (Chờ Phase 3--5)}
   \begin{block}{Trạng thái hiện tại}
-    Công cụ nền tảng \textbf{T0} đã chạy xong trên cả 4 tài liệu (KeePass: 12, Peering: 21, Gamma J: 13, Seeded LMS: 19 phát hiện). Bảng số liệu đối chiếu P/R/Miss Rate/$F_1$ và biểu đồ \texttt{pic/*.png} sẽ được điền sau khi hoàn tất chuẩn chuyên gia Claude và chạy T1--T4.
+    Công cụ nền tảng \textbf{T0} đã chạy xong trên cả 4 tài liệu (KeePass: 12, Peering: 21, Gamma J: 13, Seeded LMS: 19 phát hiện). Bảng số liệu đối chiếu P/R/Miss Rate/$F_1$ và biểu đồ \texttt{report/figures/*.png} sẽ được điền sau khi hoàn tất chuẩn chuyên gia Claude và chạy T1--T4.
   \end{block}
   \note{[Khánh] Cập nhật tiến độ: T0 đã có kết quả, đang chờ khôi phục quota Claude để chốt chuẩn GT và chạy T1-T4.}
 \end{frame}
