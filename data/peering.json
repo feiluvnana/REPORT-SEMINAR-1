@@ -1,0 +1,103 @@
+{
+ "doc_id": "peering",
+ "title": "Software Requirements Specification for Internetworking of Content Delivery Networks through Peering",
+ "source": "PURE dataset (Ferrari et al., 2017): 2008 - peering.xml",
+ "requirements": [
+  {
+   "req_id": "PE-001",
+   "text": "The format for service information description is defined"
+  },
+  {
+   "req_id": "PE-002",
+   "text": "The format for service information description is defined"
+  },
+  {
+   "req_id": "PE-003",
+   "text": "The interaction protocol between Web Server-SR, SR-mediator is defined."
+  },
+  {
+   "req_id": "PE-004",
+   "text": "Resource provisioning, delegation and reservation policies are in place"
+  },
+  {
+   "req_id": "PE-005",
+   "text": "There is an established norm that any resource failure will be reported"
+  },
+  {
+   "req_id": "PE-006",
+   "text": "The interaction protocol between Web Server-SR, SR-mediator is defined."
+  },
+  {
+   "req_id": "PE-007",
+   "text": "Malicious requests are detected and rejected."
+  },
+  {
+   "req_id": "PE-008",
+   "text": "Web servers have already replicated necessary content."
+  },
+  {
+   "req_id": "PE-009",
+   "text": "Both anticipated and unanticipated user requests (traffic) are considered."
+  },
+  {
+   "req_id": "PE-010",
+   "text": "The format for service information description is defined"
+  },
+  {
+   "req_id": "PE-011",
+   "text": "The format of service requirements is defined."
+  },
+  {
+   "req_id": "PE-012",
+   "text": "Mediator-SR, mediator-PR, mediator-PA interaction protocols are defined."
+  },
+  {
+   "req_id": "PE-013",
+   "text": "Mediator works in conjunction with the PA to establish negotiation."
+  },
+  {
+   "req_id": "PE-014",
+   "text": "Interaction protocols between PAs are identified."
+  },
+  {
+   "req_id": "PE-015",
+   "text": "Malicious requests are identified and acted upon."
+  },
+  {
+   "req_id": "PE-016",
+   "text": "There are existing policies for long-term peering arrangement."
+  },
+  {
+   "req_id": "PE-017",
+   "text": "There is procedure to perform short-term negotiation."
+  },
+  {
+   "req_id": "PE-018",
+   "text": "Negotiation is established between selected CDN peers."
+  },
+  {
+   "req_id": "PE-019",
+   "text": "Primary CDN has already acquired sufficient external resources."
+  },
+  {
+   "req_id": "PE-020",
+   "text": "Functional policies are identified and deployed."
+  },
+  {
+   "req_id": "PE-021",
+   "text": "Effective content delivery is ensured through SLA satisfaction."
+  },
+  {
+   "req_id": "PE-022",
+   "text": "Policies identifying the consequences of SLA violation are defined."
+  },
+  {
+   "req_id": "PE-023",
+   "text": "Policies are in place to perform renegotiation for problem resolution."
+  },
+  {
+   "req_id": "PE-024",
+   "text": "Policies are in place to perform renegotiation for problem resolution."
+  }
+ ]
+}

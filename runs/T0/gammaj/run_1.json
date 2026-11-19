@@ -1,0 +1,109 @@
+{
+ "doc_id": "gammaj",
+ "findings": [
+  {
+   "req_id": "GJ-002",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "will be supplied",
+   "related_ids": [],
+   "rationale": "Passive construction 'will be supplied' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "GJ-005",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-026",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be protected",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be protected' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "GJ-030",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "large",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): large."
+  },
+  {
+   "req_id": "GJ-033",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-034",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-036",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-037",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-038",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "clear",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): clear."
+  },
+  {
+   "req_id": "GJ-040",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easily",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easily."
+  },
+  {
+   "req_id": "GJ-042",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-044",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): easy."
+  },
+  {
+   "req_id": "GJ-049",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be fixed",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be fixed' without an explicit 'by <Actor>' agent."
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "doc_id": "seeded_lms",
+ "title": "Library Management System (LMS) — Software Requirements Specification",
+ "source": "Synthetic seeded benchmark (40 requirements: 10 clean, 30 defective)",
+ "requirements": [
+  {
+   "req_id": "SD-001",
+   "text": "A Librarian shall create a new Member account only after verifying the applicant's government-issued photo ID and recording full name, email address, and phone number; if verification fails, the Circulation System shall reject account creation and log reason code ERR-ID-01."
+  },
+  {
+   "req_id": "SD-002",
+   "text": "The Authentication Service shall enforce Member passwords of at least 12 characters containing uppercase, lowercase, and numeric characters; passwords failing validation shall be rejected with HTTP 400."
+  },
+  {
+   "req_id": "SD-003",
+   "text": "The Authentication Service shall hash all Member and Librarian passwords using bcrypt with a cost factor of 12 before database storage, and shall never store or log plaintext passwords."
+  },
+  {
+   "req_id": "SD-004",
+   "text": "The Authentication Service shall terminate an authenticated web portal session after 15 minutes of user inactivity and redirect the user to the login page with status message SESSION_EXPIRED."
+  },
+  {
+   "req_id": "SD-005",
+   "text": "The Authentication Service shall lock a Member account after 5 consecutive failed login attempts within a 10-minute window."
+  },
+  {
+   "req_id": "SD-006",
+   "text": "When a Librarian links a Member account to a Guarantor profile, the Notification Service shall notify him by email within 60 seconds and log delivery status."
+  },
+  {
+   "req_id": "SD-007",
+   "text": "The Authentication Service shall expire password-reset tokens TBD minutes after issuance and invalidate any unused token upon a subsequent reset request."
+  },
+  {
+   "req_id": "SD-008",
+   "text": "The Portal Interface shall provide a user-friendly Member dashboard that is easy to navigate and loads rapidly on standard connections."
+  },
+  {
+   "req_id": "SD-009",
+   "text": "The Circulation System shall allow an active Member in good standing to have at most 5 physical items checked out simultaneously; any checkout exceeding 5 items shall be blocked with error ERR-LOAN-LIMIT."
+  },
+  {
+   "req_id": "SD-010",
+   "text": "The Circulation System shall assign a standard loan duration of 14 calendar days from the checkout timestamp for all circulating print books."
+  },
+  {
+   "req_id": "SD-011",
+   "text": "The Circulation System shall hold a reserved item on the pickup shelf for exactly 72 hours after sending the pickup-ready notice; if uncollected after 72 hours, the system shall cancel the hold and notify the next Member in queue."
+  },
+  {
+   "req_id": "SD-012",
+   "text": "The Circulation System shall allow a Member to renew an eligible loan at most TBD consecutive times provided no other Member has an active hold on that title; ineligible renewals shall return error ERR-RENEW-DENIED."
+  },
+  {
+   "req_id": "SD-013",
+   "text": "When a Member scans an item barcode at a self-checkout kiosk, the Circulation System shall validate item eligibility within 2 seconds and issue the loan receipt."
+  },
+  {
+   "req_id": "SD-014",
+   "text": "The Hold Queue Service shall restrict each Member to the allowed maximum number of active hold requests and reject additional requests with message ERR-HOLD-CAP."
+  },
+  {
+   "req_id": "SD-015",
+   "text": "The Circulation System shall allow a standard Member in good standing to borrow up to 8 physical items simultaneously through the desk or self-checkout terminal."
+  },
+  {
+   "req_id": "SD-016",
+   "text": "The Circulation System shall set the standard loan period for circulating print books to 21 calendar days from the checkout timestamp."
+  },
+  {
+   "req_id": "SD-017",
+   "text": "Unverified visitors shall be able to self-register online with only an email address and immediately check out physical books without Librarian ID verification."
+  },
+  {
+   "req_id": "SD-018",
+   "text": "Reserved items placed on the pickup shelf shall remain held indefinitely until the requesting Member explicitly cancels the hold."
+  },
+  {
+   "req_id": "SD-019",
+   "text": "The Billing Service shall assess an overdue fine of $0.50 USD per overdue day per item, capped at a maximum of $20.00 USD per item, starting 24 hours after the due timestamp."
+  },
+  {
+   "req_id": "SD-020",
+   "text": "The Circulation System shall block any Member with an unpaid fine balance exceeding $5.00 USD from borrowing or renewing items until the balance drops to $5.00 USD or below."
+  },
+  {
+   "req_id": "SD-021",
+   "text": "When an item becomes 7 days overdue, the Notification Service shall send an overdue email and/or suspend borrowing privileges and/or apply a penalty flag."
+  },
+  {
+   "req_id": "SD-022",
+   "text": "Overdue fine waiver requests up to $25.00 USD shall be reviewed, approved, and recorded with a reason code in the audit log within 1 business day."
+  },
+  {
+   "req_id": "SD-023",
+   "text": "The Notification Service shall dispatch SMS due-date alerts to Members before the due date if appropriate."
+  },
+  {
+   "req_id": "SD-024",
+   "text": "The Billing Service shall retain payment receipts for TBD years before purging them from archival storage."
+  },
+  {
+   "req_id": "SD-025",
+   "text": "The Billing Service shall charge an overdue fine of $1.25 USD per overdue day per item with no maximum cap on accumulated fines."
+  },
+  {
+   "req_id": "SD-026",
+   "text": "A Member shall be permitted to renew borrowed items online at any time regardless of any unpaid overdue fine balance."
+  },
+  {
+   "req_id": "SD-027",
+   "text": "The Circulation System shall display each Patron's active loan count and enforce the 5-item borrowing limit on the Patron profile screen within 1 second."
+  },
+  {
+   "req_id": "SD-028",
+   "text": "The Catalog Search Service shall return search results quickly even when many users are querying the catalog simultaneously."
+  },
+  {
+   "req_id": "SD-029",
+   "text": "The Catalog Search Service shall highlight matched query terms inside result snippets where possible."
+  },
+  {
+   "req_id": "SD-030",
+   "text": "The Catalog Search Service shall provide sufficient ISBN matching accuracy and acceptable response times for catalog lookups."
+  },
+  {
+   "req_id": "SD-031",
+   "text": "The Catalog Import Service shall efficiently process large batch MARC21 files without noticeable system slowdown."
+  },
+  {
+   "req_id": "SD-032",
+   "text": "When a Librarian attempts to delete a bibliographic record that still has active loans or holds, the Catalog Service shall detect the active references."
+  },
+  {
+   "req_id": "SD-033",
+   "text": "The Reporting Service shall allow an Administrator to export daily circulation logs in UTF-8 CSV format up to 100,000 rows per file, returning status HTTP 200 within 10 seconds."
+  },
+  {
+   "req_id": "SD-034",
+   "text": "The Backup Service shall execute an encrypted full database backup at TBD intervals and verify checksum integrity; backup failures shall trigger an alert to the Administrator within 5 minutes."
+  },
+  {
+   "req_id": "SD-035",
+   "text": "The Audit Service shall record important administrative actions in a timely manner and retain them for an appropriate period."
+  },
+  {
+   "req_id": "SD-036",
+   "text": "If the primary database node becomes unreachable for more than 10 seconds, the Failover Manager shall log event FAILOVER-01."
+  },
+  {
+   "req_id": "SD-037",
+   "text": "The Portal Interface shall provide adequate transport security and clear error messages during authentication."
+  },
+  {
+   "req_id": "SD-038",
+   "text": "The Authentication Service shall accept any Member password of at least 8 characters during account registration and password reset."
+  },
+  {
+   "req_id": "SD-039",
+   "text": "The Authentication Service shall keep authenticated web portal sessions active for 60 minutes of user inactivity before requiring re-authentication."
+  },
+  {
+   "req_id": "SD-040",
+   "text": "The Authentication Service shall encrypt all Member passwords using reversible AES-256 encryption so Administrators can decrypt and retrieve forgotten passwords upon request."
+  }
+ ]
+}

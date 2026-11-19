@@ -1,0 +1,157 @@
+{
+ "doc_id": "seeded_lms",
+ "findings": [
+  {
+   "req_id": "SD-002",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be rejected",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be rejected' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "SD-006",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "him",
+   "related_ids": [],
+   "rationale": "Matched potentially ambiguous pronoun 'him'."
+  },
+  {
+   "req_id": "SD-007",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD",
+   "related_ids": [],
+   "rationale": "Matched placeholder 'TBD'."
+  },
+  {
+   "req_id": "SD-008",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "rapidly, easy, user-friendly",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): rapidly, easy, user-friendly."
+  },
+  {
+   "req_id": "SD-009",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be blocked",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be blocked' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "SD-012",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD",
+   "related_ids": [],
+   "rationale": "Matched placeholder 'TBD'."
+  },
+  {
+   "req_id": "SD-014",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "allowed maximum",
+   "related_ids": [],
+   "rationale": "Unquantified limit phrase without value."
+  },
+  {
+   "req_id": "SD-021",
+   "type": "ambiguity",
+   "subtype": "coordination",
+   "evidence": "and/or",
+   "related_ids": [],
+   "rationale": "Matched 'and/or' coordination smell."
+  },
+  {
+   "req_id": "SD-022",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be reviewed",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be reviewed' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "SD-023",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "if appropriate",
+   "related_ids": [],
+   "rationale": "Matched weak phrase(s): if appropriate."
+  },
+  {
+   "req_id": "SD-024",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD",
+   "related_ids": [],
+   "rationale": "Matched placeholder 'TBD'."
+  },
+  {
+   "req_id": "SD-026",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be permitted",
+   "related_ids": [],
+   "rationale": "Passive construction 'shall be permitted' without an explicit 'by <Actor>' agent."
+  },
+  {
+   "req_id": "SD-028",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "quickly, many",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): quickly, many."
+  },
+  {
+   "req_id": "SD-029",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "where possible",
+   "related_ids": [],
+   "rationale": "Matched weak phrase(s): where possible."
+  },
+  {
+   "req_id": "SD-030",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "sufficient, acceptable",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): sufficient, acceptable."
+  },
+  {
+   "req_id": "SD-031",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "large, efficiently, noticeable",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): large, efficiently, noticeable."
+  },
+  {
+   "req_id": "SD-034",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD",
+   "related_ids": [],
+   "rationale": "Matched placeholder 'TBD'."
+  },
+  {
+   "req_id": "SD-035",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "appropriate, timely",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): appropriate, timely."
+  },
+  {
+   "req_id": "SD-037",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "clear, adequate",
+   "related_ids": [],
+   "rationale": "Matched vague term(s): clear, adequate."
+  }
+ ]
+}

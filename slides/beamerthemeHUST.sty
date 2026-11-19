@@ -1,0 +1,91 @@
+% ============================================================
+%  beamerthemeHUST.sty — Clean HUST-styled Beamer theme
+%  Requires \input{../meta.tex} in slides.tex before \usetheme{HUST}
+% ============================================================
+\ProvidesPackage{beamerthemeHUST}
+
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+
+% HUST brand palette
+\definecolor{hustred}{RGB}{204,21,39}
+\definecolor{hustdarkred}{RGB}{150,12,26}
+\definecolor{hustbg}{RGB}{250,250,251}
+\definecolor{hustgray}{RGB}{90,95,105}
+\definecolor{hustlightgray}{RGB}{235,237,240}
+\definecolor{husttext}{RGB}{30,34,40}
+
+\setbeamercolor{background canvas}{bg=hustbg}
+\setbeamercolor{normal text}{fg=husttext}
+\setbeamercolor{structure}{fg=hustred}
+\setbeamercolor{title}{fg=hustred}
+\setbeamercolor{subtitle}{fg=hustgray}
+\setbeamercolor{author}{fg=husttext}
+\setbeamercolor{institute}{fg=hustgray}
+\setbeamercolor{date}{fg=hustgray}
+\setbeamercolor{frametitle}{fg=hustred,bg=white}
+\setbeamercolor{block title}{bg=hustred,fg=white}
+\setbeamercolor{block body}{bg=hustlightgray!60,fg=husttext}
+\setbeamercolor{block title example}{bg=hustgray,fg=white}
+\setbeamercolor{block body example}{bg=hustlightgray!50,fg=husttext}
+\setbeamercolor{item}{fg=hustred}
+\setbeamercolor{footline}{fg=hustgray,bg=hustlightgray!70}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{itemize items}[circle]
+
+% Frame title with thin HUST red underline and top-right logo
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1.05cm,dp=0.22cm,leftskip=0.6cm,rightskip=1.2cm]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+    \ifx\insertframesubtitle\@empty\else%
+      \\[-0.1ex]{\scriptsize\color{hustgray}\insertframesubtitle}%
+    \fi%
+  \end{beamercolorbox}%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[hustred, line width=1.4pt] ([yshift=-1.27cm]current page.north west) -- ([yshift=-1.27cm]current page.north east);
+    \node[anchor=north east, inner sep=0pt] at ([xshift=-0.35cm,yshift=-0.16cm]current page.north east) {%
+      \includegraphics[height=0.92cm]{hust_logo.png}%
+    };
+  \end{tikzpicture}%
+  \vspace{-0.15cm}
+}
+
+% Clean footer: Group | Topic A1 | Slide x/y
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.4ex,dp=1ex,leftskip=0.5cm]{footline}%
+      \textbf{\color{hustred}\metaGroup} \textbar{} \metaUniversity%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.47\paperwidth,ht=2.4ex,dp=1ex,center]{footline}%
+      \metaShortTitle%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.20\paperwidth,ht=2.4ex,dp=1ex,right,rightskip=0.5cm]{footline}%
+      \insertframenumber{} / \inserttotalframenumber%
+    \end{beamercolorbox}%
+  }%
+}
+
+% Custom title page using meta.tex macros and HUST logo
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[hustred] (current page.north west) rectangle ([yshift=-0.22cm]current page.north east);
+    \fill[hustred] (current page.south west) rectangle ([yshift=0.14cm]current page.south east);
+    \node[anchor=north east, inner sep=0pt] at ([xshift=-0.65cm,yshift=-0.55cm]current page.north east) {%
+      \includegraphics[height=1.65cm]{hust_logo.png}%
+    };
+  \end{tikzpicture}%
+  \vspace*{0.35cm}
+  {\small\bfseries\color{hustred}\MakeUppercase{\metaUniversity}}\\[0.08cm]
+  {\footnotesize\color{hustgray}\metaSchool}\\[0.55cm]
+  {\large\bfseries\color{husttext}\metaCourse\ --- Đề tài \metaTopicCode}\\[0.22cm]
+  {\Large\bfseries\color{hustred}\metaTitle}\\[0.55cm]
+  \begin{tabular}{@{}ll}
+    \textbf{GVHD:} & \metaLecturer\ (\metaLecturerUnit) \\
+    \textbf{Thực hiện:} & \metaGroup\ --- \metaAuthorsShort \\
+    \textbf{Học kỳ:} & \metaSemester \\
+  \end{tabular}
+}

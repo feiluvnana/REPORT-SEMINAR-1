@@ -1,0 +1,543 @@
+\documentclass[12pt,a4paper]{report}
+
+% ============================================================
+%  SHARED METADATA
+% ============================================================
+\input{meta.tex}
+
+% ============================================================
+%  PACKAGES (XeLaTeX + Vietnamese)
+% ============================================================
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Menlo}[Scale=0.85]
+\usepackage[english,vietnamese]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\captionsetup[figure]{labelsep=space, font=small, labelfont=bf}
+\captionsetup[table]{labelsep=space, font=small, labelfont=bf}
+\captionsetup[subfigure]{labelformat=simple}
+
+\graphicspath{{pic/}}
+
+% ============================================================
+%  PAGE LAYOUT
+% ============================================================
+\geometry{
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=3cm,
+  right=2.5cm,
+  headheight=15pt
+}
+
+\onehalfspacing
+
+% ============================================================
+%  COLORS (Preserved from template)
+% ============================================================
+\definecolor{primaryblue}{RGB}{0,70,140}
+\definecolor{lightblue}{RGB}{230,242,255}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codepurple}{RGB}{148,0,211}
+\definecolor{codeblue}{RGB}{0,0,205}
+\definecolor{codered}{RGB}{180,0,0}
+\definecolor{backcolor}{RGB}{248,248,248}
+\definecolor{sectioncolor}{RGB}{0,70,140}
+
+% ============================================================
+%  HYPERREF SETUP
+% ============================================================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=primaryblue,
+  urlcolor=primaryblue,
+  citecolor=primaryblue,
+  pdftitle={\metaTitle},
+  pdfauthor={\metaGroup\ - \metaAuthorsShort},
+  pdfsubject={\metaCourse\ - Đề tài \metaTopicCode}
+}
+
+% ============================================================
+%  HEADERS & FOOTERS
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{primaryblue}{\textit{\metaShortTitle}}}
+\fancyhead[R]{\small\thepage}
+\fancyfoot[C]{\small\textcolor{gray}{\rule{0.4\textwidth}{0.4pt}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% ============================================================
+%  SECTION TITLE FORMATTING
+% ============================================================
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\color{primaryblue}}
+  {\chaptertitlename\ \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{20pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{sectioncolor}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}{1em}{}
+
+% ============================================================
+%  CODE LISTING STYLE (Preserved from template)
+% ============================================================
+\lstdefinestyle{turtlestyle}{
+  backgroundcolor=\color{backcolor},
+  commentstyle=\color{codegreen}\itshape,
+  keywordstyle=\color{codeblue}\bfseries,
+  stringstyle=\color{codered},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{primaryblue},
+  keepspaces=true,
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{codegray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  xleftmargin=15pt,
+  literate={—}{{\textemdash}}1 {–}{{\textendash}}1 {“}{{``}}1 {”}{{''}}1 {’}{{'}}1
+}
+\lstset{style=turtlestyle}
+
+% ============================================================
+%  CUSTOM ENVIRONMENTS (Preserved from template)
+% ============================================================
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{notebox}{
+  colback=lightblue,
+  colframe=primaryblue,
+  fonttitle=\bfseries,
+  title=Ghi chú,
+  breakable
+}
+
+\newtcolorbox{examplebox}[1][Ví dụ]{
+  colback=green!5,
+  colframe=green!50!black,
+  fonttitle=\bfseries,
+  title=#1,
+  breakable
+}
+
+\newtcolorbox{definitionbox}[1][Định nghĩa]{
+  colback=yellow!8,
+  colframe=orange!70!black,
+  fonttitle=\bfseries,
+  title=#1,
+  breakable
+}
+
+% ============================================================
+%  DOCUMENT START
+% ============================================================
+\begin{document}
+
+% ============================================================
+%  TITLE PAGE
+% ============================================================
+\begin{titlepage}
+  \centering
+  \vspace*{0.4cm}
+
+  {\Large\bfseries\color{primaryblue}\MakeUppercase{\metaUniversity}}\\[0.15cm]
+  {\large\bfseries\MakeUppercase{\metaSchool}}\\[0.4cm]
+  \includegraphics[height=2.6cm]{hust_logo.png}\\[0.4cm]
+  \rule{0.6\linewidth}{0.5pt}
+
+  \vspace{0.8cm}
+  {\large\bfseries\color{primaryblue}\MakeUppercase{\metaCourse\ --- Đề tài \metaTopicCode}}\\[0.35cm]
+  {\huge\bfseries\color{primaryblue}\metaTitle}\\[0.8cm]
+
+  \begin{large}
+    \textbf{Giảng viên hướng dẫn:} \metaLecturer\ (\metaLecturerUnit)\\[0.35cm]
+    \textbf{Nhóm thực hiện:} \metaGroup\\[0.25cm]
+    \begin{tabular}{lll}
+      \toprule
+      \textbf{MSSV} & \textbf{Họ và tên} & \textbf{Vai trò} \\
+      \midrule
+      \metaMembers
+      \bottomrule
+    \end{tabular}\\[0.7cm]
+    \textbf{\metaSemester}
+  \end{large}
+
+  \vfill
+  \rule{\linewidth}{0.5pt}
+  \rule{\linewidth}{1.5pt}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+%  CHƯƠNG 1: GIỚI THIỆU
+% ============================================================
+\chapter{Giới thiệu}
+
+\section{Đặt vấn đề và động lực nghiên cứu}
+Trong quy trình phát triển phần mềm, tài liệu đặc tả yêu cầu phần mềm (\textit{Software Requirements Specification} --- SRS) đóng vai trò hợp đồng kỹ thuật giữa các bên liên quan nghiệp vụ và đội ngũ phát triển. Do hầu hết tài liệu SRS được viết bằng ngôn ngữ tự nhiên để mọi đối tượng đều có thể đọc hiểu, chúng rất dễ chứa các khiếm khuyết ngôn ngữ như \textbf{mơ hồ} (\textit{ambiguity}), \textbf{thiếu sót} (\textit{incompleteness}) và \textbf{mâu thuẫn} (\textit{inconsistency})~\cite{berry2003,iso29148}. Nếu không được phát hiện ở giai đoạn phân tích yêu cầu, những lỗi này sẽ lan truyền sang thiết kế, lập trình và kiểm thử, làm tăng mạnh chi phí sửa lỗi về sau hoặc gây sai lệch hệ thống so với kỳ vọng thực tế.
+
+Kiểm duyệt thủ công bởi chuyên gia là phương pháp truyền thống nhưng tốn nhiều thời gian, dễ bỏ sót do mệt mỏi hoặc hiện tượng ``giải mã trong vô thức'' (\textit{subconscious disambiguation}) khi người đọc tự suy diễn nghĩa hợp lý thay vì nhận ra câu chữ có nhiều cách hiểu~\cite{berry2003}. Các công cụ phân tích ngôn ngữ tự nhiên dựa trên luật từ điển như QuARS~\cite{fabbrini2005} hay Smella~\cite{femmer2017} hỗ trợ phát hiện nhanh các dấu hiệu bề mặt (từ mơ hồ, câu bị động), song lại hạn chế trước các lỗi đòi hỏi suy luận ngữ nghĩa hoặc đối chiếu chéo nhiều yêu cầu trong cùng tài liệu. Sự xuất hiện của các mô hình ngôn ngữ lớn (\textit{Large Language Models} --- LLMs) và tác tử AI (\textit{AI agents}) mở ra hướng tiếp cận mới để kiểm định chất lượng SRS tự động ở cả cấp độ câu đơn lẻ lẫn cấp độ toàn tài liệu~\cite{lubos2024,ronanki2025}.
+
+\section{Phát biểu bài toán A1 và câu hỏi nghiên cứu}
+Theo yêu cầu chủ đề \textbf{A1} của học phần Seminar 1, nghiên cứu này thực hiện một \textbf{nghiên cứu thực nghiệm} (\textit{empirical study}) nhằm đánh giá khả năng của các công cụ AI trong việc phát hiện đồng thời ba loại khiếm khuyết SRS: \textit{mơ hồ}, \textit{thiếu sót} và \textit{mâu thuẫn}. Kết quả đầu ra của công cụ được đối chiếu với tập chuẩn chuyên gia (\textit{expert ground truth}) trên một bộ tài liệu đặc tả công khai kết hợp tài liệu chuẩn hóa có cấy lỗi kiểm soát, từ đó đo lường \textbf{tỷ lệ phát hiện đúng} (\textit{Recall / Correct Detection Rate}), \textbf{tỷ lệ bỏ sót} (\textit{Miss Rate}), cùng độ chính xác (\textit{Precision}) và điểm $F_1$.
+
+Bốn câu hỏi nghiên cứu được đặt ra như sau:
+\begin{itemize}
+  \item \textbf{RQ1 (Hiệu năng tổng thể):} Các công cụ tác tử AI phát hiện lỗi SRS chính xác đến mức nào so với chuyên gia (Precision, Recall, Miss Rate, $F_1$) và so với công cụ nền tảng dựa trên luật?
+  \item \textbf{RQ2 (Tác động của Skill):} Việc cung cấp cho tác tử một \textbf{kỹ năng} (\texttt{SKILL.md} gồm bảng phân loại lỗi chi tiết, danh sách kiểm tra và lược đồ JSON chuẩn) có cải thiện chất lượng phát hiện so với câu lệnh thuần (\textit{plain prompt}) hay không?
+  \item \textbf{RQ3 (Độ khó theo loại lỗi):} Trong ba nhóm lỗi \textit{mơ hồ}, \textit{thiếu sót} và \textit{mâu thuẫn}, loại nào khó phát hiện nhất đối với các công cụ AI?
+  \item \textbf{RQ4 (Tính ổn định):} Kết quả phát hiện của tác tử AI có ổn định qua nhiều lượt chạy lặp lại hay không?
+\end{itemize}
+
+\section{Đóng góp chính của báo cáo}
+\begin{enumerate}
+  \item Xây dựng bảng phân loại gồm 3 nhóm lỗi chính và 15 tiểu loại (\textit{subtypes}) kế thừa từ IEEE Std 830-1998, ISO/IEC/IEEE 29148:2018 và sổ tay mơ hồ của Berry và cộng sự~\cite{berry2003}, thống nhất cho cả chuyên gia và công cụ.
+  \item Chuẩn bị bộ dữ liệu đánh giá gồm 147 yêu cầu: 107 yêu cầu từ 3 tài liệu công khai trong bộ PURE~\cite{ferrari2017} và 40 yêu cầu trong tài liệu Hệ thống Quản lý Thư viện (\texttt{seeded\_lms}) được cấy có kiểm soát 30 lỗi theo đúng phân bố định trước.
+  \item Thiết kế giao thức tạo chuẩn chuyên gia 2 lượt độc lập kèm đánh giá đồng thuận $\kappa$, kiểm định trên tập cấy lỗi và đóng băng mã băm SHA-256 trước khi chạy công cụ nhằm tránh thiên lệch hậu nghiệm.
+  \item Thực nghiệm so sánh đối chứng giữa công cụ nền dựa trên luật (\texttt{T0}) và các cấu hình tác tử AI không dùng/có dùng kỹ năng \texttt{SKILL.md}, kèm phân tích lỗi chi tiết và công bố đầy đủ mã nguồn tái lập.
+\end{enumerate}
+
+% ============================================================
+%  CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
+% ============================================================
+\chapter{Cơ sở lý thuyết}
+
+\section{Chất lượng đặc tả yêu cầu phần mềm theo chuẩn quốc tế}
+Theo chuẩn \textbf{IEEE Std 830-1998}~\cite{ieee830} và chuẩn kế thừa hiện hành \textbf{ISO/IEC/IEEE 29148:2018}~\cite{iso29148}, một tài liệu SRS chất lượng cao cần thỏa mãn các thuộc tính cốt lõi ở cả cấp độ từng yêu cầu đơn lẻ lẫn toàn bộ tập yêu cầu:
+\begin{itemize}
+  \item \textbf{Không mơ hồ (\textit{Unambiguous}):} Mỗi yêu cầu chỉ có duy nhất một cách diễn giải khách quan và có thể kiểm chứng được bằng các đại lượng đo lường cụ thể.
+  \item \textbf{Đầy đủ (\textit{Complete}):} Yêu cầu không chứa các chỗ trống chưa xác định (\textit{TBD}), chỉ rõ tác nhân thực hiện, điều kiện kích hoạt, giá trị/đơn vị định lượng và cách xử lý ngoại lệ hoặc hệ quả khi sự kiện xảy ra.
+  \item \textbf{Nhất quán (\textit{Consistent}):} Không tồn tại hai yêu cầu mâu thuẫn về giá trị định lượng, quy tắc nghiệp vụ, hoặc sử dụng thuật ngữ không đồng nhất cho cùng một thực thể trong toàn tài liệu.
+\end{itemize}
+
+\section{Ba nhóm khiếm khuyết trọng tâm trong SRS}
+Dựa trên hệ thống phân loại ngôn ngữ học của Berry, Kamsties và Krieger (2003)~\cite{berry2003} kết hợp với ISO/IEC/IEEE 29148:2018~\cite{iso29148}, ba nhóm lỗi trong bài toán A1 được cụ thể hóa như sau:
+
+\begin{definitionbox}[Định nghĩa ba loại khiếm khuyết cốt lõi]
+\begin{enumerate}
+  \item \textbf{Mơ hồ (\textit{Ambiguity}):} Phát biểu cho phép từ hai cách hiểu trở lên hoặc dùng các từ ngữ chủ quan không có ngưỡng kiểm thử. Bao gồm từ ngữ mơ hồ (\textit{vague term}: nhanh, dễ sử dụng, đầy đủ), đại từ quy chiếu không rõ (\textit{referential}), cấu trúc cú pháp đa nghĩa (\textit{syntactic}), liên từ nhập nhằng như \textit{and/or} (\textit{coordination}), và cụm từ rào đón làm suy yếu tính bắt buộc (\textit{weak phrase}: nếu có thể, khi phù hợp).
+  \item \textbf{Thiếu sót (\textit{Incompleteness}):} Thiếu thông tin vận hành thiết yếu khiến đội phát triển hoặc kiểm thử không thể triển khai trọn vẹn. Bao gồm giá trị chưa xác định (\textit{TBD}), thiếu tác nhân chủ thể trong câu bị động (\textit{missing actor}), thiếu điều kiện tiên quyết (\textit{missing condition}), thiếu luồng xử lý lỗi (\textit{missing error handling}), thiếu giá trị hoặc đơn vị (\textit{missing value/unit}), và thiếu hệ quả/thời hạn sau khi kích hoạt (\textit{missing consequence}).
+  \item \textbf{Mâu thuẫn (\textit{Inconsistency}):} Xung đột logic hoặc sai lệch giữa nhiều yêu cầu trong cùng SRS. Bao gồm xung đột giá trị số (\textit{conflicting values}), xung đột quy tắc/chính sách (\textit{conflicting rules}), lệch thuật ngữ cho cùng vai trò (\textit{terminology}), và yêu cầu trùng lặp dư thừa không phân biệt phạm vi (\textit{duplicate}).
+\end{enumerate}
+\end{definitionbox}
+
+\section{Các phương pháp NLP4RE truyền thống và tác tử LLM}
+Trong tổng quan hệ thống trên 404 nghiên cứu về Xử lý Ngôn ngữ Tự nhiên cho Kỹ nghệ Yêu cầu (NLP4RE), Zhao và cộng sự (2021)~\cite{zhao2021} chỉ ra rằng phát hiện khiếm khuyết là một trong những tác vụ phổ biến nhất, nhưng đa số công cụ trước đây dựa vào luật hình thức hoặc phân tích cú pháp nông. Hai đại diện tiêu biểu là:
+\begin{itemize}
+  \item \textbf{QuARS} (Fabbrini và cộng sự, 2001/2005)~\cite{fabbrini2001,fabbrini2005}: sử dụng mô hình chất lượng ngôn ngữ học với từ điển các chỉ dấu để phát hiện tính mơ hồ, thiếu chủ thể hoặc từ chỉ mức độ yếu trong yêu cầu.
+  \item \textbf{Smella} (Femmer và cộng sự, 2017)~\cite{femmer2017}: đề xuất khái niệm ``mùi yêu cầu'' (\textit{Requirements Smells}) tương tự \textit{code smells}, dùng biểu thức chính quy, gắn nhãn từ loại (POS tagging) và từ điển để cảnh báo nhanh ngay khi soạn thảo.
+\end{itemize}
+
+Các công cụ dựa trên luật có ưu điểm nhanh, tất định và dễ giải thích, nhưng tỷ lệ cảnh báo giả cao khi gặp ngoại lệ ngữ cảnh và gần như bất lực trước mâu thuẫn ngữ nghĩa liên câu. Ngược lại, các nghiên cứu gần đây của Lubos và cộng sự (2024)~\cite{lubos2024} hay Ronanki và cộng sự (2025)~\cite{ronanki2025} cho thấy LLM có khả năng đánh giá ngữ nghĩa yêu cầu ở mức cao, song nhạy cảm với cách viết câu lệnh (\textit{prompt}) và tính phi tất định giữa các lượt sinh.
+
+\subsection{Tác tử AI và cơ chế kỹ năng (\texttt{SKILL.md})}
+Thay vì chỉ gửi một câu lệnh ngắn gọn, mô hình \textbf{tác tử AI trang bị kỹ năng} tách tri thức chuyên môn (bảng phân loại 15 tiểu loại, quy tắc phân biệt ranh giới, danh sách kiểm tra 2 lượt và lược đồ JSON chuẩn) vào tệp hướng dẫn có cấu trúc \texttt{SKILL.md}. Điều này cho phép kiểm chứng thực nghiệm xem việc nạp tri thức miền có hệ thống qua kỹ năng có giúp tác tử nâng cao độ chính xác và giảm bỏ sót so với câu lệnh thông thường hay không (RQ2).
+
+% ============================================================
+%  CHƯƠNG 3: PHƯƠNG PHÁP NGHIÊN CỨU
+% ============================================================
+\chapter{Phương pháp nghiên cứu}
+
+\section{Quy trình tổng thể}
+Hình~\ref{fig:method_pipeline} tóm tắt quy trình thực nghiệm khép kín gồm 5 giai đoạn: chuẩn bị dữ liệu, gắn nhãn chuẩn chuyên gia độc lập, đóng băng mã băm toàn vẹn, thực thi các công cụ ở chế độ chỉ đọc cô lập và tính toán độ đo bằng mã Python.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=0.9cm and 1.0cm,
+  box/.style={rectangle, rounded corners=4pt, draw=primaryblue, fill=lightblue, text width=2.45cm, align=center, minimum height=1.15cm, font=\small},
+  freeze/.style={rectangle, rounded corners=4pt, draw=codered, fill=red!8, text width=2.3cm, align=center, minimum height=1.15cm, font=\small\bfseries},
+  arrow/.style={-{Stealth[length=2.5mm]}, thick, color=primaryblue}
+]
+  \node[box] (data) {1. Bộ dữ liệu\\(PURE 107 +\\Seeded 40)};
+  \node[box, right=of data] (gt) {2. Chuẩn chuyên gia\\(Claude 2 lượt +\\$\kappa$ + phân xử)};
+  \node[freeze, right=of gt] (hash) {3. Đóng băng\\SHA-256\\(\texttt{HASHES.txt})};
+  \node[box, right=of hash] (tools) {4. Chạy công cụ\\(T0 + T1--T4\\$\times$ 3 lượt)};
+  \node[box, below=1.0cm of tools] (eval) {5. Đánh giá tự động\\(\texttt{evaluate.py}:\\P/R/Miss/$F_1$, CI, $\kappa$)};
+
+  \draw[arrow] (data) -- (gt);
+  \draw[arrow] (gt) -- (hash);
+  \draw[arrow] (hash) -- (tools);
+  \draw[arrow] (tools) -- (eval);
+  \draw[arrow, dashed, color=codered] (hash.south) |- (eval.west) node[pos=0.25, left, font=\scriptsize, color=codered]{Kiểm tra toàn vẹn};
+\end{tikzpicture}
+\caption{Quy trình nghiên cứu thực nghiệm khép kín nhằm đảm bảo tính khách quan và khả năng tái lập.}
+\label{fig:method_pipeline}
+\end{figure}
+
+\section{Bảng phân loại lỗi và quy tắc chuẩn hóa}
+Bảng~\ref{tab:taxonomy} trình bày chi tiết 3 nhóm lỗi và 15 tiểu loại dùng chung cho chuyên gia và mọi công cụ.
+
+\begin{table}[H]
+\centering
+\caption{Bảng phân loại 3 nhóm khiếm khuyết SRS và 15 tiểu loại (\textit{subtypes}).}
+\label{tab:taxonomy}
+\small
+\begin{tabular}{p{2.7cm}p{4.3cm}p{7.4cm}}
+\toprule
+\textbf{Loại lỗi (\texttt{type})} & \textbf{Tiểu loại (\texttt{subtype})} & \textbf{Tiêu chí nhận diện cốt lõi} \\
+\midrule
+\textbf{Ambiguity} & \texttt{vague\_term}, \texttt{referential}, \texttt{syntactic}, \texttt{coordination}, \texttt{weak\_phrase} & Từ ngữ chủ quan không có ngưỡng đo; đại từ mơ hồ; cấu trúc đa nghĩa; dùng \textit{and/or}; cụm từ rào đón (\textit{where possible}, \textit{if appropriate}). \\
+\midrule
+\textbf{Incompleteness} & \texttt{tbd}, \texttt{missing\_actor}, \texttt{missing\_condition}, \texttt{missing\_error\_handling}, \texttt{missing\_value\_or\_unit}, \texttt{missing\_consequence} & Ký hiệu \textit{TBD}; bị động thiếu tác nhân; thiếu điều kiện kích hoạt; thiếu xử lý ngoại lệ; thiếu giá trị/đơn vị định lượng; thiếu hệ quả hoặc thời hạn. \\
+\midrule
+\textbf{Inconsistency} & \texttt{conflicting\_values}, \texttt{conflicting\_rules}, \texttt{terminology}, \texttt{duplicate} & Mâu thuẫn số liệu giữa các yêu cầu; quy tắc xung đột; lệch thuật ngữ cho cùng một vai trò; lặp lại yêu cầu dư thừa. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Để tránh sai lệch đếm trùng khi đối chiếu cặp, nghiên cứu áp dụng ba quy tắc chuẩn hóa bắt buộc:
+\begin{enumerate}
+  \item \textbf{Đơn vị nhãn \texttt{(req\_id, type)}:} Một yêu cầu có thể mang nhiều loại lỗi khác nhau, nhưng tối đa \textbf{một phát hiện cho mỗi cặp \texttt{(req\_id, type)}} (nếu có nhiều dấu hiệu cùng loại trong một câu thì gộp vào một bản ghi).
+  \item \textbf{Neo mâu thuẫn về sau:} Mọi lỗi \texttt{inconsistency} (kể cả \texttt{duplicate}) giữa hai hay nhiều yêu cầu được neo vào \texttt{req\_id} \textbf{xuất hiện sau theo thứ tự tài liệu}, liệt kê các \texttt{req\_id} liên quan trước đó trong \texttt{related\_ids}.
+  \item \textbf{Tuân thủ mã định danh JSON:} Các công cụ phải trả về đúng trường \texttt{req\_id} bên ngoài (ví dụ \texttt{KP-017}), không sử dụng mã cũ nhúng trong nội dung văn bản (như \texttt{REQ-18:}).
+\end{enumerate}
+
+\section{Thiết kế các công cụ đối chứng (T0--T4) và kỹ năng}
+Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật với các cấu hình LLM theo thiết kế cặp đôi có/không có kỹ năng:
+\begin{itemize}
+  \item \textbf{T0 (\texttt{baseline\_rules.py}):} Bộ dò mùi yêu cầu kiểu Smella/QuARS viết bằng Python, kết hợp danh sách từ mơ hồ, cụm từ yếu, biểu thức chính quy bắt \textit{TBD}, nhận diện câu bị động thiếu tác nhân \texttt{by <Actor>}, và phát hiện trùng lặp qua độ tương đồng Jaccard từ vựng ($\ge 0{,}80$).
+  \item \textbf{T1 / T3 (Plain Prompt):} Gửi trực tiếp câu lệnh nhiệm vụ chuẩn kèm lược đồ JSON và danh sách tên tiểu loại hợp lệ trong một thư mục rỗng chỉ chứa tài liệu đầu vào (không có \texttt{SKILL.md}).
+  \item \textbf{T2 / T4 (+ \texttt{SKILL.md}):} Giữ nguyên câu lệnh nhiệm vụ và lược đồ đầu ra như Plain Prompt, chỉ bổ sung chỉ dẫn nạp tệp \texttt{skill/req-defect-detector/SKILL.md} chứa định nghĩa chi tiết, danh sách kiểm tra hai lượt và các quy tắc loại trừ cảnh báo giả.
+\end{itemize}
+
+\section{Giao thức tạo chuẩn chuyên gia và đóng băng dữ liệu}
+Để giảm thiểu thiên lệch tự ưu tiên (\textit{self-preference bias}), vai trò chuyên gia được gán cố định cho mô hình \textbf{Claude}, tách biệt hoàn toàn với họ mô hình của các công cụ đánh giá. Quy trình gồm 5 bước:
+\begin{enumerate}
+  \item \textbf{Lượt 1 (Pass 1):} Phiên Claude độc lập gắn nhãn 107 yêu cầu PURE thành \texttt{expert\_pass1.json}.
+  \item \textbf{Lượt 2 (Pass 2):} Một tác tử Claude hoàn toàn mới (không được truy cập kết quả lượt 1 hay \texttt{seed\_key.json}) gắn nhãn toàn bộ 147 yêu cầu thành \texttt{expert\_pass2.json}.
+  \item \textbf{Đo tự nhất quán và kiểm định:} Tính hệ số \textbf{Cohen's $\kappa$} giữa lượt 1 và lượt 2 trên $107 \times 3 = 321$ cặp nhị phân \texttt{(req\_id, type)} của bộ PURE; đồng thời đo Recall của lượt 2 trên tập \texttt{seeded\_lms} đối chiếu với \texttt{seed\_key.json}.
+  \item \textbf{Phân xử (\textit{Adjudication}):} Giải quyết mọi bất đồng giữa hai lượt trên PURE và ghi nhận lý do vào \texttt{adjudication\_log.md} để chốt \texttt{final\_gt.json} (riêng \texttt{seeded\_lms} giữ nguyên đáp án chính xác từ \texttt{seed\_key.json}).
+  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
+\end{enumerate}
+
+\section{Quy tắc khớp và các độ đo đánh giá}
+Trước khi khớp, mã đánh giá thực hiện gộp các bản ghi trùng cặp \texttt{(req\_id, type)} và khử đối xứng các cặp mâu thuẫn hai chiều (nếu công cụ báo cả hai đầu $A \leftrightarrow B$, chỉ giữ bản ghi ở \texttt{req\_id} sau để không phạt nhầm thành False Positive).
+\begin{itemize}
+  \item \textbf{Khớp chặt (\textit{Strict Matching}):} Khớp khi trùng cả \texttt{req\_id} và \texttt{type}. Riêng với \texttt{inconsistency}, một dự đoán cũng được tính khớp nếu rơi vào bất kỳ phần tử nào thuộc \texttt{related\_ids} của chuẩn (mỗi mục chuẩn chỉ được khớp tối đa một lần).
+  \item \textbf{Khớp nới lỏng (\textit{Lenient Matching}):} Đánh giá nhị phân ở mức yêu cầu ($N = 147$): yêu cầu có lỗi (bất kỳ loại nào) so với yêu cầu sạch.
+\end{itemize}
+
+Từ các số đếm $TP, FP, FN$, các độ đo được tính theo trung bình và độ lệch chuẩn qua 3 lượt chạy lặp lại:
+\[
+  \text{Precision} = \frac{TP}{TP + FP}, \quad
+  \text{Recall} = \frac{TP}{TP + FN}, \quad
+  \text{Miss Rate} = 1 - \text{Recall} = \frac{FN}{TP + FN}, \quad
+  F_1 = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}.
+\]
+Độ bất định của điểm $F_1$ được ước lượng bằng phương pháp \textbf{Bootstrap 95\% CI} theo cấp độ yêu cầu với $1000$ lần lấy mẫu lại. Độ ổn định qua 3 lượt lặp được đo bằng chỉ số chồng lấp \textbf{Jaccard trung bình} theo cặp lượt chạy và hệ số \textbf{Fleiss' $\kappa$} trên toàn bộ $147 \times 3 = 441$ cặp \texttt{(req\_id, type)}. Hiệu ứng của kỹ năng được đo bằng $\Delta F_1 = F_{1,\text{+skill}} - F_{1,\text{plain}}$ kèm khoảng tin cậy Bootstrap ghép cặp.
+
+% ============================================================
+%  CHƯƠNG 4: THIẾT LẬP THỰC NGHIỆM
+% ============================================================
+\chapter{Thiết lập thực nghiệm}
+
+\section{Bộ dữ liệu thực nghiệm}
+Nghiên cứu sử dụng tổng cộng \textbf{147 yêu cầu} từ 4 tài liệu, gồm 3 tài liệu đặc tả công khai trích từ bộ dữ liệu \textbf{PURE} (Ferrari và cộng sự, 2017)~\cite{ferrari2017} (chỉ chọn các tài liệu có thẻ \texttt{<req>} tường minh để đảm bảo ranh giới yêu cầu khách quan) và 1 tài liệu tự xây dựng có cấy lỗi kiểm soát \texttt{seeded\_lms}. Bảng~\ref{tab:dataset} tóm tắt quy mô từng tài liệu.
+
+\begin{table}[H]
+\centering
+\caption{Thống kê 4 tài liệu đặc tả yêu cầu trong thực nghiệm (tổng cộng 147 yêu cầu).}
+\label{tab:dataset}
+\small
+\begin{tabular}{llp{4.5cm}cp{4.4cm}}
+\toprule
+\textbf{Mã tài liệu} & \textbf{Nguồn} & \textbf{Lĩnh vực} & \textbf{Số yêu cầu} & \textbf{Đặc điểm nổi bật} \\
+\midrule
+\texttt{keepass} (\texttt{KP}) & PURE (\texttt{2008 - keepass.xml}) & Trình quản lý mật khẩu & 32 & Văn phong chưa chuẩn, lẫn nhãn cũ (\texttt{REQ-xx}), lỗi ngữ pháp nhẹ \\
+\texttt{peering} (\texttt{PE}) & PURE (\texttt{2008 - peering.xml}) & Liên kết mạng CDN & 24 & Nhiều câu bị động (\textit{is defined}), có một số yêu cầu trùng lặp \\
+\texttt{gammaj} (\texttt{GJ}) & PURE (\texttt{0000 - gamma j.xml}) & Cửa hàng trực tuyến & 51 & Nhiều yêu cầu giao diện mơ hồ (\textit{easy to use}), xen kẽ thông số hiệu năng cụ thể \\
+\midrule
+\texttt{seeded\_lms} (\texttt{SD}) & Tự xây dựng (có cấy lỗi) & Hệ thống Quản lý Thư viện & 40 & 10 yêu cầu sạch + 30 yêu cầu cấy lỗi (10 lỗi/loại), viết mới hoàn toàn \\
+\midrule
+\textbf{Tổng cộng} & & & \textbf{147} & \textbf{107 PURE + 40 Seeded} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Thiết kế tập dữ liệu cấy lỗi kiểm soát (\texttt{seeded\_lms})}
+Tài liệu \texttt{seeded\_lms} được tạo tự động qua mã \texttt{eval/seed\_defects.py} từ 40 yêu cầu gốc viết chặt chẽ (đầy đủ tác nhân, giá trị, đơn vị và xử lý lỗi). Mã nguồn thay thế 30 yêu cầu trong số đó bằng các phiên bản lỗi thuộc 12 tiểu loại cụ thể (Bảng~\ref{tab:seeded_dist}), đồng thời bảo toàn 10 yêu cầu sạch dùng làm đối chứng cho cả lỗi giả lẫn các cặp mâu thuẫn (mỗi yêu cầu \texttt{inconsistency} đều mâu thuẫn trực tiếp với một yêu cầu sạch xuất hiện trước đó).
+
+\begin{table}[H]
+\centering
+\caption{Phân bố 30 khiếm khuyết được cấy vào tài liệu \texttt{seeded\_lms} (10 lỗi/nhóm).}
+\label{tab:seeded_dist}
+\small
+\begin{tabular}{llc p{6.8cm}}
+\toprule
+\textbf{Loại lỗi} & \textbf{Tiểu loại (\texttt{subtype})} & \textbf{Số lượng} & \textbf{Ví dụ cấy lỗi tiêu biểu} \\
+\midrule
+Ambiguity (10) & \texttt{vague\_term} & 6 & \textit{``return search results quickly even when many users...''} \\
+ & \texttt{weak\_phrase} & 2 & \textit{``where possible''}, \textit{``if appropriate''} \\
+ & \texttt{referential} & 1 & \textit{``notify him by email''} (nhập nhằng Librarian/Member/Guarantor) \\
+ & \texttt{coordination} & 1 & \textit{``send an overdue email and/or suspend... and/or apply...''} \\
+\midrule
+Incompleteness (10) & \texttt{tbd} & 4 & \textit{``expire password-reset tokens TBD minutes after issuance''} \\
+ & \texttt{missing\_consequence} & 3 & Khóa tài khoản sau 5 lần đăng nhập sai nhưng thiếu thời lượng khóa \\
+ & \texttt{missing\_actor} & 1 & Bị động \textit{``shall be reviewed, approved, and recorded''} thiếu chủ thể \\
+ & \texttt{missing\_error\_handling} & 1 & Thiếu xử lý khi mã vạch sách không hợp lệ ở quầy tự mượn \\
+ & \texttt{missing\_value\_or\_unit} & 1 & \textit{``the allowed maximum number of active hold requests''} thiếu con số \\
+\midrule
+Inconsistency (10) & \texttt{conflicting\_values} & 5 & Tối đa 5 sách (\texttt{SD-009}) vs 8 sách (\texttt{SD-015}); 14 ngày vs 21 ngày \\
+ & \texttt{conflicting\_rules} & 4 & Băm một chiều bcrypt (\texttt{SD-003}) vs mã hóa thuận nghịch AES-256 (\texttt{SD-040}) \\
+ & \texttt{terminology} & 1 & Dùng \textit{``Patron''} (\texttt{SD-027}) thay cho thuật ngữ chuẩn \textit{``Member''} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Môi trường phần mềm và cấu hình thực thi}
+Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.13 (\texttt{REPORT/.venv}) với \texttt{numpy} và \texttt{matplotlib}, biên dịch báo cáo bằng \texttt{XeLaTeX} (\texttt{latexmk}). Để tránh rò rỉ dữ liệu, tập \texttt{ground\_truth/} không bao giờ được sao chép vào thư mục tạm của các công cụ; các lượt chạy không dùng kỹ năng (Plain) được đặt trong thư mục cô lập hoàn toàn không chứa \texttt{SKILL.md} và truyền cờ \texttt{--disable-slash-commands}.
+
+Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{eval/parse\_tool\_output.py} để tách gói JSON của CLI và kiểm tra hợp lệ lược đồ; trường hợp lỗi định dạng sẽ được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
+
+% ============================================================
+%  CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM (CHỜ SỐ LIỆU PHASE 3-6)
+% ============================================================
+\chapter{Kết quả thực nghiệm}
+
+\begin{notebox}
+Chương này sẽ tự động cập nhật bằng các bảng \LaTeX\ từ \texttt{eval/results/tables/} và 5 biểu đồ từ \texttt{pic/} sau khi hoàn tất Phase 3 (chuẩn chuyên gia Claude + đóng băng SHA-256), Phase 4 (chạy các công cụ LLM) và Phase 5 (\texttt{eval/evaluate.py}).
+\end{notebox}
+
+\section{Độ tin cậy chuẩn chuyên gia ($\kappa$ và kiểm định trên \texttt{seeded\_lms})}
+\textit{(Chờ kết quả \texttt{eval/check\_gt.py --analyze} sau Phase 3.)}
+
+\section{Hiệu năng phát hiện tổng thể (RQ1)}
+\textit{(Chờ bảng \texttt{overall\_metrics.tex} và biểu đồ \texttt{pic/prf1\_by\_tool.png} sau Phase 5.)}
+
+\section{Tác động của kỹ năng \texttt{SKILL.md} (RQ2)}
+\textit{(Chờ số liệu $\Delta F_1$ ghép cặp và biểu đồ \texttt{pic/skill\_effect.png} sau Phase 5.)}
+
+\section{So sánh theo loại khiếm khuyết (RQ3)}
+\textit{(Chờ bảng \texttt{by\_type\_metrics.tex}, \texttt{pic/recall\_heatmap.png} và \texttt{pic/miss\_rate\_by\_type.png}.)}
+
+\section{Tính ổn định qua các lượt chạy lặp (RQ4)}
+\textit{(Chờ chỉ số Jaccard, Fleiss' $\kappa$ và biểu đồ \texttt{pic/stability.png}.)}
+
+% ============================================================
+%  CHƯƠNG 6: THẢO LUẬN
+% ============================================================
+\chapter{Thảo luận}
+
+\section{Phân tích lỗi chi tiết (False Positives \& False Negatives)}
+\textit{(Sẽ phân loại khoảng 30 cảnh báo giả và 30 trường hợp bỏ sót từ \texttt{eval/results/error\_samples.json} kèm 4--6 ví dụ cụ thể trong Phase 6.)}
+
+\section{Các mối đe dọa tính hợp lệ (\textit{Threats to Validity})}
+\begin{itemize}
+  \item \textbf{Chuyên gia AI thay thế chuyên gia con người:} Tuy sử dụng 2 lượt độc lập của Claude (tách biệt với họ mô hình công cụ) kèm đo $\kappa$ và phân xử, nhãn chuẩn vẫn phản ánh phán đoán của AI thay vì kỹ sư yêu cầu thực tế tại doanh nghiệp.
+  \item \textbf{Rò rỉ dữ liệu huấn luyện (\textit{Data Contamination}):} Bộ PURE được công bố công khai từ năm 2017 nên các LLM hiện đại có thể đã tiếp xúc một phần trong quá trình tiền huấn luyện; tài liệu mới \texttt{seeded\_lms} được thiết kế nhằm kiểm soát rủi ro này.
+  \item \textbf{Tính tự nhiên của lỗi cấy nhân tạo:} 30 lỗi trong \texttt{seeded\_lms} được thiết kế theo mẫu chuẩn hóa nên có thể rõ ràng hơn lỗi phân tán trong tài liệu công nghiệp thực tế.
+  \item \textbf{Kích thước mẫu hạn chế:} Tổng 147 yêu cầu trên 4 tài liệu là quy mô vừa phải; báo cáo sử dụng khoảng tin cậy Bootstrap 95\% để lượng hóa độ bất định thống kê.
+  \item \textbf{Biến động phiên bản và hạn mức mô hình:} Các mô hình CLI thương mại có thể cập nhật phiên bản hoặc thay đổi giới hạn sử dụng theo thời gian.
+\end{itemize}
+
+% ============================================================
+%  CHƯƠNG 7: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+% ============================================================
+\chapter{Kết luận và hướng phát triển}
+
+\section{Kết luận}
+\textit{(Tổng kết câu trả lời định lượng cho RQ1--RQ4 sau khi hoàn tất Phase 5--6.)}
+
+\section{Hướng phát triển}
+\begin{itemize}
+  \item Mở rộng đánh giá với chuyên gia con người (kỹ sư phân tích nghiệp vụ) trên các tài liệu SRS tiếng Việt thực tế.
+  \item Kết hợp kiểm tra quy tắc tất định (\texttt{T0}) ở bước tiền xử lý với tác tử LLM trang bị kỹ năng ngữ nghĩa để cân bằng tốc độ và độ bao phủ.
+  \item Tích hợp quy trình phát hiện khiếm khuyết vào luồng CI/CD kiểm duyệt tài liệu Markdown/ReqIF tự động.
+\end{itemize}
+
+% ============================================================
+%  TÀI LIỆU THAM KHẢO
+% ============================================================
+\chapter*{Tài liệu tham khảo}
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+
+\begin{enumerate}[leftmargin=2.2em,label={[\arabic*]}]
+  \bibitem{ieee830}
+  IEEE Computer Society. (1998). \textit{IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications}. IEEE.
+
+  \bibitem{iso29148}
+  ISO/IEC/IEEE. (2018). \textit{ISO/IEC/IEEE 29148:2018: Systems and software engineering --- Life cycle processes --- Requirements engineering}. International Organization for Standardization.
+
+  \bibitem{berry2003}
+  Berry, D. M., Kamsties, E., \& Krieger, M. M. (2003). \textit{From Contract Drafting to Software Specification: Linguistic Sources of Ambiguity}. University of Waterloo Technical Report / Fraunhofer IESE Report 139.03/E.
+
+  \bibitem{ferrari2017}
+  Ferrari, A., Spagnolo, G. O., \& Gnesi, S. (2017). PURE: A Dataset of Public Requirements Documents. \textit{Proceedings of the 25th IEEE International Requirements Engineering Conference (RE)}, pp. 502--505. DOI: 10.1109/RE.2017.29.
+
+  \bibitem{femmer2017}
+  Femmer, H., Méndez Fernández, D., Wagner, S., \& Eder, S. (2017). Rapid quality assurance with Requirements Smells. \textit{Journal of Systems and Software}, 123, 190--213. DOI: 10.1016/j.jss.2016.02.047.
+
+  \bibitem{fabbrini2001}
+  Fabbrini, F., Fusani, M., Gnesi, S., \& Lami, G. (2001). The Linguistic Approach to the Natural Language Requirements Quality: Benefit of the use of an Automatic Tool. \textit{Proceedings of the 26th Annual NASA Goddard Software Engineering Workshop}, pp. 97--105.
+
+  \bibitem{fabbrini2005}
+  Fabbrini, F., Fusani, M., Gnesi, S., \& Lami, G. (2005). An Automatic Tool for the Analysis of Natural Language Requirements (QuARS). \textit{Computer Systems Science and Engineering}, 20(1), 53--62.
+
+  \bibitem{zhao2021}
+  Zhao, L., Alhoshan, W., Ferrari, A., Letsholo, K. J., Ajagbe, M. A., Chioasca, E.-V., \& Batista-Navarro, R. T. (2021). Natural Language Processing for Requirements Engineering: A Systematic Mapping Study. \textit{ACM Computing Surveys}, 54(3), Article 55.
+
+  \bibitem{lubos2024}
+  Lubos, S., Felfernig, A., Tran, T. N. T., Garber, D., El Mansi, M., Erdeniz, S. P., \& Le, V.-M. (2024). Leveraging LLMs for the Quality Assurance of Software Requirements. \textit{Proceedings of the 32nd IEEE International Requirements Engineering Conference (RE)}.
+
+  \bibitem{ronanki2025}
+  Ronanki, K., Cabrero-Daniel, B., Horkoff, J., \& Berger, C. (2025). Prompt Engineering Guidelines for Using Large Language Models in Requirements Engineering. \textit{Euromicro Conference Series on Software Engineering and Advanced Applications (SEAA)}.
+\end{enumerate}
+
+% ============================================================
+%  PHỤ LỤC
+% ============================================================
+\appendix
+\chapter{Phụ lục: Kỹ năng, Câu lệnh và Dữ liệu mẫu}
+
+\section{Toàn văn kỹ năng \texttt{SKILL.md}}
+\lstinputlisting[caption={Tệp kỹ năng \texttt{skill/req-defect-detector/SKILL.md}}]{skill/req-defect-detector/SKILL.md}
+
+\section{Câu lệnh thuần (\texttt{plain\_prompt.txt}) và câu lệnh kèm kỹ năng (\texttt{skill\_prompt.txt})}
+\lstinputlisting[caption={Tệp \texttt{prompts/plain\_prompt.txt}}]{prompts/plain_prompt.txt}
+\lstinputlisting[caption={Tệp \texttt{prompts/skill\_prompt.txt}}]{prompts/skill_prompt.txt}
+
+\section{Ví dụ đầu ra JSON từ công cụ nền tảng \texttt{T0} trên \texttt{peering}}
+\lstinputlisting[caption={Trích đoạn kết quả JSON chuẩn hóa (\texttt{runs/T0/peering/run\_1.json})}]{runs/T0/peering/run_1.json}
+
+\end{document}

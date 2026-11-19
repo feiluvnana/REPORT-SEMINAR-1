@@ -1,0 +1,24 @@
+Analyze the provided Software Requirements Specification (SRS) JSON document and identify all requirement defects across three types: ambiguity, incompleteness, and inconsistency.
+
+Rules:
+1. Always use the exact JSON `req_id` field (e.g., "KP-017"), never any legacy label embedded inside `text` (such as "REQ-18:").
+2. Emit at most ONE finding per `(req_id, type)` pair. If a requirement has multiple triggers of the same defect type, combine them into one finding using the primary subtype. A requirement may still have findings of different types.
+3. For any `inconsistency` finding (including duplicate requirements), anchor the finding on the LATER `req_id` in document order and list the earlier conflicting/duplicated `req_id`(s) in `related_ids`. For `ambiguity` and `incompleteness`, set `related_ids` to `[]`.
+4. Only use these exact `type` and `subtype` values:
+   - `ambiguity`: `vague_term`, `referential`, `syntactic`, `coordination`, `weak_phrase`
+   - `incompleteness`: `tbd`, `missing_actor`, `missing_condition`, `missing_error_handling`, `missing_value_or_unit`, `missing_consequence`
+   - `inconsistency`: `conflicting_values`, `conflicting_rules`, `terminology`, `duplicate`
+5. Return ONLY a single valid JSON object (no markdown commentary outside JSON) with this exact schema:
+{
+  "doc_id": "<doc_id from input>",
+  "findings": [
+    {
+      "req_id": "KP-019",
+      "type": "ambiguity",
+      "subtype": "vague_term",
+      "evidence": "more than a line",
+      "related_ids": [],
+      "rationale": "Concise explanation of the defect."
+    }
+  ]
+}

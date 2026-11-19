@@ -1,0 +1,35 @@
+# Python virtual environment & bytecode
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS & editor junk
+.DS_Store
+*.swp
+*.swo
+*~
+
+# LaTeX / Beamer build & auxiliary files (keep deliverables *.pdf; keep runs/**/*.log)
+*.aux
+*.toc
+main.toc
+*.out
+*.xdv
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.bcf
+*.run.xml
+*.synctex.gz
+/main.log
+/slides/*.log

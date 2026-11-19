@@ -1,0 +1,298 @@
+{
+ "doc_id": "seeded_lms",
+ "findings": [
+  {
+   "req_id": "SD-005",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "lock a Member account after 5 consecutive failed login attempts",
+   "related_ids": [],
+   "rationale": "Specifies the lockout trigger but omits the lockout duration and unlock/error behavior."
+  },
+  {
+   "req_id": "SD-006",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "notify him by email",
+   "related_ids": [],
+   "rationale": "Ambiguous pronoun 'him' could refer to the Librarian, the Member, or the Guarantor."
+  },
+  {
+   "req_id": "SD-007",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD minutes",
+   "related_ids": [],
+   "rationale": "Uses placeholder 'TBD' instead of a concrete expiration duration."
+  },
+  {
+   "req_id": "SD-008",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "user-friendly ... easy to navigate ... loads rapidly",
+   "related_ids": [],
+   "rationale": "Subjective, unmeasurable usability and performance terms without quantitative criteria."
+  },
+  {
+   "req_id": "SD-012",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "at most TBD consecutive times",
+   "related_ids": [],
+   "rationale": "Maximum renewal count is left as TBD."
+  },
+  {
+   "req_id": "SD-013",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "validate item eligibility ... and issue the loan receipt",
+   "related_ids": [],
+   "rationale": "Omits error handling when the barcode is invalid or the item is ineligible for checkout."
+  },
+  {
+   "req_id": "SD-014",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "the allowed maximum number of active hold requests",
+   "related_ids": [],
+   "rationale": "Fails to specify the numeric maximum hold limit."
+  },
+  {
+   "req_id": "SD-015",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "borrow up to 8 physical items simultaneously",
+   "related_ids": [
+    "SD-009"
+   ],
+   "rationale": "Conflicts with SD-009, which limits active simultaneous loans to at most 5 items."
+  },
+  {
+   "req_id": "SD-016",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "21 calendar days",
+   "related_ids": [
+    "SD-010"
+   ],
+   "rationale": "Conflicts with SD-010, which defines the standard loan duration as 14 calendar days."
+  },
+  {
+   "req_id": "SD-017",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "self-register online ... and immediately check out physical books without Librarian ID verification",
+   "related_ids": [
+    "SD-001"
+   ],
+   "rationale": "Directly contradicts SD-001, which requires in-person Librarian verification of a government-issued photo ID before account creation."
+  },
+  {
+   "req_id": "SD-018",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "remain held indefinitely until the requesting Member explicitly cancels",
+   "related_ids": [
+    "SD-011"
+   ],
+   "rationale": "Directly contradicts SD-011, which mandates automatic cancellation after 72 hours."
+  },
+  {
+   "req_id": "SD-021",
+   "type": "ambiguity",
+   "subtype": "coordination",
+   "evidence": "and/or suspend borrowing privileges and/or apply a penalty flag",
+   "related_ids": [],
+   "rationale": "Multiple 'and/or' coordinations leave unclear which subset of actions is mandatory."
+  },
+  {
+   "req_id": "SD-022",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be reviewed, approved, and recorded",
+   "related_ids": [],
+   "rationale": "Passive construction omits the authorized actor responsible for reviewing and approving waivers."
+  },
+  {
+   "req_id": "SD-023",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "if appropriate",
+   "related_ids": [],
+   "rationale": "Weak conditional phrase 'if appropriate' leaves trigger conditions and timing undefined."
+  },
+  {
+   "req_id": "SD-024",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD years",
+   "related_ids": [],
+   "rationale": "Retention period is marked as TBD instead of a concrete number of years."
+  },
+  {
+   "req_id": "SD-025",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "$1.25 USD per overdue day ... with no maximum cap",
+   "related_ids": [
+    "SD-019"
+   ],
+   "rationale": "Conflicts with SD-019, which specifies $0.50 USD per day capped at $20.00 USD."
+  },
+  {
+   "req_id": "SD-026",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "renew borrowed items online at any time regardless of any unpaid overdue fine balance",
+   "related_ids": [
+    "SD-020"
+   ],
+   "rationale": "Directly contradicts SD-020, which blocks renewals when unpaid fines exceed $5.00 USD."
+  },
+  {
+   "req_id": "SD-027",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "Patron's ... Patron profile",
+   "related_ids": [
+    "SD-001",
+    "SD-009"
+   ],
+   "rationale": "Uses 'Patron' instead of the established SRS term 'Member' defined in SD-001 and SD-009."
+  },
+  {
+   "req_id": "SD-028",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "quickly ... many users",
+   "related_ids": [],
+   "rationale": "Unquantified terms 'quickly' and 'many users' lack measurable latency and concurrency thresholds."
+  },
+  {
+   "req_id": "SD-029",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "where possible",
+   "related_ids": [],
+   "rationale": "Weak phrase 'where possible' makes the requirement non-verifiable and optional without criteria."
+  },
+  {
+   "req_id": "SD-030",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "sufficient ... acceptable",
+   "related_ids": [],
+   "rationale": "Vague qualifiers 'sufficient' and 'acceptable' provide no testable acceptance threshold."
+  },
+  {
+   "req_id": "SD-031",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "efficiently ... large ... noticeable",
+   "related_ids": [],
+   "rationale": "Vague terms 'efficiently', 'large', and 'noticeable' lack concrete volume and latency bounds."
+  },
+  {
+   "req_id": "SD-032",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "shall detect the active references",
+   "related_ids": [],
+   "rationale": "States that the system detects active references but omits what action/consequence follows (block, warn, or cascade)."
+  },
+  {
+   "req_id": "SD-034",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "at TBD intervals",
+   "related_ids": [],
+   "rationale": "Backup frequency is unspecified (TBD)."
+  },
+  {
+   "req_id": "SD-035",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "important ... timely manner ... appropriate period",
+   "related_ids": [],
+   "rationale": "Multiple vague terms leave event scope, latency, and retention period undefined."
+  },
+  {
+   "req_id": "SD-036",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "unreachable for more than 10 seconds, the Failover Manager shall log event FAILOVER-01",
+   "related_ids": [],
+   "rationale": "Omits the recovery action/timeout when primary database failover occurs."
+  },
+  {
+   "req_id": "SD-037",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "adequate ... clear",
+   "related_ids": [],
+   "rationale": "Vague terms 'adequate' and 'clear' lack concrete protocol and error-format specifications."
+  },
+  {
+   "req_id": "SD-038",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "at least 8 characters",
+   "related_ids": [
+    "SD-002"
+   ],
+   "rationale": "Conflicts with SD-002, which requires Member passwords of at least 12 characters."
+  },
+  {
+   "req_id": "SD-039",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "60 minutes of user inactivity",
+   "related_ids": [
+    "SD-004"
+   ],
+   "rationale": "Conflicts with SD-004, which terminates inactive sessions after 15 minutes."
+  },
+  {
+   "req_id": "SD-040",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "reversible AES-256 encryption so Administrators can decrypt and retrieve forgotten passwords",
+   "related_ids": [
+    "SD-003"
+   ],
+   "rationale": "Directly contradicts SD-003, which mandates one-way bcrypt hashing and forbids storing recoverable passwords."
+  }
+ ],
+ "original_texts": {
+  "SD-005": "The Authentication Service shall lock a Member account for 30 minutes after 5 consecutive failed login attempts within a 10-minute window and display error code ERR-AUTH-LOCK.",
+  "SD-006": "When a Librarian links a Member account to a Guarantor profile, the Notification Service shall send a confirmation email to the Member within 60 seconds and log delivery status.",
+  "SD-007": "The Authentication Service shall expire password-reset tokens exactly 15 minutes after issuance and invalidate any unused token upon a subsequent reset request.",
+  "SD-008": "The Portal Interface shall render the Member dashboard and navigation menu in compliance with WCAG 2.1 Level AA contrast (minimum 4.5:1) and complete initial page load within 1.5 seconds on 10 Mbps links.",
+  "SD-012": "The Circulation System shall allow a Member to renew an eligible loan at most 2 consecutive times provided no other Member has an active hold on that title; ineligible renewals shall return error ERR-RENEW-DENIED.",
+  "SD-013": "When a Member scans an item barcode at a self-checkout kiosk, the Circulation System shall validate item eligibility within 2 seconds and print a receipt; if the barcode is unreadable or the item is reference-only, the kiosk shall display an error alert and abort checkout.",
+  "SD-014": "The Hold Queue Service shall allow each Member to maintain at most 3 active hold requests simultaneously and reject additional requests with message ERR-HOLD-CAP.",
+  "SD-015": "The Circulation System shall restrict standard Members to a maximum of 8 simultaneous physical item checkouts via the online reservation cart.",
+  "SD-016": "The Circulation System shall enforce a 14-day return window for print monographs checked out by Members.",
+  "SD-017": "The Registration Portal shall allow Librarians to pre-register visitors in person prior to ID check.",
+  "SD-018": "The Hold Queue Service shall release uncollected reserved items after 72 hours and notify the Member of cancellation.",
+  "SD-021": "When an item becomes 7 days overdue, the Notification Service shall send an overdue reminder email to the Member and suspend borrowing privileges until the item is returned.",
+  "SD-022": "The Billing Service shall allow a Librarian to waive overdue fines up to $25.00 USD after entering a mandatory reason code in the audit log; waivers above $25.00 USD require Administrator approval.",
+  "SD-023": "The Notification Service shall dispatch SMS due-date alerts 24 hours before the due timestamp to all Members who have opted into SMS notifications.",
+  "SD-024": "The Billing Service shall delete archived payment receipts after 7 years in accordance with the library retention policy.",
+  "SD-025": "The Billing Service shall calculate late fees at $0.50 USD per day with a $20.00 USD maximum cap.",
+  "SD-026": "The Circulation System shall block online renewals when a Member's unpaid fine balance exceeds $5.00 USD.",
+  "SD-027": "The Circulation System shall display a Member's active loan list, due dates, and current fine balance on the account summary screen within 1 second.",
+  "SD-028": "The Catalog Search Service shall return paginated results of 25 items per page within 800 milliseconds under a sustained load of 500 concurrent queries.",
+  "SD-029": "The Catalog Search Service shall highlight exact matched query terms inside title and abstract snippets using HTML <mark> tags when query length is between 2 and 100 characters.",
+  "SD-030": "The Catalog Search Service shall normalize ISBN-10 and ISBN-13 search strings by stripping hyphens and spaces, and return matching bibliographic records within 500 milliseconds.",
+  "SD-031": "The Catalog Import Service shall process batch MARC21 files up to 50,000 records within 5 minutes and quarantine malformed records into an error CSV report.",
+  "SD-032": "When a Librarian deletes a bibliographic record that still has active loans or holds, the Catalog Service shall block deletion and return error ERR-CAT-INUSE.",
+  "SD-034": "The Backup Service shall execute an encrypted full database backup daily at 02:00 UTC and verify checksum integrity; backup failures shall trigger an alert to the Administrator within 5 minutes.",
+  "SD-035": "The Audit Service shall log all Librarian and Administrator privilege changes within 1 second and retain logs in append-only storage for 365 days.",
+  "SD-036": "If the primary database node becomes unreachable for more than 10 seconds, the Failover Manager shall promote the synchronous standby replica within 30 seconds and log event FAILOVER-01.",
+  "SD-037": "The Portal Interface shall restrict Member login pages to TLS 1.3 and display clear error codes for expired certificates within 3 seconds.",
+  "SD-038": "The Authentication Service shall enforce a minimum password length of 12 characters.",
+  "SD-039": "The Authentication Service shall automatically log out inactive web portal users after 15 minutes.",
+  "SD-040": "The Authentication Service shall hash Member and Librarian passwords using bcrypt."
+ }
+}
