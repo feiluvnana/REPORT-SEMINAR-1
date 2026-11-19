@@ -1,0 +1,98 @@
+"""Step 15 consistency checker for REPORT/ deliverables and git hygiene.
+
+Usage:
+  # Before Phase 3-6 results exist (checks paths, PDFs, and no Co-Authored-By trailers):
+  REPORT/.venv/bin/python REPORT/eval/check_consistency.py --pre-freeze
+
+  # Full Step 15 check (requires frozen GT, metrics.csv, tables, charts, final TeX):
+  REPORT/.venv/bin/python REPORT/eval/check_consistency.py
+"""
+import argparse
+import csv
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+from check_gt import verify as verify_hashes
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def check_tex_refs(tex_path: Path, base_dir: Path, pic_dirs: list[Path]) -> list[str]:
+    errs = []
+    txt = tex_path.read_text()
+    for inc in re.findall(r"\\input\{([^}]+)\}", txt):
+        target = (base_dir / inc)
+        if not target.exists():
+            errs.append(f"{tex_path.name}: missing \\input{{{inc}}}")
+    for lst in re.findall(r"\\lstinputlisting(?:\[[^\]]*\])?\{([^}]+)\}", txt):
+        target = (base_dir / lst)
+        if not target.exists():
+            errs.append(f"{tex_path.name}: missing \\lstinputlisting{{{lst}}}")
+    for img in re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", txt):
+        if not any((d / img).exists() for d in pic_dirs):
+            errs.append(f"{tex_path.name}: missing image {img}")
+    return errs
+
+
+def check_git_no_coauthor() -> list[str]:
+    res = subprocess.run(
+        ["git", "-C", str(ROOT), "log", "--format=%H %B"],
+        capture_output=True, text=True, check=False,
+    )
+    if res.returncode != 0:
+        return ["Could not read git log."]
+    if re.search(r"co-authored-by\s*:", res.stdout, re.I):
+        return ["Found forbidden Co-Authored-By line in git history."]
+    return []
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pre-freeze", action="store_true")
+    args = ap.parse_args()
+
+    errors: list[str] = []
+    errors.extend(check_git_no_coauthor())
+    errors.extend(check_tex_refs(ROOT / "main.tex", ROOT, [ROOT / "pic", ROOT]))
+    errors.extend(check_tex_refs(ROOT / "slides/slides.tex", ROOT / "slides", [ROOT / "pic", ROOT / "slides"]))
+
+    for pdf in [ROOT / "main.pdf", ROOT / "slides/slides.pdf", ROOT / "slides/slides-notes.pdf"]:
+        if not pdf.exists():
+            errors.append(f"Missing compiled PDF: {pdf}")
+
+    if not args.pre_freeze:
+        if not verify_hashes():
+            errors.append("HASHES.txt verification failed.")
+        metrics_csv = ROOT / "eval/results/metrics.csv"
+        if not metrics_csv.exists():
+            errors.append("Missing eval/results/metrics.csv")
+        else:
+            with metrics_csv.open() as fh:
+                rows = list(csv.DictReader(fh))
+            if not rows:
+                errors.append("eval/results/metrics.csv is empty.")
+        for chart in [
+            "prf1_by_tool.png", "recall_heatmap.png", "skill_effect.png",
+            "stability.png", "miss_rate_by_type.png",
+        ]:
+            if not (ROOT / "pic" / chart).exists():
+                errors.append(f"Missing chart: pic/{chart}")
+        for tex in [ROOT / "main.tex", ROOT / "slides/slides.tex"]:
+            content = tex.read_text()
+            for marker in ["Đang chờ kết quả", "Chờ kết quả", "Chờ Phase", "Sẽ bổ sung"]:
+                if marker in content:
+                    errors.append(f"{tex.name} still contains placeholder text: {marker!r}")
+
+    if errors:
+        for e in errors:
+            print(f"FAIL: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    mode = "PRE-FREEZE" if args.pre_freeze else "FULL"
+    print(f"CONSISTENCY_OK ({mode}): TeX references, PDFs, and git commit hygiene verified.")
+
+
+if __name__ == "__main__":
+    main()

@@ -33,6 +33,7 @@ This is an empirical study: **tool + public dataset + expert ground truth + comp
 - **Language:** the report and slides are written in Vietnamese. Code, data, and this plan are in English.
 - **Team details** are kept in one file (`meta.tex`) shared by the report and slides: Nhóm 4 — Nguyễn Tùng Dương (20251175M, nhóm trưởng), Trần Xuân Nam (20251177M), Phạm Gia Khánh (20252636M); lecturer TS. Nguyễn Thanh Hùng (Khoa Khoa học Máy tính, SoICT).
 - **HUST logo** is fetched from public HUST sources (hust.edu.vn or Wikimedia Commons) into `slides/` and `pic/`.
+- **Git commit hygiene:** never include any `Co-Authored-By:` or co-author trailer lines in commit messages.
 
 ## 3. Folder Layout (`REPORT/`)
 
@@ -61,6 +62,7 @@ REPORT/
 │   ├── baseline_rules.py    # T0
 │   ├── run_tools.sh         # runs T1–T4 × docs × 3 repeats
 │   ├── evaluate.py          # matching + metrics + charts
+│   ├── check_consistency.py # Step 15 consistency & git-commit check
 │   └── results/             # metrics.csv, tables/*.tex
 ├── pic/                     # charts + logo (shared by report & slides)
 ├── main.tex → main.pdf
