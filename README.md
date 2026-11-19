@@ -150,25 +150,27 @@ Mọi con số trong báo cáo và slide đều lấy từ `result/tables/number
 
 ## 5. Trước khi trình bày: kiểm tra, rà soát, nắm vững
 
+**Phụ trách mục 5.1 và 5.2: Dương (toàn bộ).** Mục 5.3 do từng thành viên tự nắm vững.
+
 ### 5.1. Cần kiểm tra (bắt buộc)
-| # | Việc cần làm | Cách làm | Phụ trách |
-|---|---|---|---|
-| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 7** (làm Phần A trước, Phần B sau). Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | **Dương (toàn bộ)** |
-| 2 | **Quyết định phân xử** | Đọc 16 dòng trong `dataset/ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá | Dương |
-| 3 | **Tài liệu tham khảo** | Claude đã đối chiếu 10 tài liệu với nguồn gốc (19/11/2026) và sửa 4 mục (Ronanki 2025 sai tác giả; Fabbrini 2005 thiếu tác giả Trentanni; Berry 2003 và Zhao 2021 sửa thông tin xuất bản). Người cần mở lại ít nhất Fabbrini 2005 (chưa xác nhận số tập/trang) và hai chuẩn IEEE 830, ISO/IEC/IEEE 29148 | Nam |
-| 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `report/main.pdf`, `slide/slides.pdf` và `result/metrics.csv` | Dương |
-| 5 | **Yêu cầu của giảng viên** | Đối chiếu định dạng, số trang, trang bìa, các mục bắt buộc, hình thức và hạn nộp với yêu cầu của TS. Nguyễn Thanh Hùng | Dương |
+| # | Việc cần làm | Cách làm |
+|---|---|---|
+| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 7** (làm Phần A trước, Phần B sau). Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" |
+| 2 | **Quyết định phân xử** | Đọc 16 dòng trong `dataset/ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá |
+| 3 | **Tài liệu tham khảo** | Claude đã đối chiếu 10 tài liệu với nguồn gốc (19/11/2026) và sửa 4 mục (Ronanki 2025 sai tác giả; Fabbrini 2005 thiếu tác giả Trentanni; Berry 2003 và Zhao 2021 sửa thông tin xuất bản). Người cần mở lại ít nhất Fabbrini 2005 (chưa xác nhận số tập/trang) và hai chuẩn IEEE 830, ISO/IEC/IEEE 29148 |
+| 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `report/main.pdf`, `slide/slides.pdf` và `result/metrics.csv` |
+| 5 | **Yêu cầu của giảng viên** | Đối chiếu định dạng, số trang, trang bìa, các mục bắt buộc, hình thức và hạn nộp với yêu cầu của TS. Nguyễn Thanh Hùng |
 
 ### 5.2. Cần rà soát
-| # | Việc cần làm | Phụ trách |
-|---|---|---|
-| 1 | Đọc `report/main.pdf` và slide: câu thiếu tự nhiên, thuật ngữ không thống nhất ("khiếm khuyết" và "lỗi", "mơ hồ" và "nhập nhằng"), lỗi dấu | Cả nhóm |
-| 2 | Đọc mục 4.4 (Phân tích lỗi) trong `report/main.pdf`: cách phân loại có công bằng không ("chuyên gia quá khắt khe" hay công cụ thật sự sai)? | Cả nhóm |
-| 3 | Xem 2–3 đầu ra gốc trong `result/run/T2/*/run_1.json` để biết công cụ thực sự xuất ra gì | Cả nhóm |
-| 4 | Biểu đồ trong `report/figures/` có đọc rõ khi chiếu lên màn hình không (cỡ chữ, màu) | Nam |
-| 5 | Tập dượt khoảng 15 phút theo ghi chú thuyết trình, có bấm giờ; chạy thử demo trên máy trình chiếu và giữ sẵn slide dự phòng | Cả nhóm |
+| # | Việc cần làm |
+|---|---|
+| 1 | Đọc `report/main.pdf` và slide: câu thiếu tự nhiên, thuật ngữ không thống nhất ("khiếm khuyết" và "lỗi", "mơ hồ" và "nhập nhằng"), lỗi dấu |
+| 2 | Đọc mục 4.4 (Phân tích lỗi) trong `report/main.pdf`: cách phân loại có công bằng không ("chuyên gia quá khắt khe" hay công cụ thật sự sai)? |
+| 3 | Xem 2–3 đầu ra gốc trong `result/run/T2/*/run_1.json` để biết công cụ thực sự xuất ra gì |
+| 4 | Biểu đồ trong `report/figures/` có đọc rõ khi chiếu lên màn hình không (cỡ chữ, màu) |
 
 ### 5.3. Cần nắm vững (mỗi thành viên giải thích được trong 1–2 câu)
+- **Tập dượt:** mỗi thành viên tập phần của mình theo `slide/slides-notes.pdf` (mục 6), cả nhóm chạy thử toàn bài khoảng 15 phút có bấm giờ và thử demo trên máy trình chiếu.
 - **Precision, recall (tỷ lệ phát hiện đúng), miss rate (tỷ lệ bỏ sót) và F1**: công thức và ý nghĩa.
 - **Cohen's κ và Fleiss' κ**: đo gì, vì sao κ = 0,81 chỉ chứng minh chuyên gia AI *tự nhất quán* chứ không chứng minh *đúng*.
 - **Khoảng tin cậy bootstrap 95%** và phép so sánh ghép cặp T2−T1, T4−T3.
