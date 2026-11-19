@@ -31,8 +31,9 @@ Nghiên cứu thực nghiệm đánh giá khả năng phát hiện **3 loại kh
 │   ├── peering.json            # 24 yêu cầu (PE-001..PE-024)
 │   ├── gammaj.json             # 51 yêu cầu (GJ-001..GJ-051)
 │   ├── seeded_lms.json         # 40 yêu cầu LMS có cấy lỗi (SD-001..SD-040)
-│   └── ground_truth/           # Chuẩn chuyên gia: expert_pass1/2, final_gt, seed_key,
-│                               # annotation_guideline, adjudication_log, HASHES.txt (SHA-256)
+│   ├── ground_truth/           # Chuẩn chuyên gia: expert_pass1/2, final_gt, seed_key,
+│   │                           # annotation_guideline, adjudication_log, HASHES.txt (SHA-256)
+│   └── human_check/            # Phiếu kiểm tra bởi người: part_a.csv, part_b.csv (xem mục 6)
 ├── prompt/                     # Mọi thứ công cụ nhận được
 │   ├── plain.txt               # Câu lệnh thuần (T1/T3)
 │   ├── skill.txt               # Câu lệnh kèm kỹ năng (T2/T4)
@@ -46,6 +47,10 @@ Nghiên cứu thực nghiệm đánh giá khả năng phát hiện **3 loại kh
 │   ├── run_tools.py / .sh      # Chạy T1-T4 x 4 tài liệu x 3 lượt (cô lập, kiểm toán, thử lại)
 │   ├── parse_tool_output.py    # Tách JSON, kiểm toán lời gọi công cụ, kiểm tra schema
 │   ├── evaluate.py             # Độ đo, Bootstrap CI, bảng LaTeX & biểu đồ
+│   ├── audit_runs.py           # Kiểm toán 48 lượt chạy -> result/run/run_summary.csv
+│   ├── extra_analysis.py       # Phân tích bổ sung: PURE theo loại, tác động kỹ năng, độ nhạy
+│   ├── make_human_check.py     # Sinh phiếu kiểm tra bởi người (mục 6)
+│   ├── score_human_check.py    # Chấm phiếu kiểm tra bởi người
 │   └── check_consistency.py    # Kiểm tra nhất quán TeX, PDF, số liệu & git
 ├── result/                     # Mọi thứ được sinh ra
 │   ├── run/<tool>/<doc>/run_<k>.{json,log,meta.json}   # Kết quả T0-T4 + run_status.csv
@@ -115,7 +120,7 @@ uv pip install --python .venv/bin/python pillow numpy matplotlib
 ### 5.1. Cần kiểm tra (bắt buộc)
 | # | Việc cần làm | Cách làm | Phụ trách |
 |---|---|---|---|
-| 1 | **Đối chiếu chuẩn với người** | Một thành viên tự gắn nhãn khoảng 20 yêu cầu PURE mà không xem chuẩn (Claude chuẩn bị mẫu và phiếu trống). Claude tính κ giữa người và chuẩn, rồi đưa kết quả vào báo cáo §5.1 và slide. Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | Khánh |
+| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 6**. Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | Khánh (Phần A), cả nhóm (Phần B) |
 | 2 | **Quyết định phân xử** | Đọc 16 dòng trong `dataset/ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá | Dương |
 | 3 | **Tài liệu tham khảo** | Kiểm tra tác giả, tên bài, nơi công bố, năm và DOI của 10 tài liệu trong báo cáo. Kém chắc chắn nhất: Fabbrini 2001, Fabbrini 2005, Lubos 2024, Ronanki 2025, Berry 2003 | Nam |
 | 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `report/main.pdf`, `slide/slides.pdf` và `result/metrics.csv` | Dương |
@@ -147,3 +152,46 @@ uv pip install --python .venv/bin/python pillow numpy matplotlib
   | LLM đã thấy PURE khi huấn luyện? | Tài liệu cấy lỗi là mới; đã thảo luận trong báo cáo |
   | Lỗi cấy quá dễ? | Đúng: T0 đạt precision 0,84 trên tài liệu cấy lỗi so với 0,40 trên PURE, nên PURE là thước đo chính |
   | Mô hình có cố định phiên bản không? | Không; đã ghi lại agy 1.5.12, ngày chạy và bí danh mô hình; 3 lượt lặp kèm chỉ số độ ổn định |
+
+---
+
+## 6. Hướng dẫn kiểm tra bởi người (human check)
+
+Nhãn chuẩn do AI (Claude Opus) tạo. Phần kiểm tra này để **người** xác nhận độ tin cậy của nhãn chuẩn và trả lời câu hỏi "các cảnh báo thừa của công cụ là nhiễu hay lỗi thật?". Kết quả được báo cáo **bên cạnh** kết quả chính; nhãn chuẩn đã đóng băng **không bị thay đổi**.
+
+### 6.1. Quy tắc chung
+- **Không mở** `dataset/ground_truth/`, `result/` (nhất là `result/human_check_key.json`) và thư mục `result/run/` cho đến khi điền xong cả hai phần.
+- **Làm Phần A trước Phần B.** Người làm Phần A không được xem Phần B trước khi xong Phần A.
+- Mở tệp `.csv` bằng Excel hoặc Google Sheets. Khi lưu, giữ **định dạng CSV UTF-8**, không đổi tên cột, không thêm hoặc xóa dòng.
+- Nếu cần ngữ cảnh, có thể đọc toàn bộ tài liệu gốc trong `dataset/keepass.json`, `dataset/peering.json`, `dataset/gammaj.json`.
+
+### 6.2. Ba loại khiếm khuyết
+| Loại | Khi nào gắn nhãn | Ví dụ |
+|---|---|---|
+| **Mơ hồ** (ambiguity) | Từ ngữ chủ quan, không đo được hoặc có thể hiểu nhiều cách: "nhanh", "dễ dùng", "nếu có thể", đại từ không rõ chỉ ai, "và/hoặc" | "Hệ thống phản hồi *nhanh*" |
+| **Thiếu sót** (incompleteness) | Thiếu thông tin cần để triển khai/kiểm thử: TBD, không rõ ai thực hiện, thiếu điều kiện kích hoạt, thiếu xử lý khi lỗi, thiếu giá trị/đơn vị, nêu điều kiện mà không nêu hệ quả | "Khóa tài khoản sau 3 lần sai" (khóa bao lâu?) |
+| **Mâu thuẫn** (inconsistency) | Mâu thuẫn hoặc trùng lặp với một yêu cầu **trước đó** trong cùng tài liệu: giá trị khác nhau, quy tắc trái ngược, gọi cùng một đối tượng bằng tên khác, lặp lại gần như y hệt | YC 4: "tối đa 2 kiện" và YC 9: "tối đa 3 kiện" |
+
+**Tiêu chí:** chỉ coi là khiếm khuyết khi một người rà soát cẩn thận **sẽ yêu cầu tác giả sửa**, vì lập trình viên hoặc kiểm thử viên có thể hiểu sai, không kiểm chứng được, hoặc nhận chỉ dẫn mâu thuẫn. Không tính lỗi chính tả/ngữ pháp không đổi nghĩa, và không tính từ ngữ đã được làm rõ bằng con số/chuẩn ngay trong yêu cầu.
+
+### 6.3. Phần A — gắn nhãn độc lập (`dataset/human_check/part_a.csv`, 20 yêu cầu, 1 người, khoảng 30 phút)
+Với mỗi yêu cầu, điền **0 hoặc 1** vào **cả ba** cột (không để trống):
+- `ambiguity_0_1`, `incompleteness_0_1`, `inconsistency_0_1`: 1 nếu yêu cầu có loại khiếm khuyết đó, 0 nếu không.
+- `inconsistency_related_ids`: nếu `inconsistency_0_1 = 1`, ghi mã yêu cầu trước đó bị mâu thuẫn/trùng (ví dụ `PE-007`).
+- `note`: ghi chú ngắn nếu phân vân (không bắt buộc).
+
+### 6.4. Phần B — đánh giá trường hợp bất đồng (`dataset/human_check/part_b.csv`, 30 trường hợp, cả nhóm hoặc 1 người, khoảng 30–45 phút)
+Mỗi dòng là một **khẳng định** rằng yêu cầu có một khiếm khuyết (loại, tiểu loại, bằng chứng, lý do; với mâu thuẫn có kèm yêu cầu liên quan). Khẳng định có thể đến từ công cụ hoặc từ chuyên gia; **nguồn được ẩn** để đánh giá khách quan.
+- `is_real_defect_yes_no_unsure`: điền `yes` (đúng là khiếm khuyết theo tiêu chí 6.2), `no` (không phải), hoặc `unsure` (không quyết định được).
+- `note`: lý do ngắn, nhất là khi chọn `no` hoặc `unsure` (ví dụ "chỉ là văn phong", "cần kiến thức miền").
+- Nếu làm theo nhóm: thảo luận và điền **một** quyết định thống nhất cho mỗi dòng.
+
+### 6.5. Sau khi điền xong
+Báo cho Claude, hoặc tự chạy:
+```bash
+.venv/bin/python script/score_human_check.py
+```
+Script báo lỗi nếu còn ô trống hoặc giá trị sai định dạng. Kết quả (κ giữa người và nhãn chuẩn, tỷ lệ cảnh báo thừa được xác nhận là lỗi thật, precision điều chỉnh của từng công cụ) được ghi vào `result/human_check_results.json` và đưa vào báo cáo, slide.
+
+Có thể tạo lại phiếu trống y hệt (seed cố định) bằng `.venv/bin/python script/make_human_check.py`.
+

@@ -1,0 +1,361 @@
+{
+ "seed": 2026,
+ "part_a": [
+  {
+   "case_id": "A01",
+   "doc_id": "keepass",
+   "req_id": "KP-027"
+  },
+  {
+   "case_id": "A02",
+   "doc_id": "keepass",
+   "req_id": "KP-013"
+  },
+  {
+   "case_id": "A03",
+   "doc_id": "keepass",
+   "req_id": "KP-030"
+  },
+  {
+   "case_id": "A04",
+   "doc_id": "peering",
+   "req_id": "PE-016"
+  },
+  {
+   "case_id": "A05",
+   "doc_id": "gammaj",
+   "req_id": "GJ-035"
+  },
+  {
+   "case_id": "A06",
+   "doc_id": "gammaj",
+   "req_id": "GJ-044"
+  },
+  {
+   "case_id": "A07",
+   "doc_id": "peering",
+   "req_id": "PE-019"
+  },
+  {
+   "case_id": "A08",
+   "doc_id": "gammaj",
+   "req_id": "GJ-042"
+  },
+  {
+   "case_id": "A09",
+   "doc_id": "gammaj",
+   "req_id": "GJ-022"
+  },
+  {
+   "case_id": "A10",
+   "doc_id": "gammaj",
+   "req_id": "GJ-001"
+  },
+  {
+   "case_id": "A11",
+   "doc_id": "gammaj",
+   "req_id": "GJ-016"
+  },
+  {
+   "case_id": "A12",
+   "doc_id": "gammaj",
+   "req_id": "GJ-011"
+  },
+  {
+   "case_id": "A13",
+   "doc_id": "gammaj",
+   "req_id": "GJ-040"
+  },
+  {
+   "case_id": "A14",
+   "doc_id": "keepass",
+   "req_id": "KP-023"
+  },
+  {
+   "case_id": "A15",
+   "doc_id": "keepass",
+   "req_id": "KP-025"
+  },
+  {
+   "case_id": "A16",
+   "doc_id": "keepass",
+   "req_id": "KP-004"
+  },
+  {
+   "case_id": "A17",
+   "doc_id": "peering",
+   "req_id": "PE-018"
+  },
+  {
+   "case_id": "A18",
+   "doc_id": "gammaj",
+   "req_id": "GJ-003"
+  },
+  {
+   "case_id": "A19",
+   "doc_id": "gammaj",
+   "req_id": "GJ-038"
+  },
+  {
+   "case_id": "A20",
+   "doc_id": "peering",
+   "req_id": "PE-024"
+  }
+ ],
+ "part_b": [
+  {
+   "case_id": "B01",
+   "doc_id": "keepass",
+   "req_id": "KP-028",
+   "type": "inconsistency",
+   "source": "tool_only",
+   "llm_runs_flagging": 9
+  },
+  {
+   "case_id": "B02",
+   "doc_id": "gammaj",
+   "req_id": "GJ-020",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B03",
+   "doc_id": "keepass",
+   "req_id": "KP-031",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 10
+  },
+  {
+   "case_id": "B04",
+   "doc_id": "keepass",
+   "req_id": "KP-029",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B05",
+   "doc_id": "keepass",
+   "req_id": "KP-018",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B06",
+   "doc_id": "keepass",
+   "req_id": "KP-023",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B07",
+   "doc_id": "gammaj",
+   "req_id": "GJ-005",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 6
+  },
+  {
+   "case_id": "B08",
+   "doc_id": "peering",
+   "req_id": "PE-004",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B09",
+   "doc_id": "keepass",
+   "req_id": "KP-017",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B10",
+   "doc_id": "keepass",
+   "req_id": "KP-017",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B11",
+   "doc_id": "keepass",
+   "req_id": "KP-015",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 4
+  },
+  {
+   "case_id": "B12",
+   "doc_id": "peering",
+   "req_id": "PE-023",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B13",
+   "doc_id": "peering",
+   "req_id": "PE-003",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B14",
+   "doc_id": "peering",
+   "req_id": "PE-002",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B15",
+   "doc_id": "peering",
+   "req_id": "PE-010",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 4
+  },
+  {
+   "case_id": "B16",
+   "doc_id": "gammaj",
+   "req_id": "GJ-017",
+   "type": "incompleteness",
+   "source": "expert_only",
+   "llm_runs_missing": 6
+  },
+  {
+   "case_id": "B17",
+   "doc_id": "peering",
+   "req_id": "PE-007",
+   "type": "ambiguity",
+   "source": "expert_only",
+   "llm_runs_missing": 5
+  },
+  {
+   "case_id": "B18",
+   "doc_id": "keepass",
+   "req_id": "KP-003",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B19",
+   "doc_id": "gammaj",
+   "req_id": "GJ-044",
+   "type": "inconsistency",
+   "source": "tool_only",
+   "llm_runs_flagging": 1
+  },
+  {
+   "case_id": "B20",
+   "doc_id": "peering",
+   "req_id": "PE-013",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 9
+  },
+  {
+   "case_id": "B21",
+   "doc_id": "keepass",
+   "req_id": "KP-002",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 6
+  },
+  {
+   "case_id": "B22",
+   "doc_id": "keepass",
+   "req_id": "KP-007",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 1
+  },
+  {
+   "case_id": "B23",
+   "doc_id": "peering",
+   "req_id": "PE-020",
+   "type": "ambiguity",
+   "source": "expert_only",
+   "llm_runs_missing": 3
+  },
+  {
+   "case_id": "B24",
+   "doc_id": "gammaj",
+   "req_id": "GJ-013",
+   "type": "ambiguity",
+   "source": "tool_only",
+   "llm_runs_flagging": 5
+  },
+  {
+   "case_id": "B25",
+   "doc_id": "gammaj",
+   "req_id": "GJ-016",
+   "type": "incompleteness",
+   "source": "expert_only",
+   "llm_runs_missing": 5
+  },
+  {
+   "case_id": "B26",
+   "doc_id": "peering",
+   "req_id": "PE-012",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B27",
+   "doc_id": "peering",
+   "req_id": "PE-017",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 12
+  },
+  {
+   "case_id": "B28",
+   "doc_id": "gammaj",
+   "req_id": "GJ-023",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 6
+  },
+  {
+   "case_id": "B29",
+   "doc_id": "gammaj",
+   "req_id": "GJ-018",
+   "type": "incompleteness",
+   "source": "tool_only",
+   "llm_runs_flagging": 6
+  },
+  {
+   "case_id": "B30",
+   "doc_id": "gammaj",
+   "req_id": "GJ-039",
+   "type": "ambiguity",
+   "source": "expert_only",
+   "llm_runs_missing": 1
+  }
+ ],
+ "population": {
+  "tool_only_pairs": 172,
+  "tool_only_by_type": {
+   "ambiguity": 79,
+   "incompleteness": 82,
+   "inconsistency": 11
+  },
+  "expert_only_pairs": 5,
+  "part_b_tool_only_quota": {
+   "ambiguity": 11,
+   "incompleteness": 12,
+   "inconsistency": 2
+  }
+ }
+}
