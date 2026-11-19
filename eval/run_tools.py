@@ -39,7 +39,7 @@ AUDIT_RE = re.compile(r"ground_truth|seed_key|final_gt|expert_pass|gt_hidden", r
 
 HYDROGEN = os.environ.get("AGY_HYDROGEN_MODEL", "gemini-4-hydrogen-high")
 NEON = os.environ.get("AGY_NEON_MODEL", "gemini-4-neon-high")
-TIMEOUT_S = int(os.environ.get("AGY_TIMEOUT_S", "180"))
+TIMEOUT_S = int(os.environ.get("AGY_TIMEOUT_S", "300"))
 
 TOOL_CFG = {
     "T1": {"model": HYDROGEN, "skill": False},
@@ -60,13 +60,23 @@ def find_agy() -> str:
     return exe
 
 
-def agy_cmd(agy: str, tool: str, prompt: str) -> list[str]:
+def agy_settings(tool: str, scratch: Path) -> str:
+    """request-review auto-denies every tool call not explicitly allowed (agy 1.5.12).
+    Plain runs get no allowances; skill runs may read files inside their own scratch folder only."""
+    settings: dict = {"toolPermission": "request-review"}
+    if TOOL_CFG[tool]["skill"]:
+        forms = {scratch.as_posix(), scratch.resolve().as_posix(), str(scratch), str(scratch.resolve())}
+        settings["permissions"] = {"allow": [f"read_file({f}/**)" for f in sorted(forms)]}
+    return json.dumps(settings)
+
+
+def agy_cmd(agy: str, tool: str, prompt: str, scratch: Path) -> list[str]:
     cfg = TOOL_CFG[tool]
     cmd = [agy, "--sandbox"]
     if not cfg["skill"]:
         cmd.append("--disable-slash-commands")
-    cmd += ["--model", cfg["model"], "--output-format", "json",
-            "--print-timeout", f"{TIMEOUT_S}s", "-p", prompt]
+    cmd += ["--model", cfg["model"], "--settings", agy_settings(tool, scratch),
+            "--output-format", "stream-json", "--print-timeout", f"{TIMEOUT_S}s", "-p", prompt]
     return cmd
 
 
@@ -84,6 +94,7 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
     out_dir = ROOT / "runs" / tool / doc_id
     out_json = out_dir / f"run_{rep}.json"
     out_log = out_dir / f"run_{rep}.log"
+    out_meta = out_dir / f"run_{rep}.meta.json"
     out_dir.mkdir(parents=True, exist_ok=True)
     if out_json.exists():
         print(f"SKIP existing: {tool}/{doc_id}/run_{rep}.json")
@@ -108,7 +119,7 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
             print(f"RUN {tool} | {doc_id} | repeat {rep} | attempt {attempt}", flush=True)
             try:
                 res = subprocess.run(
-                    agy_cmd(agy, tool, full_prompt), cwd=scratch,
+                    agy_cmd(agy, tool, full_prompt, scratch), cwd=scratch,
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                     timeout=TIMEOUT_S + 60, check=False,
                 )
@@ -116,8 +127,12 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
             except subprocess.TimeoutExpired as exc:
                 out_log.write_bytes((exc.stdout or b"") + b"\n[run_tools] TIMEOUT\n")
 
+            parser_cmd = [sys.executable, str(PARSER), "--raw", str(out_log), "--doc", str(doc_path),
+                          "--out", str(out_json), "--workspace", str(scratch), "--meta", str(out_meta)]
+            if use_skill:
+                parser_cmd.append("--require-skill")
             parsed = subprocess.run(
-                [sys.executable, str(PARSER), "--raw", str(out_log), "--doc", str(doc_path), "--out", str(out_json)],
+                parser_cmd,
                 capture_output=True, text=True, encoding="utf-8", errors="replace", check=False,
             )
             if parsed.returncode == 0:

@@ -10,7 +10,8 @@ Rules:
    - `ambiguity`: `vague_term`, `referential`, `syntactic`, `coordination`, `weak_phrase`
    - `incompleteness`: `tbd`, `missing_actor`, `missing_condition`, `missing_error_handling`, `missing_value_or_unit`, `missing_consequence`
    - `inconsistency`: `conflicting_values`, `conflicting_rules`, `terminology`, `duplicate`
-5. Return ONLY a single valid JSON object (no markdown commentary outside JSON) with this exact schema:
+5. Do not search the web, fetch URLs, use browser tools, or run commands. Work only from the document in this prompt (and the skill file, if one is named above).
+6. Return ONLY a single valid JSON object (no markdown commentary outside JSON) with this exact schema:
 {
   "doc_id": "<doc_id from input>",
   "findings": [

@@ -427,9 +427,18 @@ Inconsistency (10) & \texttt{conflicting\_values} & 5 & Tối đa 5 sách (\text
 \end{table}
 
 \section{Môi trường phần mềm và cấu hình thực thi}
-Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.13 (\texttt{REPORT/.venv}) với \texttt{numpy} và \texttt{matplotlib}, biên dịch báo cáo bằng \texttt{XeLaTeX} (\texttt{latexmk}). Để tránh rò rỉ dữ liệu, tập \texttt{ground\_truth/} không bao giờ được sao chép vào thư mục tạm của các công cụ; các lượt chạy không dùng kỹ năng (Plain) được đặt trong thư mục cô lập hoàn toàn không chứa \texttt{SKILL.md} và truyền cờ \texttt{--disable-slash-commands}.
+Mọi thử nghiệm được thực hiện trên macOS sử dụng Python 3.12.13 (\texttt{REPORT/.venv}) với \texttt{numpy} và \texttt{matplotlib}, biên dịch báo cáo bằng \texttt{XeLaTeX} (\texttt{latexmk}). Các công cụ LLM chạy qua \texttt{agy} phiên bản 1.5.12 (bí danh mô hình \texttt{gemini-4-hydrogen-high} và \texttt{gemini-4-neon-high}, mức suy luận \textit{high}; CLI không cho đặt nhiệt độ hay seed và không công bố phiên bản mô hình cố định), giới hạn thời gian 300 giây mỗi lượt.
 
-Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{eval/parse\_tool\_output.py} để tách gói JSON của CLI và kiểm tra hợp lệ lược đồ; trường hợp lỗi định dạng sẽ được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
+Kiểm thử thực nghiệm cho thấy cờ \texttt{--sandbox} của \texttt{agy} chỉ cô lập lệnh terminal, \textbf{không} chặn công cụ đọc tệp, và công cụ tìm kiếm web không thể tắt. Vì vậy nghiên cứu áp dụng 4 lớp bảo vệ chống rò rỉ đáp án:
+\begin{enumerate}
+  \item \textbf{Quyền công cụ:} mọi lượt chạy dùng \texttt{--settings} với \texttt{toolPermission = request-review}, tự động từ chối mọi thao tác không nằm trong danh sách cho phép; riêng T2/T4 chỉ được phép đọc tệp \textit{bên trong} thư mục tạm của chính lượt chạy (nơi chứa \texttt{SKILL.md}).
+  \item \textbf{Cách ly vật lý:} \texttt{ground\_truth/} được chuyển ra ngoài kho mã trong suốt thời gian chạy và khôi phục khi kết thúc.
+  \item \textbf{Kiểm toán vết công cụ:} đầu ra \texttt{stream-json} ghi lại từng lời gọi công cụ; \texttt{parse\_tool\_output.py} loại bỏ lượt chạy nếu có tìm kiếm web, truy cập URL, trình duyệt, lệnh terminal, hoặc đọc tệp ngoài thư mục tạm, và với T2/T4 \textbf{bắt buộc} có lời gọi đọc \texttt{SKILL.md} (chứng minh kỹ năng thực sự được nạp).
+  \item \textbf{Chỉ dẫn trong prompt:} cả hai prompt cấm tìm kiếm web và công cụ ngoài với cùng một câu chữ.
+\end{enumerate}
+Các lượt Plain chạy trong thư mục tạm chỉ chứa tài liệu đầu vào và truyền thêm \texttt{--disable-slash-commands}; máy chạy không cài kỹ năng toàn cục nào của \texttt{agy}, nên T1--T4 có cùng ngữ cảnh ngoài khác biệt về kỹ năng.
+
+Với mỗi cấu hình công cụ LLM, hệ thống thực thi $4 \text{ tài liệu} \times 3 \text{ lượt lặp} = 12$ lượt chạy độc lập. Mỗi lượt chạy được bọc qua \texttt{eval/parse\_tool\_output.py} để tách gói \texttt{stream-json} của CLI, kiểm toán vết công cụ và kiểm tra hợp lệ lược đồ; thời gian chạy và số token được lưu vào \texttt{run\_k.meta.json}. Lượt chạy lỗi (định dạng, quá thời gian hoặc không qua kiểm toán) được thử lại tối đa 1 lần trước khi ghi nhận thất bại.
 
 % ============================================================
 %  CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM (CHỜ SỐ LIỆU PHASE 3-6)

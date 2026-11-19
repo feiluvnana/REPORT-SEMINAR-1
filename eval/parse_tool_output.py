@@ -2,11 +2,15 @@
 
 Usage:
   REPORT/.venv/bin/python parse_tool_output.py \
-      --raw raw.log --doc data/peering.json --out run_1.json
-Exits non-zero if the CLI failed, JSON cannot be extracted, or schema validation fails.
+      --raw raw.log --doc data/peering.json --out run_1.json \
+      [--workspace <scratch dir>] [--require-skill] [--meta run_1.meta.json]
+Exits non-zero if the CLI failed, JSON cannot be extracted, schema validation fails,
+or (for agy stream-json logs) the tool-call audit fails: web/browser tools used,
+a file read outside the workspace, or (with --require-skill) SKILL.md never read.
 """
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -77,6 +81,9 @@ def unwrap_cli_envelope(raw_text: str) -> str:
             continue
         if not isinstance(env, dict):
             continue
+        # agy stream-json: final {"event": "result", "result": {...}}
+        if env.get("event") == "result" and isinstance(env.get("result"), dict):
+            env = env["result"]
         # agy envelope
         if "response" in env and "status" in env:
             if env.get("status") != "SUCCESS":
@@ -92,6 +99,73 @@ def unwrap_cli_envelope(raw_text: str) -> str:
             return line
 
     return raw_text
+
+
+FORBIDDEN_TOOL_RE = re.compile(r"^(search_web|read_url_content|browser_.*|run_command)$")
+READ_TOOLS = {"read_file", "view_file"}
+SKILL_REL = "skill/req-defect-detector/SKILL.md"
+
+
+def collect_stream_events(raw_text: str) -> tuple[list[dict], dict]:
+    """Return (tool steps, final result dict) from an agy stream-json log; empty if not stream-json."""
+    steps, result = [], {}
+    for line in raw_text.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(ev, dict):
+            continue
+        su = ev.get("step_update")
+        if ev.get("event") == "step_update" and isinstance(su, dict) and su.get("step_type") == "tool":
+            info = su.get("tool_info") or {}
+            params = info.get("parameters") or {}
+            steps.append({
+                "step_index": su.get("step_index"),
+                "state": su.get("state"),
+                "tool_name": su.get("tool_name") or info.get("name"),
+                "path": params.get("Path") or params.get("path") or params.get("AbsolutePath"),
+            })
+        elif ev.get("event") == "result" and isinstance(ev.get("result"), dict):
+            result = ev["result"]
+    return steps, result
+
+
+def _norm(path: str) -> str:
+    return os.path.normcase(os.path.realpath(path))
+
+
+def audit_tool_calls(steps: list[dict], workspace: Path | None, require_skill: bool) -> list[str]:
+    errors = []
+    ws = _norm(str(workspace)) if workspace else None
+    skill_read = False
+    seen = set()
+    for st in steps:
+        if st.get("state") not in (None, "DONE"):
+            continue  # in-progress or denied attempt; only completed tool calls can leak information
+        name = st.get("tool_name") or ""
+        key = (st.get("step_index"), name, st.get("path"))
+        if key in seen:
+            continue
+        seen.add(key)
+        if FORBIDDEN_TOOL_RE.match(name):
+            errors.append(f"forbidden tool used: {name}")
+        if name in READ_TOOLS and st.get("path"):
+            rp = st["path"]
+            full = rp if os.path.isabs(rp) or not ws else os.path.join(ws, rp)
+            nf = _norm(full)
+            if re.search(r"ground_truth|seed_key|final_gt|expert_pass", rp, re.I):
+                errors.append(f"read of ground-truth path: {rp}")
+            elif ws and not (nf == ws or nf.startswith(ws + os.sep)):
+                errors.append(f"read outside workspace: {rp}")
+            if nf.replace("\\", "/").endswith(SKILL_REL):
+                skill_read = True
+    if require_skill and not skill_read:
+        errors.append("SKILL.md was never read")
+    return errors
 
 
 def validate_findings(obj: dict, expected_doc_id: str, valid_req_ids: set[str]) -> dict:
@@ -143,11 +217,32 @@ def main() -> None:
     ap.add_argument("--raw", required=True, type=Path)
     ap.add_argument("--doc", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--workspace", type=Path, default=None)
+    ap.add_argument("--require-skill", action="store_true")
+    ap.add_argument("--meta", type=Path, default=None)
     args = ap.parse_args()
 
     doc = json.loads(args.doc.read_text(encoding="utf-8"))
     valid_req_ids = {r["req_id"] for r in doc["requirements"]}
     raw_text = args.raw.read_text(errors="replace", encoding="utf-8")
+
+    steps, result = collect_stream_events(raw_text)
+    audit_errors = audit_tool_calls(steps, args.workspace, args.require_skill) if (steps or result) else (
+        ["SKILL.md was never read (no stream-json tool trace)"] if args.require_skill else [])
+    if args.meta:
+        args.meta.parent.mkdir(parents=True, exist_ok=True)
+        meta = {
+            "tool_calls": steps,
+            "denied_actions": result.get("denied_actions", []),
+            "duration_seconds": result.get("duration_seconds"),
+            "num_turns": result.get("num_turns"),
+            "usage": result.get("usage"),
+            "status": result.get("status"),
+            "audit_errors": audit_errors,
+        }
+        args.meta.write_text(json.dumps(meta, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    if audit_errors:
+        raise ValueError("tool-call audit failed: " + "; ".join(audit_errors))
 
     assistant_text = unwrap_cli_envelope(raw_text)
     obj = extract_json_object(assistant_text)

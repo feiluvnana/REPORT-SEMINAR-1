@@ -244,7 +244,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 | 5 | Expert pass 2 (fresh Claude Opus subagent), in parallel with 4 | 2, 3 | ✅ done (78 findings; seeded recall 30/30) |
 | 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ✅ done (κ=0.814; 16 disagreements → 9 accepted/7 rejected; final GT 82 findings) |
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ✅ done 2026-11-19T01:59Z (GT + SKILL.md + prompts). Re-freeze only if prompts change after `QUESTION.md` answers, before any run |
-| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 re-run with data-independent rules; `run_tools.sh` hides `ground_truth/` during runs + audits logs; T1–T4 wait for `QUESTION.md` answers |
+| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; runner hardened per `ANSWER.md`; next: 1 smoke run (`--tools T1 T2 --docs peering --repeats 1`), then the full run |
 | 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ runs on frozen GT; T0 evaluated (all-strict F1 0.487, PURE 0.411, seeded 0.653) |
 | 10 | Error analysis | 9 | ☐ |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slides/hust_logo.png`, `pic/hust_logo.png`, `slides/hust_banner_white.png` from hust.edu.vn) |
@@ -259,7 +259,13 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - **Expert passes:** both ran as blind Opus subagents with their own `annotation_guideline.md`, separate from SKILL.md. Pass 1 was not run in the main session, because that session had already seen the skill and seed key.
 - **Freeze also hashes** `skill/**/*.md` and `prompts/*.txt`.
 - **`run_tools.sh` fixes:** it moves `ground_truth/` out of the repo during runs, greps the logs for GT file names afterwards, and the macOS `seq 1 0` loop bug is fixed.
-- **Open questions** for agy (sandbox reads, whether the skill is really loaded) are in `QUESTION.md`.
+- **agy answers** (`ANSWER.md`, agy 1.5.12): `--sandbox` does not block `read_file`, and web search cannot be disabled, so the runner now uses:
+  - `--settings` with `toolPermission: request-review`; T2/T4 are only allowed `read_file(<scratch>/**)`;
+  - `stream-json` output, so `parse_tool_output.py` can audit tool calls (no web, browser or command tools, no reads outside scratch; T2/T4 must read SKILL.md);
+  - a 300 s timeout and a per-run `run_k.meta.json` (duration, tokens, tool calls);
+  - one identical no-web rule in both prompts.
+
+  Re-frozen 2026-11-19T06:23Z, before any kept tool run.
 
 ## 7. Agent Assignment
 | Work | Agent |
