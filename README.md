@@ -42,14 +42,14 @@ REPORT/
 │   ├── final_gt.json                    # Chuẩn sau phân xử (chờ chạy)
 │   ├── adjudication_log.md              # Nhật ký phân xử bất đồng (chờ chạy)
 │   └── HASHES.txt                       # Mã băm SHA-256 đóng băng trước Phase 4
-├── runs/<tool>/<doc>/run_<k>.json       # Kết quả chạy T0 (đã xong) và T1-T6 (chờ Phase 4)
+├── runs/<tool>/<doc>/run_<k>.json       # Kết quả chạy T0 (đã xong) và T1-T4 (chờ Phase 4)
 ├── eval/
 │   ├── prepare_data.py                  # Trích xuất PURE XML -> JSON chuẩn hóa
 │   ├── seed_defects.py                  # Sinh seeded_lms.json + seed_key.json
 │   ├── baseline_rules.py                # Công cụ nền tảng T0 (Smella/QuARS-style)
 │   ├── check_gt.py                      # Tính Cohen's kappa, Recall cấy lỗi & đóng băng SHA-256
 │   ├── parse_tool_output.py             # Tách JSON từ đầu ra CLI & kiểm tra schema
-│   ├── run_tools.sh                     # Chạy T1-T6 x 4 tài liệu x 3 lượt (cô lập, có retry)
+│   ├── run_tools.sh                     # Chạy T1-T4 x 4 tài liệu x 3 lượt (cô lập, có retry)
 │   ├── evaluate.py                      # Tính độ đo, Bootstrap CI, bảng LaTeX & 5 biểu đồ
 │   └── results/                         # metrics.csv, tables/*.tex, error_samples.json
 ├── pic/                                 # Logo HUST & các biểu đồ PNG
@@ -84,7 +84,7 @@ REPORT/
    REPORT/.venv/bin/python REPORT/eval/check_gt.py --analyze
    REPORT/.venv/bin/python REPORT/eval/check_gt.py --freeze
    ```
-4. **Chạy các cấu hình LLM (`T1`–`T6`: Hydrogen, Composer 2.5, Neon) và tính độ đo, bảng, biểu đồ:**
+4. **Chạy các cấu hình LLM (`T1`–`T4`: Gemini 4 Hydrogen và Gemini 4 Neon) và tính độ đo, bảng, biểu đồ:**
    ```bash
    bash REPORT/eval/run_tools.sh
    REPORT/.venv/bin/python REPORT/eval/evaluate.py
@@ -99,4 +99,4 @@ REPORT/
 
 ## 4. Trạng thái hiện tại
 - **Đã hoàn thành (không cần Claude / LLM thương mại):** dữ liệu PURE + `seeded_lms.json` + `seed_key.json`, `SKILL.md` & các câu lệnh đối chứng, công cụ `T0`, toàn bộ script kiểm tra chuẩn/đóng băng/tách JSON/đánh giá (`evaluate.py --self-test` đạt), khung báo cáo `main.tex` (Chương 1–4, Tài liệu tham khảo, Phụ lục), khung slide `beamerthemeHUST.sty` + `slides.tex` + `slides-notes.tex` và `README.md`.
-- **Đang chờ:** lượt gắn nhãn chuẩn chuyên gia bằng **Claude** (Pass 1, Pass 2, phân xử) do hết hạn mức tạm thời, sau đó đóng băng `HASHES.txt`, chạy Phase 4–5 (`T1`–`T6`) và hoàn thiện Chương 5–7 cùng các slide kết quả.
+- **Đang chờ:** lượt gắn nhãn chuẩn chuyên gia bằng **Claude Opus** (Pass 1, Pass 2, phân xử), sau đó đóng băng `HASHES.txt`, chạy Phase 4–5 (`T1`–`T4`) và hoàn thiện Chương 5–7 cùng các slide kết quả.

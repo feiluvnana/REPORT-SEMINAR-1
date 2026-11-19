@@ -342,11 +342,9 @@ def generate_charts(summary: dict, tools: list[str]) -> None:
     # 3. Skill-effect chart (Plain vs +Skill F1 for all model pairs)
     pairs = []
     if "T1" in summary and "T2" in summary:
-        pairs.append(("Hydrogen", summary["T1"]["all_strict"]["f1_mean"] * 100, summary["T2"]["all_strict"]["f1_mean"] * 100))
+        pairs.append(("Gemini 4 Hydrogen", summary["T1"]["all_strict"]["f1_mean"] * 100, summary["T2"]["all_strict"]["f1_mean"] * 100))
     if "T3" in summary and "T4" in summary:
-        pairs.append(("Composer 2.5", summary["T3"]["all_strict"]["f1_mean"] * 100, summary["T4"]["all_strict"]["f1_mean"] * 100))
-    if "T5" in summary and "T6" in summary:
-        pairs.append(("Neon", summary["T5"]["all_strict"]["f1_mean"] * 100, summary["T6"]["all_strict"]["f1_mean"] * 100))
+        pairs.append(("Gemini 4 Neon", summary["T3"]["all_strict"]["f1_mean"] * 100, summary["T4"]["all_strict"]["f1_mean"] * 100))
     if pairs:
         px = np.arange(len(pairs))
         fig, ax = plt.subplots(figsize=(6, 4))
@@ -552,9 +550,9 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(csv_rows)
 
-    # Paired bootstrap skill effect (T2-T1, T4-T3, T6-T5)
+    # Paired bootstrap skill effect (T2-T1, T4-T3)
     skill_effects = []
-    for base_t, skill_t in [("T1", "T2"), ("T3", "T4"), ("T5", "T6")]:
+    for base_t, skill_t in [("T1", "T2"), ("T3", "T4")]:
         if base_t in boot_cache and skill_t in boot_cache:
             diff = boot_cache[skill_t] - boot_cache[base_t]
             lo, hi = np.percentile(diff, [2.5, 97.5])

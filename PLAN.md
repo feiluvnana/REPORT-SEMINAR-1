@@ -21,13 +21,13 @@ This is an empirical study: **tool + public dataset + expert ground truth + comp
   | Kind | Example | Role in our study |
   |---|---|---|
   | Rule-based NLP "smell" detector | Smella-style vague words, passive voice, TBD | **Baseline (T0)**, Python script |
-  | Plain LLM prompt | "Find defects in this SRS" | **T1 / T3 / T5**, measures what the skill adds |
-  | **LLM agent + skill** | Agent loads `SKILL.md` (taxonomy, checklist, JSON output) | **Main tools (T2 / T4 / T6)** |
+  | Plain LLM prompt | "Find defects in this SRS" | **T1 / T3**, measures what the skill adds |
+  | **LLM agent + skill** | Agent loads `SKILL.md` (taxonomy, checklist, JSON output) | **Main tools (T2 / T4)** |
   | Fine-tuned classifier (BERT, …) | Needs labeled training data | Related work only |
   | Commercial tools (QVscribe, IBM RQA) | Paid licenses | Related work only |
 
-- **Expert = Claude** (main Claude Code session) replaces the human expert.
-- **Tools = non-Claude models only.** agy and cursor-agent can also run Claude models, so a non-Claude model must be selected explicitly (§5). This keeps the expert and the tools on different models and avoids self-preference bias.
+- **Expert = Claude Opus** (`claude` Opus main session + fresh Opus subagent) replaces the human expert.
+- **Tools = non-Claude models only.** `agy` can also run Claude models, so non-Claude Gemini models (`gemini-4-hydrogen-high`, `gemini-4-neon-high`) are selected explicitly (§5). This keeps the expert and the tools on different model families and avoids self-preference bias.
 - **Metrics are computed by a script**, never by hand.
 - **Each phase or tool run is done by a separate agent** (§7).
 - **Language:** the report and slides are written in Vietnamese. Code, data, and this plan are in English.
@@ -59,7 +59,7 @@ REPORT/
 │   ├── prepare_data.py      # PURE XML → JSON
 │   ├── seed_defects.py      # builds seeded_lms.json + seed_key.json
 │   ├── baseline_rules.py    # T0
-│   ├── run_tools.sh         # runs T1–T6 × docs × 3 repeats
+│   ├── run_tools.sh         # runs T1–T4 × docs × 3 repeats
 │   ├── evaluate.py          # matching + metrics + charts
 │   └── results/             # metrics.csv, tables/*.tex
 ├── pic/                     # charts + logo (shared by report & slides)
@@ -118,8 +118,8 @@ Based on IEEE 830 / ISO/IEC/IEEE 29148 quality attributes and Berry et al.'s *Am
                "evidence": "more than a line", "related_ids": [], "rationale": "..."}]}
 ```
 
-### Phase 3 — Expert Ground Truth (Claude Only)
-> **Model pinning:** Expert Pass 1, Expert Pass 2, and Adjudication must run on **Claude** (never on Gemini/Hydrogen or GPT/Codex) to keep the expert strictly separate from the evaluated tools.
+### Phase 3 — Expert Ground Truth (Claude Opus Only)
+> **Model pinning:** Expert Pass 1, Expert Pass 2, and Adjudication must run on **Claude Opus** (never on Gemini/Hydrogen/Neon) to keep the expert strictly separate from the evaluated tools.
 1. **Pass 1:** a Claude session/agent labels all 107 PURE requirements against the taxonomy → `expert_pass1.json`.
 2. **Pass 2:** an independent fresh Claude subagent/session with no access to pass 1, the seed key, or any tool output labels all 4 documents (147 requirements) → `expert_pass2.json`.
 3. Compute **Cohen's κ** on PURE (pass 1 vs pass 2) over all `107 × 3 = 321` `(req_id, type)` binary pairs (plus per-type κ) with a script; this is expert self-consistency.
@@ -128,22 +128,20 @@ Based on IEEE 830 / ISO/IEC/IEEE 29148 quality attributes and Berry et al.'s *Am
 6. **Freeze:** write SHA-256 hashes and a timestamp of all ground-truth files to `HASHES.txt` **before Phase 4 starts**. `evaluate.py` checks the hashes and refuses to run if any file has changed.
 
 ### Phase 4 — Tool Runs
-Smoke test (done): both CLIs run headless (`agy --sandbox`, `cursor-agent -p --trust` with `composer-2.5`; note `gpt-5.3-codex` & `grok-4.7-medium` on `cursor-agent` currently hit account usage limits).
+Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydrogen-high` and `gemini-4-neon-high` (`cursor-agent` / `composer-2.5` dropped).
 
 | ID | Tool | Model (non-Claude) | Setting | Command sketch |
 |---|---|---|---|---|
 | T0 | `baseline_rules.py` | — | Word lists + regex (vague words, TBD, passive voice without an actor, duplicates by text similarity) | `python3 eval/baseline_rules.py` |
 | T1 | agy | `gemini-4-hydrogen-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-hydrogen-high --output-format json -p "<plain + doc>"` |
 | T2 | agy | `gemini-4-hydrogen-high` | + skill | `agy --sandbox --model gemini-4-hydrogen-high --output-format json -p "<skill + doc>"` |
-| T3 | cursor-agent | `composer-2.5` | Plain prompt | `cursor-agent -p --trust --model composer-2.5 --output-format json "<plain + doc>"` |
-| T4 | cursor-agent | `composer-2.5` | + skill | same, with skill prompt |
-| T5 | agy | `gemini-4-neon-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-neon-high --output-format json -p "<plain + doc>"` |
-| T6 | agy | `gemini-4-neon-high` | + skill | `agy --sandbox --model gemini-4-neon-high --output-format json -p "<skill + doc>"` |
+| T3 | agy | `gemini-4-neon-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-neon-high --output-format json -p "<plain + doc>"` |
+| T4 | agy | `gemini-4-neon-high` | + skill | `agy --sandbox --model gemini-4-neon-high --output-format json -p "<skill + doc>"` |
 
-- 6 LLM configurations × 4 documents × **3 repeats** = **72 LLM runs**, plus T0.
-- Tools run in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands` on `agy`; `skill` with `skill/req-defect-detector/SKILL.md`), never `ground_truth/`. (`agy` uses `--sandbox`; `cursor-agent` drops `--mode ask` so skill runs can read `SKILL.md` without looping.)
+- 4 LLM configurations × 4 documents × **3 repeats** = **48 LLM runs**, plus T0.
+- Tools run in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands`; `skill` with `skill/req-defect-detector/SKILL.md`), never `ground_truth/`, using `--sandbox` so `agy` executes cleanly and returns JSON instead of entering planning mode.
 - Plain and skill prompts share the same task sentence and output schema. The only difference is the taxonomy and checklist in the skill.
-- `run_tools.sh` saves raw CLI output (`.log`), unwraps `--output-format json` CLI envelopes and validates the findings schema (`eval/parse_tool_output.py`), and uses per-run timeouts (`--print-timeout 180s` / `timeout 180`). Invalid JSON or schema errors get one retry; a second failure is logged as a failed run, never silently dropped.
+- `run_tools.sh` saves raw CLI output (`.log`), unwraps `--output-format json` CLI envelopes and validates the findings schema (`eval/parse_tool_output.py`), and uses per-run timeouts (`--print-timeout 180s`). Invalid JSON or schema errors get one retry; a second failure is logged as a failed run, never silently dropped.
 
 ### Phase 5 — Metrics Script (`eval/evaluate.py`)
 - **Pre-matching normalization:** collapse duplicate `(req_id, type)` predictions and deduplicate symmetric inconsistency predictions (where two predicted inconsistency findings cross-reference each other via `related_ids`) so tools are not penalized for reporting both ends of a conflict pair.
@@ -158,7 +156,7 @@ Smoke test (done): both CLIs run headless (`agy --sandbox`, `cursor-agent -p --t
   - F1
 - **Uncertainty:** bootstrap 95% CI over requirements (1000 resamples).
 - **Stability:** Jaccard overlap of findings between repeats, and Fleiss' κ across the 3 runs over `(req_id, type)` binary pairs (`147 × 3 = 441` overall; `107 × 3 = 321` PURE).
-- **Skill effect:** ΔF1 for T2 − T1, T4 − T3, and T6 − T5, with a paired bootstrap.
+- **Skill effect:** ΔF1 for T2 − T1 and T4 − T3, with a paired bootstrap.
 - **Outputs:** `results/metrics.csv`, LaTeX tables in `results/tables/`, and charts in `pic/`:
   - P/R/F1 bar chart per tool
   - Recall heatmap, tool × defect type
@@ -240,11 +238,11 @@ Smoke test (done): both CLIs run headless (`agy --sandbox`, `cursor-agent -p --t
 | 1 | Create folders, download PURE, `prepare_data.py` (Gamma J title fixed) | — | ✅ done |
 | 2 | `seed_defects.py` → `seeded_lms.json` + `seed_key.json` | 1 | ✅ done (40 reqs, 30 canonical defects) |
 | 3 | Write `SKILL.md`, `plain_prompt.txt`, `skill_prompt.txt` | taxonomy | ✅ done |
-| 4 | Expert pass 1 (Claude only) | 1 | ☐ waiting on Claude quota |
-| 5 | Expert pass 2 (fresh Claude subagent), in parallel with 4 | 2, 3 | ☐ waiting on Claude quota |
+| 4 | Expert pass 1 (Claude Opus) | 1 | ☐ ready for Claude |
+| 5 | Expert pass 2 (fresh Claude Opus subagent), in parallel with 4 | 2, 3 | ☐ ready for Claude |
 | 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ☐ (`check_gt.py` ready) |
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ☐ |
-| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T6 × 4 docs × 3) | 3, 7 | ⏳ T0 done; `run_tools.sh` & `parse_tool_output.py` ready (T1–T6 wait for step 7) |
+| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; `run_tools.sh` & `parse_tool_output.py` ready (T1–T4 wait for step 7) |
 | 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ script written & `--self-test` passed (run after step 8) |
 | 10 | Error analysis | 9 | ☐ |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slides/hust_logo.png`, `pic/hust_logo.png`, `slides/hust_banner_white.png` from hust.edu.vn) |
@@ -256,12 +254,11 @@ Smoke test (done): both CLIs run headless (`agy --sandbox`, `cursor-agent -p --t
 ## 7. Agent Assignment
 | Work | Agent |
 |---|---|
-| Orchestration, scripts, T0, report/slides scaffolding, evaluation & charts | Main session (or Claude session) |
-| Expert pass 1, Expert pass 2 (isolated), Adjudication | **Claude only** (`claude` CLI / Claude subagent — isolated passes) |
+| Orchestration, scripts, T0, report/slides scaffolding, evaluation & charts | Claude Opus main session (scaffolds already prepared) |
+| Expert pass 1, Expert pass 2 (isolated), Adjudication | **Claude Opus only** (`claude` CLI / Claude Opus subagent — isolated passes) |
 | T1 / T2 detection | agy (`gemini-4-hydrogen-high`) — separate process per run |
-| T3 / T4 detection | cursor-agent (`composer-2.5`) — separate process per run |
-| T5 / T6 detection | agy (`gemini-4-neon-high`) — separate process per run |
-| Error analysis, Report writing (`main.tex`), Slides (`slides.tex`) | Main session / Claude subagent (given frozen GT, `metrics.csv`, error analysis) |
+| T3 / T4 detection | agy (`gemini-4-neon-high`) — separate process per run |
+| Error analysis, Report writing (`main.tex`), Slides (`slides.tex`) | Claude Opus session / subagent (given frozen GT, `metrics.csv`, error analysis) |
 | Final consistency review | Automated check + reviewer verification of numbers and citations |
 
 ## 8. Risks & Mitigations
