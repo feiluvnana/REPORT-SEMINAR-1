@@ -35,6 +35,9 @@ GT_DIR = ROOT / "ground_truth"
 STATUS_FILE = ROOT / "runs" / "run_status.csv"
 ALL_TOOLS = ["T1", "T2", "T3", "T4"]
 ALL_DOCS = ["keepass", "peering", "gammaj", "seeded_lms"]
+QUOTA_RE = re.compile(r"RESOURCE_EXHAUSTED|quota|rate[ _-]?limit|too many requests|\b429\b|exhausted", re.I)
+QUOTA_WAIT_S = int(os.environ.get("AGY_QUOTA_WAIT_S", "300"))      # first wait; doubles up to the max
+QUOTA_WAIT_MAX_S = int(os.environ.get("AGY_QUOTA_WAIT_MAX_S", "1800"))
 AUDIT_RE = re.compile(r"ground_truth|seed_key|final_gt|expert_pass|gt_hidden", re.I)
 
 HYDROGEN = os.environ.get("AGY_HYDROGEN_MODEL", "gemini-4-hydrogen-high")
@@ -80,6 +83,27 @@ def agy_cmd(agy: str, tool: str, prompt: str, scratch: Path) -> list[str]:
     return cmd
 
 
+def quota_error(log_bytes: bytes) -> str | None:
+    """Return the CLI error text if the run failed because of quota/rate limits.
+    Only CLI error lines are inspected (AGY_ERROR lines and the final result's error), never model text."""
+    for line in log_bytes.decode("utf-8", errors="replace").splitlines():
+        line = line.strip()
+        cand = ""
+        if line.startswith("AGY_ERROR") or line.lower().startswith("error:"):
+            cand = line
+        elif line.startswith("{"):
+            try:
+                ev = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            res = ev.get("result", ev) if isinstance(ev, dict) else {}
+            if isinstance(res, dict) and res.get("status") not in (None, "SUCCESS"):
+                cand = f"{res.get('status')} {res.get('error', '')} {res.get('finished_reason', '')}"
+        if cand and QUOTA_RE.search(cand):
+            return cand[:200]
+    return None
+
+
 def append_status(row: list) -> None:
     STATUS_FILE.parent.mkdir(parents=True, exist_ok=True)
     new = not STATUS_FILE.exists()
@@ -116,16 +140,26 @@ def run_one(agy: str, tool: str, doc_id: str, rep: int) -> bool:
             shutil.copy2(ROOT / "skill" / "req-defect-detector" / "SKILL.md", skill_dst / "SKILL.md")
 
         for attempt in (1, 2):
-            print(f"RUN {tool} | {doc_id} | repeat {rep} | attempt {attempt}", flush=True)
-            try:
-                res = subprocess.run(
-                    agy_cmd(agy, tool, full_prompt, scratch), cwd=scratch,
-                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                    timeout=TIMEOUT_S + 60, check=False,
-                )
-                out_log.write_bytes(res.stdout or b"")
-            except subprocess.TimeoutExpired as exc:
-                out_log.write_bytes((exc.stdout or b"") + b"\n[run_tools] TIMEOUT\n")
+            wait_s = QUOTA_WAIT_S
+            while True:  # quota/rate-limit errors never consume an attempt: wait and try again
+                print(f"RUN {tool} | {doc_id} | repeat {rep} | attempt {attempt}", flush=True)
+                try:
+                    res = subprocess.run(
+                        agy_cmd(agy, tool, full_prompt, scratch), cwd=scratch,
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                        timeout=TIMEOUT_S + 60, check=False,
+                    )
+                    log_bytes = res.stdout or b""
+                except subprocess.TimeoutExpired as exc:
+                    log_bytes = (exc.stdout or b"") + b"\n[run_tools] TIMEOUT\n"
+                out_log.write_bytes(log_bytes)
+                q = quota_error(log_bytes)
+                if not q:
+                    break
+                append_status([tool, doc_id, rep, attempt, "QUOTA_WAIT", 0, out_log.relative_to(ROOT).as_posix()])
+                print(f"QUOTA_WAIT {tool}/{doc_id}/run_{rep}: {q} -> sleeping {wait_s}s", file=sys.stderr, flush=True)
+                time.sleep(wait_s)
+                wait_s = min(wait_s * 2, QUOTA_WAIT_MAX_S)
 
             parser_cmd = [sys.executable, str(PARSER), "--raw", str(out_log), "--doc", str(doc_path),
                           "--out", str(out_json), "--workspace", str(scratch), "--meta", str(out_meta)]

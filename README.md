@@ -118,6 +118,40 @@ uv pip install --python .venv/bin/python pillow numpy matplotlib
 
 ---
 
-## 5. Trạng thái hiện tại
-- **Đã hoàn thành (không cần Claude):** dữ liệu PURE + `seeded_lms.json` + `seed_key.json`, `SKILL.md` & các câu lệnh đối chứng, công cụ `T0`, toàn bộ script kiểm tra chuẩn/đóng băng/tách JSON/đánh giá/kiểm tra nhất quán, khung báo cáo `main.tex` (Chương 1–4, Tài liệu tham khảo, Phụ lục) và bộ slide `beamerthemeHUST.sty` + `slides.tex` + `slides-notes.tex`.
-- **Đang chờ:** lượt gắn nhãn chuẩn chuyên gia bằng **Claude Opus** (Pass 1, Pass 2, phân xử), đóng băng `HASHES.txt`, chạy Phase 4–5 (`T1`–`T4`) và hoàn thiện Chương 5–7 cùng các slide kết quả.
+## 5. Trước khi trình bày: kiểm tra, rà soát, nắm vững
+
+### 5.1. Cần kiểm tra (bắt buộc)
+| # | Việc cần làm | Cách làm | Phụ trách |
+|---|---|---|---|
+| 1 | **Đối chiếu chuẩn với người** | Một thành viên tự gắn nhãn khoảng 20 yêu cầu PURE mà không xem chuẩn (Claude chuẩn bị mẫu và phiếu trống). Claude tính κ giữa người và chuẩn, rồi đưa kết quả vào báo cáo §5.1 và slide. Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | Khánh |
+| 2 | **Quyết định phân xử** | Đọc 16 dòng trong `ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá | Dương |
+| 3 | **Tài liệu tham khảo** | Kiểm tra tác giả, tên bài, nơi công bố, năm và DOI của 10 tài liệu trong báo cáo. Kém chắc chắn nhất: Fabbrini 2001, Fabbrini 2005, Lubos 2024, Ronanki 2025, Berry 2003 | Nam |
+| 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `main.pdf`, `slides.pdf` và `eval/results/metrics.csv` | Dương |
+| 5 | **Yêu cầu của giảng viên** | Đối chiếu định dạng, số trang, trang bìa, các mục bắt buộc, hình thức và hạn nộp với yêu cầu của TS. Nguyễn Thanh Hùng | Dương |
+
+### 5.2. Cần rà soát
+| # | Việc cần làm | Phụ trách |
+|---|---|---|
+| 1 | Đọc `main.pdf` và slide: câu thiếu tự nhiên, thuật ngữ không thống nhất ("khiếm khuyết" và "lỗi", "mơ hồ" và "nhập nhằng"), lỗi dấu | Cả nhóm |
+| 2 | Đọc khoảng 5 ví dụ trong `eval/results/error_analysis.md`: cách phân loại có công bằng không ("chuyên gia quá khắt khe" hay công cụ thật sự sai)? | Cả nhóm |
+| 3 | Xem 2–3 đầu ra gốc trong `runs/T2/*/run_1.json` để biết công cụ thực sự xuất ra gì | Cả nhóm |
+| 4 | Biểu đồ trong `pic/` có đọc rõ khi chiếu lên màn hình không (cỡ chữ, màu) | Nam |
+| 5 | Tập dượt khoảng 15 phút theo ghi chú thuyết trình, có bấm giờ; chạy thử demo trên máy trình chiếu và giữ sẵn slide dự phòng | Cả nhóm |
+
+### 5.3. Cần nắm vững (mỗi thành viên giải thích được trong 1–2 câu)
+- **Precision, recall (tỷ lệ phát hiện đúng), miss rate (tỷ lệ bỏ sót) và F1**: công thức và ý nghĩa.
+- **Cohen's κ và Fleiss' κ**: đo gì, vì sao κ = 0,81 chỉ chứng minh chuyên gia AI *tự nhất quán* chứ không chứng minh *đúng*.
+- **Khoảng tin cậy bootstrap 95%** và phép so sánh ghép cặp T2−T1, T4−T3.
+- **Quy tắc so khớp:** một phát hiện = (`req_id`, loại lỗi); lỗi mâu thuẫn gắn vào yêu cầu xuất hiện sau.
+- **Chống rò rỉ đáp án:** đóng băng SHA-256 trước khi chạy công cụ; giới hạn quyền agy; kiểm toán lời gọi công cụ (T2/T4 bắt buộc đọc `SKILL.md`, cấm web); đã loại các ví dụ lấy từ đáp án ra khỏi `SKILL.md` và T0.
+- **Câu trả lời cho các câu hỏi dễ gặp:**
+
+  | Câu hỏi có thể gặp | Trả lời ngắn |
+  |---|---|
+  | Chuyên gia là AI, không phải người? | 2 lượt độc lập, κ = 0,814, recall 30/30 trên tài liệu cấy lỗi, nhật ký phân xử, đối chiếu với người (mục 5.1, việc 1); đã nêu trong mối đe dọa tính hợp lệ |
+  | Chuyên gia và công cụ đều là LLM? | Khác họ mô hình (Claude và Gemini); chuẩn được đóng băng trước khi chạy công cụ |
+  | Kỹ năng và chuẩn dùng chung một phân loại? | Cần thiết để so khớp công bằng; một phần lợi ích của kỹ năng có thể đến từ việc khớp quy ước, điều này đã nêu rõ |
+  | Dữ liệu nhỏ? | 147 yêu cầu, có khoảng tin cậy bootstrap, ghi nhận là hạn chế |
+  | LLM đã thấy PURE khi huấn luyện? | Tài liệu cấy lỗi là mới; đã thảo luận trong báo cáo |
+  | Lỗi cấy quá dễ? | Đúng: T0 đạt precision 0,84 trên tài liệu cấy lỗi so với 0,40 trên PURE, nên PURE là thước đo chính |
+  | Mô hình có cố định phiên bản không? | Không; đã ghi lại agy 1.5.12, ngày chạy và bí danh mô hình; 3 lượt lặp kèm chỉ số độ ổn định |

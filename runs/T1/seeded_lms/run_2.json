@@ -1,0 +1,266 @@
+{
+ "doc_id": "seeded_lms",
+ "findings": [
+  {
+   "req_id": "SD-005",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "lock a Member account after 5 consecutive failed login attempts within a 10-minute window",
+   "related_ids": [],
+   "rationale": "Specifies locking the account without defining the lockout duration, unlock mechanism, or error/notification behavior for locked login attempts."
+  },
+  {
+   "req_id": "SD-006",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "notify him",
+   "related_ids": [],
+   "rationale": "The pronoun 'him' is referentially ambiguous among the Librarian, the Member, and the Guarantor, and assumes a male recipient."
+  },
+  {
+   "req_id": "SD-007",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD minutes",
+   "related_ids": [],
+   "rationale": "Uses an unresolved 'TBD' placeholder for the password-reset token expiration time."
+  },
+  {
+   "req_id": "SD-008",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "user-friendly Member dashboard that is easy to navigate and loads rapidly on standard connections",
+   "related_ids": [],
+   "rationale": "Relies on subjective, unmeasurable terms ('user-friendly', 'easy to navigate', 'loads rapidly', 'standard connections') without objective acceptance criteria."
+  },
+  {
+   "req_id": "SD-012",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD consecutive times",
+   "related_ids": [],
+   "rationale": "Uses an unresolved 'TBD' placeholder for the maximum number of consecutive loan renewals."
+  },
+  {
+   "req_id": "SD-013",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "validate item eligibility within 2 seconds and issue the loan receipt",
+   "related_ids": [],
+   "rationale": "Defines only the success path and omits system behavior and error handling when item eligibility validation fails."
+  },
+  {
+   "req_id": "SD-014",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "the allowed maximum number of active hold requests",
+   "related_ids": [],
+   "rationale": "References an 'allowed maximum number' of active hold requests without specifying any numeric limit in the SRS."
+  },
+  {
+   "req_id": "SD-015",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "up to 8 physical items simultaneously",
+   "related_ids": [
+    "SD-009"
+   ],
+   "rationale": "Allows a Member in good standing to borrow up to 8 physical items simultaneously, conflicting with SD-009 which caps simultaneous checkouts at 5."
+  },
+  {
+   "req_id": "SD-016",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "21 calendar days",
+   "related_ids": [
+    "SD-010"
+   ],
+   "rationale": "Sets the standard loan period for circulating print books to 21 calendar days, conflicting with SD-010 which sets it to 14 calendar days."
+  },
+  {
+   "req_id": "SD-017",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "self-register online with only an email address and immediately check out physical books without Librarian ID verification",
+   "related_ids": [
+    "SD-001"
+   ],
+   "rationale": "Permits unverified self-registration and immediate checkout with only an email address, contradicting SD-001 which requires Librarian verification of government-issued photo ID and full contact details."
+  },
+  {
+   "req_id": "SD-018",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "remain held indefinitely until the requesting Member explicitly cancels the hold",
+   "related_ids": [
+    "SD-011"
+   ],
+   "rationale": "Requires reserved items to be held indefinitely until explicit cancellation, contradicting SD-011 which expires and cancels uncollected holds after 72 hours."
+  },
+  {
+   "req_id": "SD-021",
+   "type": "ambiguity",
+   "subtype": "coordination",
+   "evidence": "send an overdue email and/or suspend borrowing privileges and/or apply a penalty flag",
+   "related_ids": [],
+   "rationale": "Uses chained 'and/or' connectors, leaving unclear which subset or combination of the three actions must be executed."
+  },
+  {
+   "req_id": "SD-022",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "shall be reviewed, approved, and recorded",
+   "related_ids": [],
+   "rationale": "Uses passive voice without identifying which role or service reviews, approves, and records overdue fine waiver requests."
+  },
+  {
+   "req_id": "SD-023",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "before the due date if appropriate",
+   "related_ids": [],
+   "rationale": "Uses the subjective qualifier 'if appropriate' without defining the criteria for sending SMS alerts, alongside an unspecified lead time before the due date."
+  },
+  {
+   "req_id": "SD-024",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD years",
+   "related_ids": [],
+   "rationale": "Uses an unresolved 'TBD' placeholder for the payment receipt retention period."
+  },
+  {
+   "req_id": "SD-025",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "$1.25 USD per overdue day per item with no maximum cap",
+   "related_ids": [
+    "SD-019"
+   ],
+   "rationale": "Specifies an overdue fine of $1.25 USD/day with no cap, conflicting with SD-019 which specifies $0.50 USD/day capped at $20.00 USD per item."
+  },
+  {
+   "req_id": "SD-026",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "permitted to renew borrowed items online at any time regardless of any unpaid overdue fine balance",
+   "related_ids": [
+    "SD-020"
+   ],
+   "rationale": "Allows renewals regardless of any unpaid overdue fine balance, contradicting SD-020 which blocks borrowing and renewing when unpaid fines exceed $5.00 USD."
+  },
+  {
+   "req_id": "SD-027",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "Patron's active loan count and enforce the 5-item borrowing limit on the Patron profile screen",
+   "related_ids": [
+    "SD-009",
+    "SD-015"
+   ],
+   "rationale": "Introduces the inconsistent term 'Patron' instead of 'Member' used across earlier requirements (such as SD-009 and SD-015), and references the 5-item limit from SD-009 which conflicts with SD-015's 8-item limit."
+  },
+  {
+   "req_id": "SD-028",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "quickly even when many users",
+   "related_ids": [],
+   "rationale": "Uses unquantified terms ('quickly', 'many users') with no measurable latency target or concurrency threshold."
+  },
+  {
+   "req_id": "SD-029",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "where possible",
+   "related_ids": [],
+   "rationale": "Uses the weak, non-verifiable phrase 'where possible' without defining when highlighting is required versus optional."
+  },
+  {
+   "req_id": "SD-030",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "sufficient ISBN matching accuracy and acceptable response times",
+   "related_ids": [],
+   "rationale": "Uses subjective terms ('sufficient', 'acceptable') without specifying concrete accuracy percentages or response-time thresholds."
+  },
+  {
+   "req_id": "SD-031",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "efficiently process large batch MARC21 files without noticeable system slowdown",
+   "related_ids": [],
+   "rationale": "Uses vague terms ('efficiently', 'large', 'noticeable system slowdown') without quantifiable file sizes, throughput, or degradation limits."
+  },
+  {
+   "req_id": "SD-032",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "shall detect the active references",
+   "related_ids": [],
+   "rationale": "Specifies detecting active loans or holds on deletion attempts, but omits the resulting system action (such as blocking deletion and returning an error)."
+  },
+  {
+   "req_id": "SD-034",
+   "type": "incompleteness",
+   "subtype": "tbd",
+   "evidence": "TBD intervals",
+   "related_ids": [],
+   "rationale": "Uses an unresolved 'TBD' placeholder for the database backup schedule interval."
+  },
+  {
+   "req_id": "SD-035",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "important administrative actions in a timely manner and retain them for an appropriate period",
+   "related_ids": [],
+   "rationale": "Uses unmeasurable terms ('important', 'in a timely manner', 'appropriate period') without enumerating audited actions, timing bounds, or retention duration."
+  },
+  {
+   "req_id": "SD-036",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "shall log event FAILOVER-01",
+   "related_ids": [],
+   "rationale": "Specifies only logging FAILOVER-01 when the primary database is unreachable for over 10 seconds, omitting the failover/recovery action or operator alert."
+  },
+  {
+   "req_id": "SD-037",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "adequate transport security and clear error messages",
+   "related_ids": [],
+   "rationale": "Uses vague terms ('adequate', 'clear') without specifying required transport protocols/ciphers or error message standards."
+  },
+  {
+   "req_id": "SD-038",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "accept any Member password of at least 8 characters",
+   "related_ids": [
+    "SD-002"
+   ],
+   "rationale": "Accepts any password of at least 8 characters, conflicting with SD-002 which requires at least 12 characters with uppercase, lowercase, and numeric characters."
+  },
+  {
+   "req_id": "SD-039",
+   "type": "inconsistency",
+   "subtype": "conflicting_values",
+   "evidence": "active for 60 minutes of user inactivity",
+   "related_ids": [
+    "SD-004"
+   ],
+   "rationale": "Keeps web portal sessions active for 60 minutes of inactivity, conflicting with SD-004 which terminates sessions after 15 minutes of inactivity."
+  },
+  {
+   "req_id": "SD-040",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "encrypt all Member passwords using reversible AES-256 encryption so Administrators can decrypt and retrieve forgotten passwords",
+   "related_ids": [
+    "SD-003"
+   ],
+   "rationale": "Requires reversible AES-256 encryption so plaintext passwords can be retrieved, contradicting SD-003 which mandates one-way bcrypt hashing and forbids storing plaintext passwords."
+  }
+ ]
+}

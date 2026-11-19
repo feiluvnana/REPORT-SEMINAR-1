@@ -1,0 +1,463 @@
+{
+ "doc_id": "peering",
+ "findings": [
+  {
+   "req_id": "PE-001",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "The format for service information description is defined",
+   "related_ids": [],
+   "rationale": "Uses the weak passive phrase 'is defined' without testable criteria and leaves the scope of 'service information description' vague."
+  },
+  {
+   "req_id": "PE-001",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined",
+   "related_ids": [],
+   "rationale": "Agentless passive voice omits which actor or component defines and uses the format, and the format specification itself is omitted."
+  },
+  {
+   "req_id": "PE-002",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "The format for service information description is defined",
+   "related_ids": [],
+   "rationale": "Uses the weak passive phrase 'is defined' without testable criteria and leaves the scope of 'service information description' vague."
+  },
+  {
+   "req_id": "PE-002",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined",
+   "related_ids": [],
+   "rationale": "Agentless passive voice omits which actor or component defines and uses the format, and the format specification itself is omitted."
+  },
+  {
+   "req_id": "PE-002",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "The format for service information description is defined",
+   "related_ids": [
+    "PE-001"
+   ],
+   "rationale": "Exact duplicate of PE-001."
+  },
+  {
+   "req_id": "PE-003",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "The interaction protocol between Web Server-SR, SR-mediator is defined.",
+   "related_ids": [],
+   "rationale": "Uses the undefined acronym 'SR', the weak passive phrase 'is defined', and syntactically ambiguous phrasing (singular 'interaction protocol' with comma-separated pairs 'Web Server-SR, SR-mediator')."
+  },
+  {
+   "req_id": "PE-003",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined.",
+   "related_ids": [],
+   "rationale": "Omits who defines or enforces the interaction protocol, as well as the protocol specification, message formats, and error-handling behavior."
+  },
+  {
+   "req_id": "PE-004",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Resource provisioning, delegation and reservation policies are in place",
+   "related_ids": [],
+   "rationale": "Uses the weak, non-verifiable phrase 'are in place' and introduces modifier scope ambiguity over whether 'Resource' modifies only 'provisioning' or also 'delegation' and 'reservation'."
+  },
+  {
+   "req_id": "PE-004",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are in place",
+   "related_ids": [],
+   "rationale": "Omits which actors or components define, manage, and enforce the policies, and omits the actual policy rules and conditions."
+  },
+  {
+   "req_id": "PE-005",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "There is an established norm that any resource failure will be reported",
+   "related_ids": [],
+   "rationale": "Uses the weak, non-verifiable phrase 'There is an established norm' instead of a concrete requirement, and does not define what constitutes a 'resource failure'."
+  },
+  {
+   "req_id": "PE-005",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "any resource failure will be reported",
+   "related_ids": [],
+   "rationale": "Passive voice 'will be reported' omits both who reports the failure and to whom it is reported, as well as the reporting timeframe and subsequent handling."
+  },
+  {
+   "req_id": "PE-006",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "The interaction protocol between Web Server-SR, SR-mediator is defined.",
+   "related_ids": [],
+   "rationale": "Uses the undefined acronym 'SR', the weak passive phrase 'is defined', and syntactically ambiguous phrasing (singular 'interaction protocol' with comma-separated pairs 'Web Server-SR, SR-mediator')."
+  },
+  {
+   "req_id": "PE-006",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined.",
+   "related_ids": [],
+   "rationale": "Omits who defines or enforces the interaction protocol, as well as the protocol specification, message formats, and error-handling behavior."
+  },
+  {
+   "req_id": "PE-006",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "The interaction protocol between Web Server-SR, SR-mediator is defined.",
+   "related_ids": [
+    "PE-003"
+   ],
+   "rationale": "Exact duplicate of PE-003."
+  },
+  {
+   "req_id": "PE-007",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Malicious requests",
+   "related_ids": [],
+   "rationale": "'Malicious requests' is vague and undefined, leaving unclear what request types or attack patterns qualify as malicious."
+  },
+  {
+   "req_id": "PE-007",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are detected and rejected.",
+   "related_ids": [],
+   "rationale": "Passive voice omits which component detects and rejects malicious requests, and omits detection criteria, rejection responses, and logging or error handling."
+  },
+  {
+   "req_id": "PE-008",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "necessary content",
+   "related_ids": [],
+   "rationale": "'Necessary content' is subjective and unmeasurable without defining what makes content necessary."
+  },
+  {
+   "req_id": "PE-008",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "have already replicated necessary content.",
+   "related_ids": [],
+   "rationale": "Omits the criteria and timing conditions for replication (e.g., before which event and from which source), as well as fallback handling when content is not yet replicated."
+  },
+  {
+   "req_id": "PE-009",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Both anticipated and unanticipated user requests (traffic) are considered.",
+   "related_ids": [],
+   "rationale": "Uses the weak, unverifiable phrase 'are considered' and vague terms 'anticipated' and 'unanticipated' without defining how they are distinguished."
+  },
+  {
+   "req_id": "PE-009",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "are considered.",
+   "related_ids": [],
+   "rationale": "Does not specify what concrete system action or outcome results from considering anticipated versus unanticipated traffic, nor which actor handles it."
+  },
+  {
+   "req_id": "PE-010",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "The format for service information description is defined",
+   "related_ids": [],
+   "rationale": "Uses the weak passive phrase 'is defined' without testable criteria and leaves the scope of 'service information description' vague."
+  },
+  {
+   "req_id": "PE-010",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined",
+   "related_ids": [],
+   "rationale": "Agentless passive voice omits which actor or component defines and uses the format, and the format specification itself is omitted."
+  },
+  {
+   "req_id": "PE-010",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "The format for service information description is defined",
+   "related_ids": [
+    "PE-001",
+    "PE-002"
+   ],
+   "rationale": "Exact duplicate of PE-001 and PE-002."
+  },
+  {
+   "req_id": "PE-011",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "The format of service requirements is defined.",
+   "related_ids": [],
+   "rationale": "Uses the weak passive phrase 'is defined' without testable criteria and leaves 'service requirements' vague."
+  },
+  {
+   "req_id": "PE-011",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "is defined.",
+   "related_ids": [],
+   "rationale": "Agentless passive voice omits who defines and consumes the format, and the format schema or standard is not specified."
+  },
+  {
+   "req_id": "PE-012",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Mediator-SR, mediator-PR, mediator-PA interaction protocols are defined.",
+   "related_ids": [],
+   "rationale": "Uses the undefined acronyms 'SR', 'PR', and 'PA', alongside the weak passive phrase 'are defined'."
+  },
+  {
+   "req_id": "PE-012",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are defined.",
+   "related_ids": [],
+   "rationale": "Omits who defines or implements these interaction protocols, and omits the actual protocol specifications and error handling."
+  },
+  {
+   "req_id": "PE-012",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "Mediator-SR, mediator-PR, mediator-PA",
+   "related_ids": [
+    "PE-003",
+    "PE-006"
+   ],
+   "rationale": "Inconsistently names and capitalizes the protocol pair as 'Mediator-SR' (and mixes 'Mediator' with 'mediator') compared to 'SR-mediator' in PE-003 and PE-006, while also partially duplicating the SR-mediator protocol requirement."
+  },
+  {
+   "req_id": "PE-013",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Mediator works in conjunction with the PA to establish negotiation.",
+   "related_ids": [],
+   "rationale": "'Works in conjunction with' is a weak phrase that leaves the division of responsibilities unclear, and 'PA' is an undefined acronym."
+  },
+  {
+   "req_id": "PE-013",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "to establish negotiation.",
+   "related_ids": [],
+   "rationale": "Omits the triggering conditions for establishing negotiation, the specific interaction steps between Mediator and PA, and error handling if negotiation cannot be established."
+  },
+  {
+   "req_id": "PE-014",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Interaction protocols between PAs are identified.",
+   "related_ids": [],
+   "rationale": "Uses the undefined acronym 'PAs' and the weak, ambiguous phrase 'are identified' (unclear whether protocols are statically specified or dynamically discovered)."
+  },
+  {
+   "req_id": "PE-014",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are identified.",
+   "related_ids": [],
+   "rationale": "Passive voice omits which actor identifies the protocols, and omits the protocol specifications themselves."
+  },
+  {
+   "req_id": "PE-014",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "Interaction protocols between PAs are identified.",
+   "related_ids": [
+    "PE-003",
+    "PE-006",
+    "PE-012"
+   ],
+   "rationale": "Inconsistently states that PA interaction protocols are 'identified', whereas earlier interaction protocol requirements (PE-003, PE-006, PE-012) specify that interaction protocols are 'defined'."
+  },
+  {
+   "req_id": "PE-015",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Malicious requests are identified and acted upon.",
+   "related_ids": [],
+   "rationale": "'Acted upon' is a weak, ambiguous phrase that does not specify what action is taken, and 'Malicious requests' is undefined."
+  },
+  {
+   "req_id": "PE-015",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "acted upon.",
+   "related_ids": [],
+   "rationale": "Does not specify the required action or consequence when a malicious request is identified, nor the responsible actor and detection criteria."
+  },
+  {
+   "req_id": "PE-015",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "Malicious requests are identified and acted upon.",
+   "related_ids": [
+    "PE-007"
+   ],
+   "rationale": "Inconsistent with PE-007: PE-007 strictly requires malicious requests to be 'detected and rejected', whereas PE-015 restates the requirement using weaker, inconsistent wording ('identified and acted upon') that does not mandate rejection."
+  },
+  {
+   "req_id": "PE-016",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "There are existing policies for long-term peering arrangement.",
+   "related_ids": [],
+   "rationale": "'Long-term' is a vague, unquantified term, and 'There are existing policies' is a weak, non-verifiable phrase."
+  },
+  {
+   "req_id": "PE-016",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "long-term peering arrangement.",
+   "related_ids": [],
+   "rationale": "Omits any quantitative timeframe or unit defining 'long-term', as well as the specific policy rules and responsible actors."
+  },
+  {
+   "req_id": "PE-017",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "There is procedure to perform short-term negotiation.",
+   "related_ids": [],
+   "rationale": "'Short-term' is a vague, unquantified term, and 'There is procedure' is weak phrasing."
+  },
+  {
+   "req_id": "PE-017",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "short-term negotiation.",
+   "related_ids": [],
+   "rationale": "Omits any quantitative timeframe or unit defining 'short-term', as well as the procedure steps, responsible actor, and failure handling."
+  },
+  {
+   "req_id": "PE-018",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "selected CDN peers",
+   "related_ids": [],
+   "rationale": "'Selected CDN peers' is ambiguous because no selection basis or reference is given, and 'Negotiation is established' is weak passive phrasing."
+  },
+  {
+   "req_id": "PE-018",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "Negotiation is established between selected CDN peers.",
+   "related_ids": [],
+   "rationale": "Omits the criteria for selecting CDN peers, the trigger conditions for negotiation, the initiating actor, and handling if negotiation fails."
+  },
+  {
+   "req_id": "PE-019",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "sufficient external resources",
+   "related_ids": [],
+   "rationale": "'Sufficient external resources' is subjective and unmeasurable without defining resource types or what level is considered sufficient."
+  },
+  {
+   "req_id": "PE-019",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "sufficient external resources.",
+   "related_ids": [],
+   "rationale": "Omits quantitative capacity thresholds and units for external resources, as well as error handling if acquired resources are insufficient."
+  },
+  {
+   "req_id": "PE-020",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Functional policies are identified and deployed.",
+   "related_ids": [],
+   "rationale": "'Functional policies' is vague and undefined, and 'identified and deployed' is weak passive phrasing."
+  },
+  {
+   "req_id": "PE-020",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "are identified and deployed.",
+   "related_ids": [],
+   "rationale": "Passive voice omits which actor identifies and deploys the policies, where and when deployment occurs, and what the policies contain."
+  },
+  {
+   "req_id": "PE-021",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Effective content delivery is ensured through SLA satisfaction.",
+   "related_ids": [],
+   "rationale": "'Effective content delivery' is subjective and vague, 'is ensured' is a weak passive phrase, and the acronym 'SLA' is not defined."
+  },
+  {
+   "req_id": "PE-021",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "Effective content delivery is ensured through SLA satisfaction.",
+   "related_ids": [],
+   "rationale": "Omits quantitative SLA metrics, target values, and units defining effective delivery and SLA satisfaction, as well as the responsible actor."
+  },
+  {
+   "req_id": "PE-022",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Policies identifying the consequences of SLA violation are defined.",
+   "related_ids": [],
+   "rationale": "Uses the weak passive phrase 'are defined' without testable criteria, leaves 'consequences of SLA violation' vague, and does not define 'SLA'."
+  },
+  {
+   "req_id": "PE-022",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "consequences of SLA violation are defined.",
+   "related_ids": [],
+   "rationale": "States that policies identify consequences without specifying any actual consequences of an SLA violation, what thresholds constitute a violation, or who enforces them."
+  },
+  {
+   "req_id": "PE-023",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Policies are in place to perform renegotiation for problem resolution.",
+   "related_ids": [],
+   "rationale": "'Problem resolution' is vague as to which problems qualify, and 'are in place' is a weak, non-verifiable phrase."
+  },
+  {
+   "req_id": "PE-023",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "perform renegotiation for problem resolution.",
+   "related_ids": [],
+   "rationale": "Omits the specific problem conditions that trigger renegotiation, the actors executing it, and fallback error handling if renegotiation fails."
+  },
+  {
+   "req_id": "PE-024",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "Policies are in place to perform renegotiation for problem resolution.",
+   "related_ids": [],
+   "rationale": "'Problem resolution' is vague as to which problems qualify, and 'are in place' is a weak, non-verifiable phrase."
+  },
+  {
+   "req_id": "PE-024",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "perform renegotiation for problem resolution.",
+   "related_ids": [],
+   "rationale": "Omits the specific problem conditions that trigger renegotiation, the actors executing it, and fallback error handling if renegotiation fails."
+  },
+  {
+   "req_id": "PE-024",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "Policies are in place to perform renegotiation for problem resolution.",
+   "related_ids": [
+    "PE-023"
+   ],
+   "rationale": "Exact duplicate of PE-023."
+  }
+ ]
+}

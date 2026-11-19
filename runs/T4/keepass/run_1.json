@@ -1,0 +1,351 @@
+{
+ "doc_id": "keepass",
+ "findings": [
+  {
+   "req_id": "KP-001",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "must be downloaded and installed",
+   "related_ids": [],
+   "rationale": "Passive voice omits who performs the download and installation (e.g., end user or administrator) and does not specify the source, version, or target environment."
+  },
+  {
+   "req_id": "KP-003",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "Folder selected must be of type the database can read and that is “name”.kdb",
+   "related_ids": [],
+   "rationale": "The demonstrative 'that' has multiple plausible antecedents ('Folder selected', 'type', 'the database'), and calling a '.kdb' file a 'Folder' that 'the database can read' makes it unclear whether a directory or a '.kdb' file is selected."
+  },
+  {
+   "req_id": "KP-003",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "Folder selected must be of type the database can read and that is “name”.kdb",
+   "related_ids": [],
+   "rationale": "Specifies a file/folder type validation rule without defining system behavior when an invalid or unreadable file/folder is selected, and passive voice ('Folder selected') omits the selecting actor."
+  },
+  {
+   "req_id": "KP-004",
+   "type": "ambiguity",
+   "subtype": "syntactic",
+   "evidence": "the previews one will be replace if selected",
+   "related_ids": [],
+   "rationale": "The trailing conditional 'if selected' (along with the typo 'previews' for 'previous') has unclear syntactic attachment—it is ambiguous whether replacement occurs when a user selects an overwrite option or whenever an existing database name is chosen."
+  },
+  {
+   "req_id": "KP-004",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "Databases must have different names or else the previews one will be replace if selected",
+   "related_ids": [],
+   "rationale": "Omits the scope boundary within which database names must be unique (e.g., same folder vs. entire system), omits whether a confirmation warning is shown before overwriting, and uses passive voice without naming the actor."
+  },
+  {
+   "req_id": "KP-005",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "There must be entries in the database in order for them to be printed",
+   "related_ids": [],
+   "rationale": "Passive voice ('to be printed') does not identify who initiates or performs printing, and the requirement does not specify system behavior when the database contains no entries (e.g., disabling print or showing a message)."
+  },
+  {
+   "req_id": "KP-006",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "All data related to the word",
+   "related_ids": [],
+   "rationale": "'All data related to the word' is vague and unmeasurable: it does not specify matching criteria (substring vs. whole-word, case sensitivity), which fields are searched, or whether all sensitive fields of matching entries are displayed."
+  },
+  {
+   "req_id": "KP-006",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "All data related to the word must be shown",
+   "related_ids": [],
+   "rationale": "Describes a search/lookup operation only on the happy path without defining behavior when no entries match or the query is empty, and passive voice ('must be shown') omits the displaying component."
+  },
+  {
+   "req_id": "KP-007",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "A name is required in order for the new group/subgroup to be created",
+   "related_ids": [],
+   "rationale": "Specifies a required-field validation rule without defining what happens when the name is missing or blank (e.g., error prompt or disabled confirmation), omits naming rules, and uses passive voice ('to be created') without identifying the actor."
+  },
+  {
+   "req_id": "KP-008",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "A subgroup cannot be created when no group is selected",
+   "related_ids": [],
+   "rationale": "States a denial condition without specifying how the system enforces or communicates it (e.g., disabling the subgroup creation action or displaying an error message), and uses passive voice without naming the actor."
+  },
+  {
+   "req_id": "KP-009",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "A name is required in order for the group/subgroup to be renamed",
+   "related_ids": [],
+   "rationale": "Specifies a required-field validation rule without defining system behavior when a blank or missing name is submitted, omits naming constraints, and uses passive voice ('to be renamed') without naming the actor."
+  },
+  {
+   "req_id": "KP-010",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "In order to find something in a group a word must be placed in the find field",
+   "related_ids": [],
+   "rationale": "'something' is vague regarding which items or fields within a group can be searched, and 'a word' leaves unclear whether partial strings or multi-word queries are supported."
+  },
+  {
+   "req_id": "KP-010",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "a word must be placed in the find field",
+   "related_ids": [],
+   "rationale": "Specifies a lookup precondition without defining behavior when the find field is empty or no matches are found, and passive voice ('must be placed') omits the actor."
+  },
+  {
+   "req_id": "KP-011",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "An entry must belong to a group to be created",
+   "related_ids": [],
+   "rationale": "States a creation precondition without specifying system behavior when no group exists or is selected (e.g., blocking creation, showing an error, or assigning a default group), and passive voice ('to be created') omits the actor."
+  },
+  {
+   "req_id": "KP-012",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "When the password field is completed the repeat password field must be completed",
+   "related_ids": [],
+   "rationale": "States a validation rule without specifying system behavior if the repeat password field is left incomplete, does not specify which form/scope (entry vs. master password) is covered, and uses passive voice without naming the actor."
+  },
+  {
+   "req_id": "KP-013",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "Password field and repeat password field must be identical",
+   "related_ids": [],
+   "rationale": "States a password-matching validation rule without specifying system behavior when the two fields do not match (e.g., error message or blocking save), and omits the applicable scope (entry vs. master password)."
+  },
+  {
+   "req_id": "KP-014",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "An entry must be selected to be viewed or modified",
+   "related_ids": [],
+   "rationale": "Passive voice ('must be selected to be viewed or modified') omits who performs selection, viewing, or modification, and does not specify system behavior when no entry is selected."
+  },
+  {
+   "req_id": "KP-015",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "When the password field is changed the repeat password field must be Changed and be identical with password field",
+   "related_ids": [],
+   "rationale": "Specifies a validation rule on password change without defining system behavior when the repeat password field is unchanged or mismatched, omits scope (entry vs. master password), and uses passive voice without naming the actor."
+  },
+  {
+   "req_id": "KP-015",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "the repeat password field must be Changed and be identical with password field",
+   "related_ids": [
+    "KP-012",
+    "KP-013"
+   ],
+   "rationale": "Duplicates the unconditional requirement in KP-013 that the password and repeat password fields must be identical, and largely overlaps with KP-012's requirement to fill the repeat password field when the password field is entered."
+  },
+  {
+   "req_id": "KP-016",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "An entry must be selected before it is duplicated",
+   "related_ids": [],
+   "rationale": "Passive voice ('must be selected before it is duplicated') omits who selects and duplicates the entry, and does not specify system behavior when no entry is selected."
+  },
+  {
+   "req_id": "KP-017",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "For the following features, use cases are not included",
+   "related_ids": [],
+   "rationale": "The appended unpunctuated clause uses the open reference 'the following features' without specifying which subsequent requirements fall within its scope."
+  },
+  {
+   "req_id": "KP-017",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "An internet connection and a browser are required in order to download new language translations",
+   "related_ids": [],
+   "rationale": "Specifies external dependencies (internet connection and browser) without defining failure handling when offline, when no browser is available, or when download fails; also omits supported browsers, download source, and actor."
+  },
+  {
+   "req_id": "KP-018",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "The prefix “Auto-Type:” is required in front of each sequence",
+   "related_ids": [],
+   "rationale": "Does not specify where a sequence is entered (e.g., an entry's note field), what constitutes a valid sequence, whether the prefix is case-sensitive, or how missing/malformed prefixes are handled."
+  },
+  {
+   "req_id": "KP-019",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "Sequence’s length must not be more than a line (59 characters)",
+   "related_ids": [],
+   "rationale": "Specifies a maximum length constraint without defining system behavior when a sequence exceeds 59 characters (e.g., rejection, truncation, or error message), nor whether the 'Auto-Type:' prefix is counted in the 59 characters."
+  },
+  {
+   "req_id": "KP-020",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "If two auto-types are referred in one note field, only the first is used",
+   "related_ids": [],
+   "rationale": "Only specifies behavior when exactly 'two' auto-types appear, omitting the boundary case of three or more auto-types, and does not specify whether ignored auto-types trigger any warning or error."
+  },
+  {
+   "req_id": "KP-020",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "two auto-types",
+   "related_ids": [
+    "KP-018",
+    "KP-019"
+   ],
+   "rationale": "Uses the term 'auto-types' instead of the terminology established in KP-018 ('Auto-Type:' prefix and 'sequence') and KP-019 ('Sequence')."
+  },
+  {
+   "req_id": "KP-021",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "Only one database file is allowed in command line options",
+   "related_ids": [],
+   "rationale": "Specifies a command-line input restriction without defining system behavior when multiple database files are provided (e.g., error exit, ignoring extras, or opening only the first)."
+  },
+  {
+   "req_id": "KP-021",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "database file",
+   "related_ids": [
+    "KP-003"
+   ],
+   "rationale": "Refers to the '.kdb' database target as a 'database file', whereas KP-003 referred to the '.kdb' target as a 'Folder'."
+  },
+  {
+   "req_id": "KP-022",
+   "type": "ambiguity",
+   "subtype": "referential",
+   "evidence": "In case a space is found in the path, it must be enclosed into quotes",
+   "related_ids": [],
+   "rationale": "The pronoun 'it' has two plausible antecedents—'a space' (subject of the preceding clause) and 'the path'—making it ambiguous whether the space or the entire path must be enclosed in quotes."
+  },
+  {
+   "req_id": "KP-022",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "In case a space is found in the path, it must be enclosed into quotes",
+   "related_ids": [],
+   "rationale": "Passive voice ('is found', 'must be enclosed') does not state whether the user or the system encloses the path in quotes, and omits which quote character (single vs. double), which path is referenced, and failure handling if unquoted."
+  },
+  {
+   "req_id": "KP-023",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "the database doesn’t open unless the password is entered",
+   "related_ids": [],
+   "rationale": "Describes a master-password authentication check without specifying system behavior on an incorrect or missing password (e.g., error message, retry policy, or lockout) and uses passive voice ('is entered') without naming the actor."
+  },
+  {
+   "req_id": "KP-024",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "the database doesn’t open unless the key file is present",
+   "related_ids": [],
+   "rationale": "Describes a key-file authentication check without specifying system behavior when the key file is missing, unreadable, or invalid, and does not define what makes the key file 'present' (e.g., location or user selection)."
+  },
+  {
+   "req_id": "KP-025",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "If there is a composite key, both master password and key file are required",
+   "related_ids": [],
+   "rationale": "Specifies a composite-key authentication requirement without stating system behavior when either credential is missing or invalid, and omits the explicit operation being authorized (unlocking the database)."
+  },
+  {
+   "req_id": "KP-028",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "File formats are not specialized password database formats",
+   "related_ids": [],
+   "rationale": "'specialized password database formats' is subjective and undefined, and 'File formats' does not clarify which formats are being referenced."
+  },
+  {
+   "req_id": "KP-028",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "File formats are not specialized password database formats",
+   "related_ids": [],
+   "rationale": "Omits the scope boundary specifying which file formats or operations (e.g., import/export formats vs. native database files) this requirement applies to."
+  },
+  {
+   "req_id": "KP-028",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "File formats are not specialized password database formats",
+   "related_ids": [
+    "KP-003"
+   ],
+   "rationale": "Unconditionally asserts that file formats are not specialized password database formats, conflicting with KP-003, which mandates a specialized '.kdb' database file format."
+  },
+  {
+   "req_id": "KP-029",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "low-level layout",
+   "related_ids": [],
+   "rationale": "'low-level layout' is vague and untestable without concrete format definitions or criteria, and 'File formats' does not specify which formats are meant."
+  },
+  {
+   "req_id": "KP-029",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "File formats only specify a low-level layout of stored data",
+   "related_ids": [],
+   "rationale": "Omits the scope specifying which file formats or operations (e.g., import/export vs. database storage) are covered and omits concrete format specifications."
+  },
+  {
+   "req_id": "KP-030",
+   "type": "incompleteness",
+   "subtype": "missing_condition",
+   "evidence": "Global hot key cannot be changed",
+   "related_ids": [],
+   "rationale": "Does not define which key combination constitutes the 'Global hot key' or what action it triggers, uses passive voice ('cannot be changed') without naming the actor, and omits behavior if a change is attempted."
+  },
+  {
+   "req_id": "KP-031",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "Title, username or URL cannot be changed in a TAN entry.",
+   "related_ids": [],
+   "rationale": "States a field-modification restriction without specifying how the system enforces or handles attempted edits (e.g., read-only fields or error feedback), uses passive voice without naming the actor, and leaves 'TAN' undefined."
+  },
+  {
+   "req_id": "KP-032",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "When a TAN is used",
+   "related_ids": [],
+   "rationale": "'used' is ambiguous because it does not define what action constitutes using a TAN (e.g., viewing, copying to clipboard, auto-typing, or manually marking as used)."
+  },
+  {
+   "req_id": "KP-032",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "When a TAN is used, it expires automatically and can never be used again.",
+   "related_ids": [],
+   "rationale": "Does not specify the concrete system behavior or state change upon expiration (e.g., deleting, marking expired, or disabling copy/auto-type) or how the system responds if a user attempts to reuse an expired TAN."
+  }
+ ]
+}

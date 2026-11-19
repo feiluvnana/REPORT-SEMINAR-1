@@ -1,0 +1,15 @@
+{
+ "tool_calls": [],
+ "denied_actions": [],
+ "duration_seconds": 110.134804,
+ "num_turns": 1,
+ "usage": {
+  "input_tokens": 12795,
+  "output_tokens": 24549,
+  "thinking_tokens": 18693,
+  "cache_read_tokens": 0,
+  "total_tokens": 37344
+ },
+ "status": "SUCCESS",
+ "audit_errors": []
+}

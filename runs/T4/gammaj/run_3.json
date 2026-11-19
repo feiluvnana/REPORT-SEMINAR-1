@@ -1,0 +1,326 @@
+{
+ "doc_id": "gammaj",
+ "findings": [
+  {
+   "req_id": "GJ-002",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "maintenance documentation will be supplied and the operating system will be tested",
+   "related_ids": [],
+   "rationale": "Uses passive voice without specifying whether Yoggie Corporation or the Web Store developers are responsible for supplying maintenance documentation and testing the operating system."
+  },
+  {
+   "req_id": "GJ-005",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "Must use a SQL based database.",
+   "related_ids": [
+    "GJ-003"
+   ],
+   "rationale": "Repeats the SQL-based database requirement already stated in GJ-003 without adding distinct functional scope."
+  },
+  {
+   "req_id": "GJ-006",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "Other versions may not be 100% compatible. Also other browsers such as Mozilla or Firefox may not be 100% compatible.",
+   "related_ids": [],
+   "rationale": "Uses non-binding 'may' and open-ended 'such as', leaving required behavior and compatibility expectations for unsupported browser versions and other browsers unclear."
+  },
+  {
+   "req_id": "GJ-006",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "Compatibility is only tested and verified for Microsoft Internet Explorer version 6 and 7, Netscape Communicator Version 4 and 5.",
+   "related_ids": [],
+   "rationale": "Uses passive voice without specifying which party or component is responsible for testing and verifying browser compatibility."
+  },
+  {
+   "req_id": "GJ-006",
+   "type": "inconsistency",
+   "subtype": "duplicate",
+   "evidence": "Compatibility is only tested and verified for Microsoft Internet Explorer version 6 and 7, Netscape Communicator Version 4 and 5.",
+   "related_ids": [
+    "GJ-001"
+   ],
+   "rationale": "Restates the same supported browser list (Microsoft Internet Explorer 6 and 7, Netscape Communicator 4 and 5) already specified in GJ-001."
+  },
+  {
+   "req_id": "GJ-007",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "Shall install online help for users via the web interface",
+   "related_ids": [],
+   "rationale": "Omits the subject/actor responsible for installing online help (e.g., the system, installer, administrator, or developers)."
+  },
+  {
+   "req_id": "GJ-008",
+   "type": "ambiguity",
+   "subtype": "syntactic",
+   "evidence": "Operations and Maintenance manual, Users Guide book, and Installation Instructions for the Administrator.",
+   "related_ids": [],
+   "rationale": "Prepositional phrase attachment is ambiguous: 'for the Administrator' could apply only to 'Installation Instructions' or to all three manuals (including 'Users Guide book')."
+  },
+  {
+   "req_id": "GJ-008",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "Shall deliver Operations and Maintenance manual, Users Guide book, and Installation Instructions for the Administrator.",
+   "related_ids": [],
+   "rationale": "Omits the actor responsible for delivering the documentation (e.g., Web Store developers or Yoggie Corporation)."
+  },
+  {
+   "req_id": "GJ-020",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "will do periodic backups",
+   "related_ids": [],
+   "rationale": "'periodic' is unquantified with no testable backup frequency, and 'will' is weaker than mandatory 'shall'."
+  },
+  {
+   "req_id": "GJ-020",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "periodic backups through a live internet connection",
+   "related_ids": [],
+   "rationale": "References periodic backups without specifying the backup interval value/unit or retention policy, and omits error handling if the live internet connection is unavailable."
+  },
+  {
+   "req_id": "GJ-021",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "The system shall validate credit cards against fraud.",
+   "related_ids": [],
+   "rationale": "Specifies credit card fraud validation without defining the system behavior when fraud is detected or validation fails (e.g., rejecting the transaction, notifying the customer/administrator, or logging the attempt)."
+  },
+  {
+   "req_id": "GJ-022",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "sensitive information",
+   "related_ids": [],
+   "rationale": "'sensitive information' is subjective and undefined, leaving unclear which specific data elements must be encrypted over HTTPS."
+  },
+  {
+   "req_id": "GJ-024",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "auto detect IP DOS attacks and block IP automatically",
+   "related_ids": [],
+   "rationale": "Does not specify the block timeout duration or unblocking/recovery procedure after an IP is blocked, nor the quantitative traffic threshold defining an IP DOS attack."
+  },
+  {
+   "req_id": "GJ-025",
+   "type": "incompleteness",
+   "subtype": "missing_consequence",
+   "evidence": "The system shall detect consecutive failed login attempts.",
+   "related_ids": [],
+   "rationale": "Specifies a detection condition without defining any resulting system action (e.g., lockout, alert, cooldown) or the numeric threshold of consecutive failed attempts."
+  },
+  {
+   "req_id": "GJ-029",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "the system shall validate 'existing' credit card in system after each log in",
+   "related_ids": [],
+   "rationale": "Specifies credit card validation on login without defining what happens if the stored card is invalid, expired, or fails validation."
+  },
+  {
+   "req_id": "GJ-030",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "too large in size",
+   "related_ids": [],
+   "rationale": "'too large in size' is subjective and provides no measurable criterion for when image compression must occur."
+  },
+  {
+   "req_id": "GJ-030",
+   "type": "incompleteness",
+   "subtype": "missing_value_or_unit",
+   "evidence": "automatically compress image files that are too large in size",
+   "related_ids": [],
+   "rationale": "References a file-size limit without giving the numeric threshold and unit (e.g., KB or MB) or the target compressed size/quality."
+  },
+  {
+   "req_id": "GJ-031",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "will employ on demand asynchronous loading for faster execution of pages",
+   "related_ids": [],
+   "rationale": "'faster execution of pages' is an unquantified comparative claim with no baseline or target load time, and 'will' is non-mandatory compared to 'shall'."
+  },
+  {
+   "req_id": "GJ-032",
+   "type": "incompleteness",
+   "subtype": "missing_error_handling",
+   "evidence": "The system shall validate email address existence.",
+   "related_ids": [],
+   "rationale": "Describes an email existence validation check without specifying the error handling when the email address does not exist or verification fails."
+  },
+  {
+   "req_id": "GJ-033",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy to use",
+   "related_ids": [],
+   "rationale": "'easy to use' is subjective and unquantified, offering no measurable usability criterion."
+  },
+  {
+   "req_id": "GJ-034",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy to learn",
+   "related_ids": [],
+   "rationale": "'easy to learn' is subjective and unquantified, lacking any measurable learnability target (e.g., training duration or task success rate)."
+  },
+  {
+   "req_id": "GJ-036",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy to locate buttons",
+   "related_ids": [],
+   "rationale": "'easy to locate' is subjective and provides no testable UI layout or discoverability standard."
+  },
+  {
+   "req_id": "GJ-037",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "friend easy to read error messages",
+   "related_ids": [],
+   "rationale": "'friend easy to read' (apparently intended as 'friendly, easy to read') is subjective and unquantified with no objective readability or tone criteria."
+  },
+  {
+   "req_id": "GJ-038",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "consistent symbols and colors for clear notifications",
+   "related_ids": [],
+   "rationale": "'consistent' and 'clear' are subjective terms without a defined visual convention or standard mapping of symbols and colors to notification states."
+  },
+  {
+   "req_id": "GJ-040",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easily updatable",
+   "related_ids": [],
+   "rationale": "'easily updatable' is subjective and unquantified, providing no testable criterion for update effort, steps, or downtime."
+  },
+  {
+   "req_id": "GJ-041",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "the site",
+   "related_ids": [
+    "GJ-001",
+    "GJ-002",
+    "GJ-005"
+   ],
+   "rationale": "Refers to the product as 'the site' instead of using the established product name 'Web Store' from GJ-001, GJ-002, and GJ-005."
+  },
+  {
+   "req_id": "GJ-042",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy to upgrade",
+   "related_ids": [],
+   "rationale": "'easy to upgrade' is subjective and unquantified, offering no measurable maintainability criterion."
+  },
+  {
+   "req_id": "GJ-043",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "extremely portable",
+   "related_ids": [],
+   "rationale": "'extremely portable' is subjective and unquantified, lacking measurable portability criteria."
+  },
+  {
+   "req_id": "GJ-043",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "the usb drive",
+   "related_ids": [
+    "GJ-009",
+    "GJ-010"
+   ],
+   "rationale": "Uses the term 'the usb drive' for the USB hardware appliance previously termed 'the USB system' in GJ-009 and GJ-010."
+  },
+  {
+   "req_id": "GJ-044",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "easy to migrate or backed up",
+   "related_ids": [],
+   "rationale": "'easy' is subjective and unquantified, giving no testable threshold for migration or backup effort or duration."
+  },
+  {
+   "req_id": "GJ-045",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "should be able to",
+   "related_ids": [],
+   "rationale": "Uses non-binding modal 'should' instead of 'shall', making it unclear whether debug mode support is mandatory or optional."
+  },
+  {
+   "req_id": "GJ-046",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "should be able to",
+   "related_ids": [],
+   "rationale": "Uses non-binding modal 'should' instead of 'shall', leaving mandatory compliance for test credit card transactions unclear."
+  },
+  {
+   "req_id": "GJ-047",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "should be able to",
+   "related_ids": [],
+   "rationale": "Uses non-binding modal 'should' instead of 'shall', leaving mandatory compliance for test shipping orders unclear."
+  },
+  {
+   "req_id": "GJ-048",
+   "type": "ambiguity",
+   "subtype": "weak_phrase",
+   "evidence": "should be able to",
+   "related_ids": [],
+   "rationale": "Uses non-binding modal 'should' instead of 'shall', leaving mandatory compliance for creating a test environment unclear."
+  },
+  {
+   "req_id": "GJ-048",
+   "type": "inconsistency",
+   "subtype": "terminology",
+   "evidence": "weborder system",
+   "related_ids": [
+    "GJ-001",
+    "GJ-002",
+    "GJ-005"
+   ],
+   "rationale": "Introduces a different product name ('weborder system') instead of the established name 'Web Store' from GJ-001, GJ-002, and GJ-005."
+  },
+  {
+   "req_id": "GJ-049",
+   "type": "incompleteness",
+   "subtype": "missing_actor",
+   "evidence": "The system hardware shall be fixed and patched via an internet connection.",
+   "related_ids": [],
+   "rationale": "Uses passive voice without identifying which actor (e.g., Yoggie Corporation, Web Store developers, or administrators) performs remote hardware fixes and patches."
+  },
+  {
+   "req_id": "GJ-050",
+   "type": "ambiguity",
+   "subtype": "vague_term",
+   "evidence": "coordinate on future enhancement and features with our organization",
+   "related_ids": [],
+   "rationale": "'coordinate on future enhancement and features' has no verifiable deliverables, process, or criteria, and 'our organization' is an undefined referent."
+  },
+  {
+   "req_id": "GJ-051",
+   "type": "inconsistency",
+   "subtype": "conflicting_rules",
+   "evidence": "OS: Apache web server",
+   "related_ids": [
+    "GJ-002"
+   ],
+   "rationale": "Lists 'OS: Apache web server' (and groups OS/database software under hardware requirements), conflicting with GJ-002 which specifies Slackware Linux 2.6 as the operating system and Apache Web Server as the web server."
+  }
+ ]
+}
