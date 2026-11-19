@@ -245,6 +245,8 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
   - one identical no-web rule in both prompts.
 
   Re-frozen 2026-11-19T06:23Z, before any kept tool run.
+- **Step 4 run check (2026-11-19):** 48/48 OK; audit clean (no web/browser/command tools, no outside reads, SKILL.md read in 12/12 T2/T4 runs, 0/24 tool calls in T1/T3, no GT strings in logs); no duplicate (req_id, type) pairs, no mis-anchored inconsistencies. Cost: 119.6 agy-minutes, 1.81M tokens; per-run table in `result/run/run_summary.csv`.
+- **Leak #3 found in Step 4:** `dataset/seeded_lms.json` `source` said "10 clean, 30 defective"; every T1–T4 run (and expert pass 2) returned exactly 30 seeded findings. PURE results unaffected. Fix pending (Step 4b).
 - **Folder restructure (2026-11-19, after the 48 runs):** lean layout of §3; all paths live in `script/paths.py`; HASHES.txt path entries rewritten (digests and freeze time unchanged).
 
 ## 7. Agent Assignment
