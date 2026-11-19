@@ -107,7 +107,7 @@
     \node[box, right=of d] (e) {\textbf{2. Chuẩn GT}\\Claude 2 lượt\\+ $\kappa$ + phân xử};
     \node[freeze, right=of e] (f) {3. Đóng băng\\SHA-256\\(\texttt{HASHES.txt})};
     \node[box, right=of f] (t) {\textbf{4. Công cụ}\\T0 + T1--T4\\$\times$ 3 lượt lặp};
-    \node[box, right=of t] (m) {\textbf{5. Đánh giá}\\\texttt{evaluate.py}\\P/R/Miss/$F_1$, CI};
+    \node[box, right=of t] (m) {\textbf{5. Chấm điểm}\\tự động\\P/R/Miss/$F_1$, KTC};
     \draw[arrow] (d) -- (e);
     \draw[arrow] (e) -- (f);
     \draw[arrow] (f) -- (t);
@@ -117,8 +117,8 @@
   \begin{block}{Đảm bảo tính khách quan}
     \begin{itemize}
       \item Chuyên gia (\textbf{Claude}) tách biệt họ mô hình với các công cụ đánh giá.
-      \item Mọi công cụ chạy trong thư mục tạm chỉ đọc, hoàn toàn không thấy \texttt{dataset/ground\_truth/}.
-      \item \texttt{evaluate.py} kiểm tra SHA-256 trong \texttt{HASHES.txt} trước khi tính độ đo.
+      \item Công cụ bị chặn đọc tệp ngoài thư mục tạm và chặn web; nhãn chuẩn được chuyển ra ngoài khi chạy.
+      \item Chương trình chấm điểm kiểm tra mã băm SHA-256 của nhãn chuẩn trước khi tính độ đo.
     \end{itemize}
   \end{block}
   \note{[Nam] Quy trình gồm năm bước. Một, chuẩn bị dữ liệu. Hai, tạo nhãn chuẩn. Ba, đóng băng nhãn chuẩn bằng mã băm SHA-256, trước khi chạy bất kỳ công cụ nào, để không ai có thể sửa đáp án sau khi thấy kết quả. Bốn, chạy các công cụ, mỗi cấu hình lặp ba lần. Năm, chấm điểm hoàn toàn bằng script. Các công cụ chạy trong thư mục tạm, bị chặn quyền đọc tệp ngoài, chặn web, và mọi lời gọi công cụ đều được kiểm toán.}
@@ -163,7 +163,7 @@
     \toprule
     \textbf{Mã} & \textbf{Công cụ / Mô hình} & \textbf{Chế độ} & \textbf{Cơ chế hoạt động} \\
     \midrule
-    \textbf{T0} & \texttt{baseline\_rules.py} & Luật tất định & Từ điển mơ hồ, \textit{TBD}, bị động thiếu \texttt{by <Actor>}, trùng lặp Jaccard $\ge 0{,}80$. \\
+    \textbf{T0} & Bộ dò dựa trên luật & Luật tất định & Từ điển mơ hồ, \textit{TBD}, bị động thiếu \texttt{by <Actor>}, trùng lặp Jaccard $\ge 0{,}80$. \\
     \textbf{T1 / T2} & \texttt{agy} (\texttt{gemini-4-hydrogen-high}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Gemini 4 Hydrogen. \\
     \textbf{T3 / T4} & \texttt{agy} (\texttt{gemini-4-neon-high}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Gemini 4 Neon. \\
     \bottomrule
@@ -172,13 +172,13 @@
 \end{frame}
 
 % --- Slide 9: Expert ground-truth protocol ---
-\begin{frame}{Giao thức xây dựng chuẩn chuyên gia (Claude Opus)}
+\begin{frame}{Xây dựng nhãn chuẩn (chuyên gia: Claude Opus)}
   \begin{enumerate}
-    \item \textbf{Pass 1:} Phiên Claude độc lập gắn nhãn toàn bộ 107 yêu cầu PURE $\rightarrow$ \texttt{expert\_pass1.json}.
-    \item \textbf{Pass 2:} Tác tử Claude độc lập thứ hai (không thấy Pass 1 và \texttt{seed\_key.json}) gắn nhãn cả 4 tài liệu (147 yêu cầu) $\rightarrow$ \texttt{expert\_pass2.json}.
-    \item \textbf{Đo tự nhất quán:} Script \texttt{check\_gt.py} tính \textbf{Cohen's $\kappa$} trên $107 \times 3 = 321$ cặp \texttt{(req\_id, type)} của PURE và kiểm tra Recall của Pass 2 trên \texttt{seeded\_lms}.
-    \item \textbf{Phân xử:} Giải quyết mọi bất đồng giữa Pass 1 và Pass 2, ghi vào \texttt{adjudication\_log.md} $\rightarrow$ \texttt{final\_gt.json}.
-    \item \textbf{Đóng băng:} Ghi mã băm SHA-256 vào \texttt{dataset/ground\_truth/HASHES.txt}.
+    \item \textbf{Lượt 1:} một tác tử Claude Opus gắn nhãn 107 yêu cầu PURE theo hướng dẫn gắn nhãn riêng.
+    \item \textbf{Lượt 2:} một tác tử mới, không thấy lượt 1 và đáp án cấy lỗi, gắn nhãn cả 147 yêu cầu.
+    \item \textbf{Đo đồng thuận:} Cohen's $\kappa$ trên $107 \times 3 = 321$ cặp (yêu cầu, loại) của PURE; kiểm định lượt 2 trên tài liệu cấy lỗi.
+    \item \textbf{Phân xử:} quyết định từng bất đồng giữa hai lượt và ghi lý do.
+    \item \textbf{Đóng băng:} ghi mã băm SHA-256 của nhãn chuẩn, kỹ năng và câu lệnh trước khi chạy công cụ.
   \end{enumerate}
   \note{[Khánh] Nhãn chuẩn do mô hình Claude Opus tạo, khác họ mô hình với các công cụ Gemini để tránh thiên lệch. Hai lượt gắn nhãn chạy độc lập, không thấy kết quả của nhau. Nhóm đo mức đồng thuận bằng Cohen's kappa, phân xử từng bất đồng có ghi lý do, rồi đóng băng. Lượt thứ hai cũng được kiểm định trên tài liệu cấy lỗi, vì người viết script cấy lỗi đã biết trước đáp án.}
 \end{frame}

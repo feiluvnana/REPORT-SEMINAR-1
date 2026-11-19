@@ -159,7 +159,7 @@ def readme_block(text: str) -> str:
              f"- **RQ3:** thiếu sót khó nhất (F1 {n['FIncTone']}–{n['FIncTfour']}%), mâu thuẫn dễ nhất (F1 {n['FConTthree']}–{n['FConTtwo']}%).",
              f"- **RQ4:** ổn định cao qua 3 lượt (Jaccard {n['JacTtwo']}–{n['JacTone']}).",
              f"- **Phân tích lỗi:** khoảng {n['AIRevRealLo']}–{n['AIRevRealHi']}% cảnh báo thừa có thể là lỗi thật mà nhãn chuẩn bỏ qua, nên Precision thật có lẽ cao hơn.",
-             human, "", "Chi tiết: `report/main.pdf`, Chương 5–6.", README_END]
+             human, "", "Chi tiết: `report/main.pdf`, Chương 4.", README_END]
     return "\n".join(lines)
 
 

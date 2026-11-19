@@ -163,14 +163,14 @@ def main() -> None:
 
     # LaTeX: PURE per-type F1 / recall table
     lines = [r"\begin{tabular}{l" + "ccc" * 3 + "}", r"\toprule",
-             r"& \multicolumn{3}{c}{\textbf{Ambiguity}} & \multicolumn{3}{c}{\textbf{Incompleteness}} & \multicolumn{3}{c}{\textbf{Inconsistency}} \\",
+             r"& \multicolumn{3}{c}{\textbf{Mơ hồ (\%)}} & \multicolumn{3}{c}{\textbf{Thiếu sót (\%)}} & \multicolumn{3}{c}{\textbf{Mâu thuẫn (\%)}} \\",
              r"\textbf{Công cụ} & P & R & $F_1$ & P & R & $F_1$ & P & R & $F_1$ \\", r"\midrule"]
     for t in ALL_TOOLS:
         cells = []
         for tp in ev.TYPES:
             m = out["pure_by_type"][t][tp]
-            cells += [f"{m['p_mean']:.2f}", f"{m['r_mean']:.2f}", f"{m['f1_mean']:.2f}"]
-        lines.append(f"{t} & " + " & ".join(cells).replace(".", "{,}") + r" \\")
+            cells += [f"{m['p_mean'] * 100:.0f}", f"{m['r_mean'] * 100:.0f}", f"{m['f1_mean'] * 100:.0f}"]
+        lines.append(f"{t} & " + " & ".join(cells) + r" \\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
     (TABLES_DIR / "pure_by_type.tex").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")

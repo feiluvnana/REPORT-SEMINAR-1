@@ -265,6 +265,9 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 - Seeded doc at the ceiling (F1 0.96–1.00); SD-023 sensitivity changes F1 by ≤ 0.02; the count leak inflated seeded F1 by ≤ 0.04.
 - The SD over repeats is the sample SD (ddof=1). Charts are PURE-scoped with Vietnamese labels and a validated palette; the recall heatmap was replaced by an F1 heatmap, since LLM recall is at the ceiling.
 
+### Report restyle (2026-11-19)
+Rewritten after the style of two HUST CS master's theses (`~/vrp/refs/Manh1.pdf`, `Manh2.pdf`): 5 chapters (Giới thiệu, Cơ sở lý thuyết và nghiên cứu liên quan, Phương pháp đề xuất, Thực nghiệm và đánh giá, Kết luận); front matter with Tóm tắt, lists of figures, tables and abbreviations; prose-first, no coloured boxes or file paths in the body; related-work summary table; results written as purpose → table → numbers → takeaway. Length went from 36 to 30 pages (15 pages of body). The human check is assigned entirely to Dương.
+
 ### Remaining after the human check
 1. Team fills `dataset/human_check/part_a.csv` and `part_b.csv` (README §7).
 2. `score_human_check.py` → `export_numbers.py` → rebuild the 3 PDFs → `check_consistency.py` (without `--allow-pending-human`) → commit and push.

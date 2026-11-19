@@ -31,7 +31,7 @@ PURE (107 yêu cầu thật), so khớp chặt, trung bình 3 lượt chạy:
 - **Phân tích lỗi:** khoảng 36–52% cảnh báo thừa có thể là lỗi thật mà nhãn chuẩn bỏ qua, nên Precision thật có lẽ cao hơn.
 - **Kiểm tra bởi người:** đang chờ nhóm điền phiếu (mục 7).
 
-Chi tiết: `report/main.pdf`, Chương 5–6.
+Chi tiết: `report/main.pdf`, Chương 4.
 <!-- RESULTS:END -->
 
 ---
@@ -153,7 +153,7 @@ Mọi con số trong báo cáo và slide đều lấy từ `result/tables/number
 ### 5.1. Cần kiểm tra (bắt buộc)
 | # | Việc cần làm | Cách làm | Phụ trách |
 |---|---|---|---|
-| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 7**. Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | Khánh (Phần A), cả nhóm (Phần B) |
+| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 7** (làm Phần A trước, Phần B sau). Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" | **Dương (toàn bộ)** |
 | 2 | **Quyết định phân xử** | Đọc 16 dòng trong `dataset/ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá | Dương |
 | 3 | **Tài liệu tham khảo** | Claude đã đối chiếu 10 tài liệu với nguồn gốc (19/11/2026) và sửa 4 mục (Ronanki 2025 sai tác giả; Fabbrini 2005 thiếu tác giả Trentanni; Berry 2003 và Zhao 2021 sửa thông tin xuất bản). Người cần mở lại ít nhất Fabbrini 2005 (chưa xác nhận số tập/trang) và hai chuẩn IEEE 830, ISO/IEC/IEEE 29148 | Nam |
 | 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `report/main.pdf`, `slide/slides.pdf` và `result/metrics.csv` | Dương |
@@ -163,7 +163,7 @@ Mọi con số trong báo cáo và slide đều lấy từ `result/tables/number
 | # | Việc cần làm | Phụ trách |
 |---|---|---|
 | 1 | Đọc `report/main.pdf` và slide: câu thiếu tự nhiên, thuật ngữ không thống nhất ("khiếm khuyết" và "lỗi", "mơ hồ" và "nhập nhằng"), lỗi dấu | Cả nhóm |
-| 2 | Đọc khoảng 5 ví dụ trong `result/error_analysis.md`: cách phân loại có công bằng không ("chuyên gia quá khắt khe" hay công cụ thật sự sai)? | Cả nhóm |
+| 2 | Đọc mục 4.4 (Phân tích lỗi) trong `report/main.pdf`: cách phân loại có công bằng không ("chuyên gia quá khắt khe" hay công cụ thật sự sai)? | Cả nhóm |
 | 3 | Xem 2–3 đầu ra gốc trong `result/run/T2/*/run_1.json` để biết công cụ thực sự xuất ra gì | Cả nhóm |
 | 4 | Biểu đồ trong `report/figures/` có đọc rõ khi chiếu lên màn hình không (cỡ chữ, màu) | Nam |
 | 5 | Tập dượt khoảng 15 phút theo ghi chú thuyết trình, có bấm giờ; chạy thử demo trên máy trình chiếu và giữ sẵn slide dự phòng | Cả nhóm |
@@ -196,8 +196,8 @@ Nội dung đã có sẵn, không lặp lại ở đây; mỗi thành viên đ�
 |---|---|
 | Bối cảnh: vì sao lỗi SRS tốn kém, vì sao đọc duyệt thủ công không đủ | `report/main.pdf`, Chương 1 |
 | Các công cụ SRS hiện có (QuARS, Smella, NLP4RE, công cụ thương mại) và điểm yếu | `report/main.pdf`, Chương 2 |
-| Bài toán A1, 4 câu hỏi nghiên cứu, phương pháp | `report/main.pdf`, Chương 1, 3, 4 |
-| Kết quả, phân tích lỗi, hạn chế | `report/main.pdf`, Chương 5–7 |
+| Bài toán A1, 4 câu hỏi nghiên cứu, phương pháp | `report/main.pdf`, Chương 1 và 3 |
+| Kết quả, phân tích lỗi, hạn chế, kết luận | `report/main.pdf`, Chương 4 và 5 |
 | **Kịch bản nói mẫu cho từng slide** (chia sẵn cho Dương, Nam, Khánh) | `slide/slides-notes.pdf`: mỗi slide kèm một trang lời thoại |
 | Câu hỏi dễ gặp và cách trả lời | mục 5.3 ở trên |
 
@@ -222,7 +222,7 @@ Nhãn chuẩn do AI (Claude Opus) tạo. Phần kiểm tra này để **người
 
 ### 7.1. Quy tắc chung
 - **Không mở** `dataset/ground_truth/`, `result/` (nhất là `result/human_check_key.json`) và thư mục `result/run/` cho đến khi điền xong cả hai phần.
-- **Làm Phần A trước Phần B.** Người làm Phần A không được xem Phần B trước khi xong Phần A.
+- **Làm Phần A trước Phần B.** Không mở Phần B cho đến khi đã điền xong và lưu Phần A, để Phần A thật sự độc lập.
 - Mở tệp `.csv` bằng Excel hoặc Google Sheets. Khi lưu, giữ **định dạng CSV UTF-8**, không đổi tên cột, không thêm hoặc xóa dòng.
 - Nếu cần ngữ cảnh, có thể đọc toàn bộ tài liệu gốc trong `dataset/keepass.json`, `dataset/peering.json`, `dataset/gammaj.json`.
 
@@ -235,17 +235,16 @@ Nhãn chuẩn do AI (Claude Opus) tạo. Phần kiểm tra này để **người
 
 **Tiêu chí:** chỉ coi là khiếm khuyết khi một người rà soát cẩn thận **sẽ yêu cầu tác giả sửa**, vì lập trình viên hoặc kiểm thử viên có thể hiểu sai, không kiểm chứng được, hoặc nhận chỉ dẫn mâu thuẫn. Không tính lỗi chính tả/ngữ pháp không đổi nghĩa, và không tính từ ngữ đã được làm rõ bằng con số/chuẩn ngay trong yêu cầu.
 
-### 7.3. Phần A — gắn nhãn độc lập (`dataset/human_check/part_a.csv`, 20 yêu cầu, 1 người, khoảng 30 phút)
+### 7.3. Phần A — gắn nhãn độc lập (`dataset/human_check/part_a.csv`, 20 yêu cầu, Dương, khoảng 30 phút)
 Với mỗi yêu cầu, điền **0 hoặc 1** vào **cả ba** cột (không để trống):
 - `ambiguity_0_1`, `incompleteness_0_1`, `inconsistency_0_1`: 1 nếu yêu cầu có loại khiếm khuyết đó, 0 nếu không.
 - `inconsistency_related_ids`: nếu `inconsistency_0_1 = 1`, ghi mã yêu cầu trước đó bị mâu thuẫn/trùng (ví dụ `PE-007`).
 - `note`: ghi chú ngắn nếu phân vân (không bắt buộc).
 
-### 7.4. Phần B — đánh giá trường hợp bất đồng (`dataset/human_check/part_b.csv`, 30 trường hợp, cả nhóm hoặc 1 người, khoảng 30–45 phút)
+### 7.4. Phần B — đánh giá trường hợp bất đồng (`dataset/human_check/part_b.csv`, 30 trường hợp, Dương, khoảng 30–45 phút)
 Mỗi dòng là một **khẳng định** rằng yêu cầu có một khiếm khuyết (loại, tiểu loại, bằng chứng, lý do; với mâu thuẫn có kèm yêu cầu liên quan). Khẳng định có thể đến từ công cụ hoặc từ chuyên gia; **nguồn được ẩn** để đánh giá khách quan.
 - `is_real_defect_yes_no_unsure`: điền `yes` (đúng là khiếm khuyết theo tiêu chí 7.2), `no` (không phải), hoặc `unsure` (không quyết định được).
 - `note`: lý do ngắn, nhất là khi chọn `no` hoặc `unsure` (ví dụ "chỉ là văn phong", "cần kiến thức miền").
-- Nếu làm theo nhóm: thảo luận và điền **một** quyết định thống nhất cho mỗi dòng.
 
 ### 7.5. Sau khi điền xong
 Báo cho Claude, hoặc tự chạy:
