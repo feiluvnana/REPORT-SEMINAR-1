@@ -292,7 +292,7 @@ Hình~\ref{fig:method_pipeline} tóm tắt quy trình thực nghiệm khép kín
   \node[box] (data) {1. Bộ dữ liệu\\(PURE 107 +\\Seeded 40)};
   \node[box, right=of data] (gt) {2. Chuẩn chuyên gia\\(Claude 2 lượt +\\$\kappa$ + phân xử)};
   \node[freeze, right=of gt] (hash) {3. Đóng băng\\SHA-256\\(\texttt{HASHES.txt})};
-  \node[box, right=of hash] (tools) {4. Chạy công cụ\\(T0 + T1--T4\\$\times$ 3 lượt)};
+  \node[box, right=of hash] (tools) {4. Chạy công cụ\\(T0 + T1--T6\\$\times$ 3 lượt)};
   \node[box, below=1.0cm of tools] (eval) {5. Đánh giá tự động\\(\texttt{evaluate.py}:\\P/R/Miss/$F_1$, CI, $\kappa$)};
 
   \draw[arrow] (data) -- (gt);
@@ -333,12 +333,12 @@ Bảng~\ref{tab:taxonomy} trình bày chi tiết 3 nhóm lỗi và 15 tiểu lo�
   \item \textbf{Tuân thủ mã định danh JSON:} Các công cụ phải trả về đúng trường \texttt{req\_id} bên ngoài (ví dụ \texttt{KP-017}), không sử dụng mã cũ nhúng trong nội dung văn bản (như \texttt{REQ-18:}).
 \end{enumerate}
 
-\section{Thiết kế các công cụ đối chứng (T0--T4) và kỹ năng}
-Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật với các cấu hình LLM theo thiết kế cặp đôi có/không có kỹ năng:
+\section{Thiết kế các công cụ đối chứng (T0--T6) và kỹ năng}
+Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật với ba cặp cấu hình LLM không thuộc họ Claude theo thiết kế có/không có kỹ năng:
 \begin{itemize}
   \item \textbf{T0 (\texttt{baseline\_rules.py}):} Bộ dò mùi yêu cầu kiểu Smella/QuARS viết bằng Python, kết hợp danh sách từ mơ hồ, cụm từ yếu, biểu thức chính quy bắt \textit{TBD}, nhận diện câu bị động thiếu tác nhân \texttt{by <Actor>}, và phát hiện trùng lặp qua độ tương đồng Jaccard từ vựng ($\ge 0{,}80$).
-  \item \textbf{T1 / T3 (Plain Prompt):} Gửi trực tiếp câu lệnh nhiệm vụ chuẩn kèm lược đồ JSON và danh sách tên tiểu loại hợp lệ trong một thư mục rỗng chỉ chứa tài liệu đầu vào (không có \texttt{SKILL.md}).
-  \item \textbf{T2 / T4 (+ \texttt{SKILL.md}):} Giữ nguyên câu lệnh nhiệm vụ và lược đồ đầu ra như Plain Prompt, chỉ bổ sung chỉ dẫn nạp tệp \texttt{skill/req-defect-detector/SKILL.md} chứa định nghĩa chi tiết, danh sách kiểm tra hai lượt và các quy tắc loại trừ cảnh báo giả.
+  \item \textbf{T1 / T3 / T5 (Plain Prompt):} Lần lượt sử dụng \texttt{agy} (\texttt{gemini-4-hydrogen-high}), \texttt{cursor-agent} (\texttt{composer-2.5}) và \texttt{agy} (\texttt{gemini-4-neon-high}) với câu lệnh nhiệm vụ chuẩn kèm lược đồ JSON trong thư mục rỗng chỉ chứa tài liệu đầu vào (không có \texttt{SKILL.md}).
+  \item \textbf{T2 / T4 / T6 (+ \texttt{SKILL.md}):} Cùng ba mô hình trên với câu lệnh nhiệm vụ và lược đồ đầu ra giống hệt Plain Prompt, chỉ bổ sung chỉ dẫn nạp tệp \texttt{skill/req-defect-detector/SKILL.md} chứa định nghĩa chi tiết, danh sách kiểm tra hai lượt và các quy tắc loại trừ cảnh báo giả.
 \end{itemize}
 
 \section{Giao thức tạo chuẩn chuyên gia và đóng băng dữ liệu}
@@ -348,7 +348,7 @@ Nghiên cứu đối chiếu một công cụ nền tảng dựa trên luật v�
   \item \textbf{Lượt 2 (Pass 2):} Một tác tử Claude hoàn toàn mới (không được truy cập kết quả lượt 1 hay \texttt{seed\_key.json}) gắn nhãn toàn bộ 147 yêu cầu thành \texttt{expert\_pass2.json}.
   \item \textbf{Đo tự nhất quán và kiểm định:} Tính hệ số \textbf{Cohen's $\kappa$} giữa lượt 1 và lượt 2 trên $107 \times 3 = 321$ cặp nhị phân \texttt{(req\_id, type)} của bộ PURE; đồng thời đo Recall của lượt 2 trên tập \texttt{seeded\_lms} đối chiếu với \texttt{seed\_key.json}.
   \item \textbf{Phân xử (\textit{Adjudication}):} Giải quyết mọi bất đồng giữa hai lượt trên PURE và ghi nhận lý do vào \texttt{adjudication\_log.md} để chốt \texttt{final\_gt.json} (riêng \texttt{seeded\_lms} giữ nguyên đáp án chính xác từ \texttt{seed\_key.json}).
-  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T4 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
+  \item \textbf{Đóng băng SHA-256:} Sinh tệp \texttt{ground\_truth/HASHES.txt} trước khi chạy bất kỳ lượt T1--T6 nào. Mã đánh giá \texttt{evaluate.py} kiểm tra hàm băm này đầu tiên và từ chối thực thi nếu có sai lệch.
 \end{enumerate}
 
 \section{Quy tắc khớp và các độ đo đánh giá}

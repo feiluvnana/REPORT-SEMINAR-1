@@ -105,7 +105,7 @@
     \node[box] (d) {\textbf{1. Dữ liệu}\\PURE (107)\\+ Seeded (40)};
     \node[box, right=of d] (e) {\textbf{2. Chuẩn GT}\\Claude 2 lượt\\+ $\kappa$ + phân xử};
     \node[freeze, right=of e] (f) {3. Đóng băng\\SHA-256\\(\texttt{HASHES.txt})};
-    \node[box, right=of f] (t) {\textbf{4. Công cụ}\\T0 + T1--T4\\$\times$ 3 lượt lặp};
+    \node[box, right=of f] (t) {\textbf{4. Công cụ}\\T0 + T1--T6\\$\times$ 3 lượt lặp};
     \node[box, right=of t] (m) {\textbf{5. Đánh giá}\\\texttt{evaluate.py}\\P/R/Miss/$F_1$, CI};
     \draw[arrow] (d) -- (e);
     \draw[arrow] (e) -- (f);
@@ -155,21 +155,20 @@
   \note{[Nam] Nêu lý do kết hợp PURE (dữ liệu thực tế công khai) với \texttt{seeded\_lms} (dữ liệu mới chưa từng xuất hiện trong tập huấn luyện LLM).}
 \end{frame}
 
-% --- Slide 8: AI tools T0-T4 ---
-\begin{frame}{Các cấu hình công cụ đối chứng (T0--T4)}
-  \small
-  \begin{tabular}{lllp{5.8cm}}
+% --- Slide 8: AI tools T0-T6 ---
+\begin{frame}{Các cấu hình công cụ đối chứng (T0--T6)}
+  \footnotesize
+  \begin{tabular}{lllp{5.7cm}}
     \toprule
-    \textbf{Mã} & \textbf{Công cụ / CLI} & \textbf{Chế độ} & \textbf{Cơ chế hoạt động} \\
+    \textbf{Mã} & \textbf{Công cụ / Mô hình} & \textbf{Chế độ} & \textbf{Cơ chế hoạt động} \\
     \midrule
     \textbf{T0} & \texttt{baseline\_rules.py} & Luật tất định & Từ điển mơ hồ, \textit{TBD}, bị động thiếu \texttt{by <Actor>}, trùng lặp Jaccard $\ge 0{,}80$. \\
-    \textbf{T1} & \texttt{agy} (Hydrogen High) & Plain Prompt & Chỉ nhận câu lệnh nhiệm vụ + lược đồ JSON (thư mục không có \texttt{SKILL.md}). \\
-    \textbf{T2} & \texttt{agy} (Hydrogen High) & + \texttt{SKILL.md} & Nạp đầy đủ bảng phân loại 15 tiểu loại, quy tắc ranh giới và checklist 2 lượt. \\
-    \textbf{T3} & Cấu hình đối chứng 2 & Plain Prompt & Cùng câu lệnh thuần và lược đồ JSON như T1. \\
-    \textbf{T4} & Cấu hình đối chứng 2 & + \texttt{SKILL.md} & Cùng kỹ năng như T2 (đo hiệu ứng kỹ năng trên hai mô hình khác nhau). \\
+    \textbf{T1 / T2} & \texttt{agy} (\texttt{gemini-4-hydrogen-high}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Gemini 4 Hydrogen. \\
+    \textbf{T3 / T4} & \texttt{cursor-agent} (\texttt{composer-2.5}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Composer 2.5. \\
+    \textbf{T5 / T6} & \texttt{agy} (\texttt{gemini-4-neon-high}) & Plain / +\texttt{SKILL.md} & Đối chứng tác động kỹ năng trên mô hình Gemini 4 Neon. \\
     \bottomrule
   \end{tabular}
-  \note{[Nam] Trình bày cách tách biệt T1/T3 và T2/T4 để đo chính xác tác động của SKILL.md mà không thay đổi câu lệnh nhiệm vụ.}
+  \note{[Nam] Trình bày 3 cặp mô hình ngoài Claude (Hydrogen, Composer 2.5, Neon) cùng chạy ở chế độ Plain và +SKILL.md để đo hiệu ứng kỹ năng.}
 \end{frame}
 
 % --- Slide 9: Expert ground-truth protocol ---

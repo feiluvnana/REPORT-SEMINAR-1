@@ -21,8 +21,8 @@ This is an empirical study: **tool + public dataset + expert ground truth + comp
   | Kind | Example | Role in our study |
   |---|---|---|
   | Rule-based NLP "smell" detector | Smella-style vague words, passive voice, TBD | **Baseline (T0)**, Python script |
-  | Plain LLM prompt | "Find defects in this SRS" | **T1 / T3**, measures what the skill adds |
-  | **LLM agent + skill** | Agent loads `SKILL.md` (taxonomy, checklist, JSON output) | **Main tools (T2 / T4)** |
+  | Plain LLM prompt | "Find defects in this SRS" | **T1 / T3 / T5**, measures what the skill adds |
+  | **LLM agent + skill** | Agent loads `SKILL.md` (taxonomy, checklist, JSON output) | **Main tools (T2 / T4 / T6)** |
   | Fine-tuned classifier (BERT, …) | Needs labeled training data | Related work only |
   | Commercial tools (QVscribe, IBM RQA) | Paid licenses | Related work only |
 
@@ -59,7 +59,7 @@ REPORT/
 │   ├── prepare_data.py      # PURE XML → JSON
 │   ├── seed_defects.py      # builds seeded_lms.json + seed_key.json
 │   ├── baseline_rules.py    # T0
-│   ├── run_tools.sh         # runs T1–T4 × docs × 3 repeats
+│   ├── run_tools.sh         # runs T1–T6 × docs × 3 repeats
 │   ├── evaluate.py          # matching + metrics + charts
 │   └── results/             # metrics.csv, tables/*.tex
 ├── pic/                     # charts + logo (shared by report & slides)
@@ -128,18 +128,20 @@ Based on IEEE 830 / ISO/IEC/IEEE 29148 quality attributes and Berry et al.'s *Am
 6. **Freeze:** write SHA-256 hashes and a timestamp of all ground-truth files to `HASHES.txt` **before Phase 4 starts**. `evaluate.py` checks the hashes and refuses to run if any file has changed.
 
 ### Phase 4 — Tool Runs
-Smoke test (done): both CLIs run headless.
+Smoke test (done): both CLIs run headless (`agy --sandbox`, `cursor-agent -p --trust` with `composer-2.5`; note `gpt-5.3-codex` & `grok-4.7-medium` on `cursor-agent` currently hit account usage limits).
 
 | ID | Tool | Model (non-Claude) | Setting | Command sketch |
 |---|---|---|---|---|
 | T0 | `baseline_rules.py` | — | Word lists + regex (vague words, TBD, passive voice without an actor, duplicates by text similarity) | `python3 eval/baseline_rules.py` |
-| T1 | agy | `gemini-4-hydrogen-high` | Plain prompt | `agy -p "$(cat prompts/plain_prompt.txt) <doc>" --model gemini-4-hydrogen-high --output-format json` |
-| T2 | agy | `gemini-4-hydrogen-high` | + skill | same, with `skill_prompt.txt` telling it to load `skill/req-defect-detector/SKILL.md` |
-| T3 | cursor-agent | `gpt-5.3-codex` | Plain prompt | `cursor-agent -p --mode ask --model gpt-5.3-codex --output-format json "<prompt + doc>"` |
-| T4 | cursor-agent | `gpt-5.3-codex` | + skill | same, with skill prompt |
+| T1 | agy | `gemini-4-hydrogen-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-hydrogen-high --output-format json -p "<plain + doc>"` |
+| T2 | agy | `gemini-4-hydrogen-high` | + skill | `agy --sandbox --model gemini-4-hydrogen-high --output-format json -p "<skill + doc>"` |
+| T3 | cursor-agent | `composer-2.5` | Plain prompt | `cursor-agent -p --trust --model composer-2.5 --output-format json "<plain + doc>"` |
+| T4 | cursor-agent | `composer-2.5` | + skill | same, with skill prompt |
+| T5 | agy | `gemini-4-neon-high` | Plain prompt | `agy --sandbox --disable-slash-commands --model gemini-4-neon-high --output-format json -p "<plain + doc>"` |
+| T6 | agy | `gemini-4-neon-high` | + skill | `agy --sandbox --model gemini-4-neon-high --output-format json -p "<skill + doc>"` |
 
-- 4 LLM configurations × 4 documents × **3 repeats** = **48 LLM runs**, plus T0.
-- Tools run read-only (`--mode ask --trust` / `--mode plan`) in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands` on `agy`; `skill` with `skill/req-defect-detector/SKILL.md`), never `ground_truth/`.
+- 6 LLM configurations × 4 documents × **3 repeats** = **72 LLM runs**, plus T0.
+- Tools run in separate isolated scratch workspaces (`plain` without any skill files and `--disable-slash-commands` on `agy`; `skill` with `skill/req-defect-detector/SKILL.md`), never `ground_truth/`. (`agy` uses `--sandbox`; `cursor-agent` drops `--mode ask` so skill runs can read `SKILL.md` without looping.)
 - Plain and skill prompts share the same task sentence and output schema. The only difference is the taxonomy and checklist in the skill.
 - `run_tools.sh` saves raw CLI output (`.log`), unwraps `--output-format json` CLI envelopes and validates the findings schema (`eval/parse_tool_output.py`), and uses per-run timeouts (`--print-timeout 180s` / `timeout 180`). Invalid JSON or schema errors get one retry; a second failure is logged as a failed run, never silently dropped.
 
@@ -156,7 +158,7 @@ Smoke test (done): both CLIs run headless.
   - F1
 - **Uncertainty:** bootstrap 95% CI over requirements (1000 resamples).
 - **Stability:** Jaccard overlap of findings between repeats, and Fleiss' κ across the 3 runs over `(req_id, type)` binary pairs (`147 × 3 = 441` overall; `107 × 3 = 321` PURE).
-- **Skill effect:** ΔF1 for T2 − T1 and T4 − T3, with a paired bootstrap.
+- **Skill effect:** ΔF1 for T2 − T1, T4 − T3, and T6 − T5, with a paired bootstrap.
 - **Outputs:** `results/metrics.csv`, LaTeX tables in `results/tables/`, and charts in `pic/`:
   - P/R/F1 bar chart per tool
   - Recall heatmap, tool × defect type
@@ -227,7 +229,7 @@ Smoke test (done): both CLIs run headless.
 ## 5. Tool Environment (verified 2026-11-17)
 | Tool | Path | Headless flag | Non-Claude models available |
 |---|---|---|---|
-| agy | `~/.local/bin/agy` | `-p/--print`, `--output-format json`, `--mode plan` | gemini-4-hydrogen-{xhigh,high,medium,low}, gemini-3.8-flash-{high,medium,low}, gpt-oss-120b-medium |
+| agy | `~/.local/bin/agy` | `-p/--print`, `--output-format json`, `--sandbox` | gemini-4-hydrogen-{xhigh,high,medium,low}, gemini-4-neon-{xhigh,high,medium,low}, gemini-3.8-flash-{high,medium,low} |
 | cursor-agent | `~/.local/bin/cursor-agent` | `-p`, `--output-format json`, `--mode ask` | gpt-5.3-codex(-high/…), gpt-5.2, gpt-5.6-*, grok-4.x, composer-2.5 |
 | LaTeX | `/Library/TeX/texbin` | xelatex, latexmk | — |
 | Python | `/opt/homebrew/bin/python3` (3.15) + `REPORT/.venv` (uv, Python 3.12.13) | — | System 3.15 has broken `pyexpat`/`ensurepip`. Always use `REPORT/.venv/bin/python` (`uv` at `~/.local/bin/uv`; `pillow`, `numpy`, `matplotlib` installed) |
@@ -242,7 +244,7 @@ Smoke test (done): both CLIs run headless.
 | 5 | Expert pass 2 (fresh Claude subagent), in parallel with 4 | 2, 3 | ☐ waiting on Claude quota |
 | 6 | κ + seeded validation + adjudication (`check_gt.py`) → `final_gt.json` | 4, 5 | ☐ (`check_gt.py` ready) |
 | 7 | **Freeze:** `HASHES.txt` (`check_gt.py --freeze`) | 6 | ☐ |
-| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T4 × 4 docs × 3) | 3, 7 | ⏳ T0 done; `run_tools.sh` & `parse_tool_output.py` ready (T1–T4 wait for step 7) |
+| 8 | `baseline_rules.py` (T0) + `run_tools.sh` (T1–T6 × 4 docs × 3) | 3, 7 | ⏳ T0 done; `run_tools.sh` & `parse_tool_output.py` ready (T1–T6 wait for step 7) |
 | 9 | `evaluate.py` → metrics, tables, charts | 7, 8 | ⏳ script written & `--self-test` passed (run after step 8) |
 | 10 | Error analysis | 9 | ☐ |
 | 11 | Fetch HUST logo; write `meta.tex` | — | ✅ done (`slides/hust_logo.png`, `pic/hust_logo.png`, `slides/hust_banner_white.png` from hust.edu.vn) |
@@ -257,7 +259,8 @@ Smoke test (done): both CLIs run headless.
 | Orchestration, scripts, T0, report/slides scaffolding, evaluation & charts | Main session (or Claude session) |
 | Expert pass 1, Expert pass 2 (isolated), Adjudication | **Claude only** (`claude` CLI / Claude subagent — isolated passes) |
 | T1 / T2 detection | agy (`gemini-4-hydrogen-high`) — separate process per run |
-| T3 / T4 detection | cursor-agent (`gpt-5.3-codex`) — separate process per run |
+| T3 / T4 detection | cursor-agent (`composer-2.5`) — separate process per run |
+| T5 / T6 detection | agy (`gemini-4-neon-high`) — separate process per run |
 | Error analysis, Report writing (`main.tex`), Slides (`slides.tex`) | Main session / Claude subagent (given frozen GT, `metrics.csv`, error analysis) |
 | Final consistency review | Automated check + reviewer verification of numbers and citations |
 

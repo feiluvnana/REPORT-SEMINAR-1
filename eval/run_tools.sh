@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Run T1-T4 across all 4 documents x 3 repeats in isolated read-only scratch workspaces.
+# Run T1-T6 across all 4 documents x 3 repeats in isolated scratch workspaces.
+#   T1/T2: agy (gemini-4-hydrogen-high) Plain / +Skill
+#   T3/T4: cursor-agent (composer-2.5)  Plain / +Skill
+#   T5/T6: agy (gemini-4-neon-high)     Plain / +Skill
 # Usage: bash REPORT/eval/run_tools.sh [--skip-hash-check]
 set -u
 
@@ -17,8 +20,9 @@ if [[ "$SKIP_HASH_CHECK" != "--skip-hash-check" ]]; then
 fi
 
 # Configurable models (override via env if needed)
-AGY_MODEL="${AGY_MODEL:-gemini-4-hydrogen-high}"
-CURSOR_MODEL="${CURSOR_MODEL:-gpt-5.3-codex}"
+AGY_HYDROGEN_MODEL="${AGY_HYDROGEN_MODEL:-gemini-4-hydrogen-high}"
+AGY_NEON_MODEL="${AGY_NEON_MODEL:-gemini-4-neon-high}"
+CURSOR_MODEL="${CURSOR_MODEL:-composer-2.5}"
 REPEATS="${REPEATS:-3}"
 DOCS=("keepass" "peering" "gammaj" "seeded_lms")
 
@@ -47,8 +51,8 @@ run_one() {
   local prompt_file=""
   local use_skill=0
   case "$tool" in
-    T1|T3) prompt_file="$ROOT/prompts/plain_prompt.txt"; use_skill=0 ;;
-    T2|T4) prompt_file="$ROOT/prompts/skill_prompt.txt"; use_skill=1 ;;
+    T1|T3|T5) prompt_file="$ROOT/prompts/plain_prompt.txt"; use_skill=0 ;;
+    T2|T4|T6) prompt_file="$ROOT/prompts/skill_prompt.txt"; use_skill=1 ;;
     *) echo "Unknown tool: $tool" >&2; return 1 ;;
   esac
 
@@ -71,17 +75,25 @@ run_one() {
       cd "$scratch" || exit 1
       case "$tool" in
         T1)
-          agy --sandbox --disable-slash-commands --model "$AGY_MODEL" \
+          agy --sandbox --disable-slash-commands --model "$AGY_HYDROGEN_MODEL" \
             --output-format json --print-timeout 180s -p "$full_prompt"
           ;;
         T2)
-          agy --sandbox --model "$AGY_MODEL" \
+          agy --sandbox --model "$AGY_HYDROGEN_MODEL" \
+            --output-format json --print-timeout 180s -p "$full_prompt"
+          ;;
+        T5)
+          agy --sandbox --disable-slash-commands --model "$AGY_NEON_MODEL" \
+            --output-format json --print-timeout 180s -p "$full_prompt"
+          ;;
+        T6)
+          agy --sandbox --model "$AGY_NEON_MODEL" \
             --output-format json --print-timeout 180s -p "$full_prompt"
           ;;
         T3|T4)
           "$PYTHON" -c '
 import subprocess, sys
-cmd = ["cursor-agent", "-p", "--mode", "ask", "--trust", "--model", sys.argv[1], "--output-format", "json", sys.argv[2]]
+cmd = ["cursor-agent", "-p", "--trust", "--model", sys.argv[1], "--output-format", "json", sys.argv[2]]
 try:
     p = subprocess.run(cmd, timeout=180, text=True, capture_output=True)
     sys.stdout.write(p.stdout)
@@ -115,7 +127,7 @@ except subprocess.TimeoutExpired:
   fi
 }
 
-for tool in T1 T2 T3 T4; do
+for tool in T1 T2 T3 T4 T5 T6; do
   for doc_id in "${DOCS[@]}"; do
     for rep in $(seq 1 "$REPEATS"); do
       run_one "$tool" "$doc_id" "$rep"
