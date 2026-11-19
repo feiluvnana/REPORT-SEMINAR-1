@@ -8,9 +8,6 @@ T1,peering,3,1,OK,54,result/run/T1/peering/run_3.log
 T1,gammaj,1,1,OK,96,result/run/T1/gammaj/run_1.log
 T1,gammaj,2,1,OK,88,result/run/T1/gammaj/run_2.log
 T1,gammaj,3,1,OK,104,result/run/T1/gammaj/run_3.log
-T1,seeded_lms,1,1,OK,30,result/run/T1/seeded_lms/run_1.log
-T1,seeded_lms,2,1,OK,30,result/run/T1/seeded_lms/run_2.log
-T1,seeded_lms,3,1,OK,30,result/run/T1/seeded_lms/run_3.log
 T2,keepass,1,1,OK,41,result/run/T2/keepass/run_1.log
 T2,keepass,2,1,OK,41,result/run/T2/keepass/run_2.log
 T2,keepass,3,1,OK,42,result/run/T2/keepass/run_3.log
@@ -20,9 +17,6 @@ T2,peering,3,1,OK,36,result/run/T2/peering/run_3.log
 T2,gammaj,1,1,OK,58,result/run/T2/gammaj/run_1.log
 T2,gammaj,2,1,OK,49,result/run/T2/gammaj/run_2.log
 T2,gammaj,3,1,OK,54,result/run/T2/gammaj/run_3.log
-T2,seeded_lms,1,1,OK,30,result/run/T2/seeded_lms/run_1.log
-T2,seeded_lms,2,1,OK,30,result/run/T2/seeded_lms/run_2.log
-T2,seeded_lms,3,1,OK,30,result/run/T2/seeded_lms/run_3.log
 T3,keepass,1,1,OK,56,result/run/T3/keepass/run_1.log
 T3,keepass,2,1,OK,54,result/run/T3/keepass/run_2.log
 T3,keepass,3,1,OK,57,result/run/T3/keepass/run_3.log
@@ -32,9 +26,6 @@ T3,peering,3,1,OK,49,result/run/T3/peering/run_3.log
 T3,gammaj,1,1,OK,99,result/run/T3/gammaj/run_1.log
 T3,gammaj,2,1,OK,80,result/run/T3/gammaj/run_2.log
 T3,gammaj,3,1,OK,55,result/run/T3/gammaj/run_3.log
-T3,seeded_lms,1,1,OK,30,result/run/T3/seeded_lms/run_1.log
-T3,seeded_lms,2,1,OK,30,result/run/T3/seeded_lms/run_2.log
-T3,seeded_lms,3,1,OK,30,result/run/T3/seeded_lms/run_3.log
 T4,keepass,1,1,OK,42,result/run/T4/keepass/run_1.log
 T4,keepass,2,1,OK,45,result/run/T4/keepass/run_2.log
 T4,keepass,3,1,OK,42,result/run/T4/keepass/run_3.log
@@ -44,6 +35,15 @@ T4,peering,3,1,OK,34,result/run/T4/peering/run_3.log
 T4,gammaj,1,1,OK,46,result/run/T4/gammaj/run_1.log
 T4,gammaj,2,1,OK,39,result/run/T4/gammaj/run_2.log
 T4,gammaj,3,1,OK,38,result/run/T4/gammaj/run_3.log
+T1,seeded_lms,1,1,OK,29,result/run/T1/seeded_lms/run_1.log
+T1,seeded_lms,2,1,OK,30,result/run/T1/seeded_lms/run_2.log
+T1,seeded_lms,3,1,OK,30,result/run/T1/seeded_lms/run_3.log
+T2,seeded_lms,1,1,OK,30,result/run/T2/seeded_lms/run_1.log
+T2,seeded_lms,2,1,OK,32,result/run/T2/seeded_lms/run_2.log
+T2,seeded_lms,3,1,OK,30,result/run/T2/seeded_lms/run_3.log
+T3,seeded_lms,1,1,OK,30,result/run/T3/seeded_lms/run_1.log
+T3,seeded_lms,2,1,OK,30,result/run/T3/seeded_lms/run_2.log
+T3,seeded_lms,3,1,OK,30,result/run/T3/seeded_lms/run_3.log
 T4,seeded_lms,1,1,OK,30,result/run/T4/seeded_lms/run_1.log
 T4,seeded_lms,2,1,OK,30,result/run/T4/seeded_lms/run_2.log
 T4,seeded_lms,3,1,OK,30,result/run/T4/seeded_lms/run_3.log

@@ -7,7 +7,7 @@
    "subtype": "missing_condition",
    "evidence": "lock a Member account after 5 consecutive failed login attempts within a 10-minute window",
    "related_ids": [],
-   "rationale": "Specifies when to lock the account, but omits the lockout duration and the unlock or recovery condition (as well as the response returned when a locked account attempts to log in)."
+   "rationale": "Specifies locking a Member account after 5 consecutive failed logins, but omits the lockout duration, the unlock condition or procedure (automatic expiration vs. manual reset), and the error response returned to a locked user."
   },
   {
    "req_id": "SD-006",
@@ -15,7 +15,7 @@
    "subtype": "referential",
    "evidence": "notify him",
    "related_ids": [],
-   "rationale": "The pronoun 'him' has an ambiguous antecedent; it is unclear whether the Librarian, the Member, or the Guarantor should be notified."
+   "rationale": "The pronoun 'him' has an ambiguous antecedent; it could refer to the Librarian, the Member, or the Guarantor."
   },
   {
    "req_id": "SD-007",
@@ -23,23 +23,23 @@
    "subtype": "tbd",
    "evidence": "TBD minutes",
    "related_ids": [],
-   "rationale": "Contains an unresolved 'TBD' placeholder instead of a concrete token expiration duration."
+   "rationale": "Contains an unresolved 'TBD' placeholder instead of a concrete expiration duration for password-reset tokens."
   },
   {
    "req_id": "SD-008",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "user-friendly, easy to navigate, loads rapidly, standard connections",
+   "evidence": "user-friendly Member dashboard that is easy to navigate and loads rapidly on standard connections",
    "related_ids": [],
-   "rationale": "Uses subjective and unmeasurable terms ('user-friendly', 'easy to navigate', 'loads rapidly', 'standard connections') without objective usability or performance criteria."
+   "rationale": "Uses subjective, unquantified terms ('user-friendly', 'easy to navigate', 'loads rapidly', 'standard connections') without measurable usability criteria, latency bounds, or network bandwidth definitions."
   },
   {
    "req_id": "SD-012",
    "type": "incompleteness",
    "subtype": "tbd",
-   "evidence": "TBD consecutive times",
+   "evidence": "at most TBD consecutive times",
    "related_ids": [],
-   "rationale": "Contains an unresolved 'TBD' placeholder instead of specifying the maximum number of consecutive renewals."
+   "rationale": "Contains an unresolved 'TBD' placeholder for the maximum number of consecutive loan renewals allowed."
   },
   {
    "req_id": "SD-013",
@@ -47,7 +47,7 @@
    "subtype": "missing_error_handling",
    "evidence": "validate item eligibility within 2 seconds and issue the loan receipt",
    "related_ids": [],
-   "rationale": "Only specifies the happy-path outcome (issuing the loan receipt) and omits what the system must do if item eligibility validation fails or the barcode cannot be validated."
+   "rationale": "Specifies only the happy path when an item is eligible; omits error handling for ineligible items, invalid or unreadable barcodes, and validation failures."
   },
   {
    "req_id": "SD-014",
@@ -55,7 +55,7 @@
    "subtype": "missing_value_or_unit",
    "evidence": "the allowed maximum number of active hold requests",
    "related_ids": [],
-   "rationale": "References 'the allowed maximum number' without specifying a concrete numeric limit anywhere in the specification."
+   "rationale": "References 'the allowed maximum number of active hold requests' without specifying the actual numeric cap anywhere in the specification."
   },
   {
    "req_id": "SD-015",
@@ -65,7 +65,7 @@
    "related_ids": [
     "SD-009"
    ],
-   "rationale": "Allows a Member in good standing to borrow up to 8 physical items simultaneously, conflicting with SD-009 which caps simultaneous checkouts at 5 physical items."
+   "rationale": "Conflicts with SD-009, which restricts a Member in good standing to at most 5 physical items checked out simultaneously, whereas SD-015 allows up to 8 items."
   },
   {
    "req_id": "SD-016",
@@ -75,7 +75,7 @@
    "related_ids": [
     "SD-010"
    ],
-   "rationale": "Sets the standard loan period for circulating print books to 21 calendar days, conflicting with SD-010 which sets it to 14 calendar days."
+   "rationale": "Conflicts with SD-010, which sets the standard loan duration for circulating print books to 14 calendar days, whereas SD-016 sets it to 21 calendar days."
   },
   {
    "req_id": "SD-017",
@@ -85,7 +85,7 @@
    "related_ids": [
     "SD-001"
    ],
-   "rationale": "Permits unverified visitors to self-register with only an email address and immediately check out books without ID verification, directly contradicting SD-001 which requires a Librarian to verify government-issued photo ID and record full name, email, and phone number before creating an account."
+   "rationale": "Directly contradicts SD-001, which requires a Librarian to verify government-issued photo ID and record full name, email, and phone number before creating an account."
   },
   {
    "req_id": "SD-018",
@@ -95,7 +95,7 @@
    "related_ids": [
     "SD-011"
    ],
-   "rationale": "Requires reserved items on the pickup shelf to be held indefinitely until cancelled by the Member, contradicting SD-011 which limits the hold to exactly 72 hours before automatic cancellation."
+   "rationale": "Directly contradicts SD-011, which holds reserved items on the pickup shelf for exactly 72 hours and automatically cancels uncollected holds to notify the next Member in queue."
   },
   {
    "req_id": "SD-021",
@@ -103,7 +103,7 @@
    "subtype": "coordination",
    "evidence": "send an overdue email and/or suspend borrowing privileges and/or apply a penalty flag",
    "related_ids": [],
-   "rationale": "Uses chained 'and/or' coordination, leaving it ambiguous which combination of the three actions must be executed and under what conditions."
+   "rationale": "Chained 'and/or' connectors make it ambiguous which specific combination of actions must occur when an item becomes 7 days overdue."
   },
   {
    "req_id": "SD-022",
@@ -111,7 +111,7 @@
    "subtype": "missing_actor",
    "evidence": "shall be reviewed, approved, and recorded",
    "related_ids": [],
-   "rationale": "Uses passive voice without identifying which actor, role, or system component is responsible for reviewing, approving, and recording fine waiver requests."
+   "rationale": "Uses passive voice and omits the actor or service responsible for reviewing, approving, and recording fine waiver requests (and does not specify handling for rejected waivers or amounts above $25.00 USD)."
   },
   {
    "req_id": "SD-023",
@@ -119,35 +119,35 @@
    "subtype": "weak_phrase",
    "evidence": "if appropriate",
    "related_ids": [],
-   "rationale": "Uses the subjective weak qualifier 'if appropriate' without defining objective criteria for when SMS due-date alerts should be dispatched."
+   "rationale": "Uses the weak, subjective phrase 'if appropriate' without defining objective criteria for when SMS due-date alerts must be sent or how far before the due date they should be dispatched."
   },
   {
    "req_id": "SD-024",
    "type": "incompleteness",
    "subtype": "tbd",
-   "evidence": "TBD years",
+   "evidence": "for TBD years",
    "related_ids": [],
-   "rationale": "Contains an unresolved 'TBD' placeholder instead of a defined retention period for payment receipts."
+   "rationale": "Contains an unresolved 'TBD' placeholder for the payment receipt archival retention period."
   },
   {
    "req_id": "SD-025",
    "type": "inconsistency",
    "subtype": "conflicting_values",
-   "evidence": "$1.25 USD per overdue day per item with no maximum cap",
+   "evidence": "$1.25 USD per overdue day per item with no maximum cap on accumulated fines",
    "related_ids": [
     "SD-019"
    ],
-   "rationale": "Specifies an overdue fine of $1.25 USD per day with no cap, conflicting with SD-019 which specifies $0.50 USD per day capped at $20.00 USD per item."
+   "rationale": "Conflicts with SD-019, which specifies an overdue fine of $0.50 USD per overdue day per item capped at $20.00 USD, whereas SD-025 charges $1.25 USD per day with no cap."
   },
   {
    "req_id": "SD-026",
    "type": "inconsistency",
    "subtype": "conflicting_rules",
-   "evidence": "renew borrowed items online at any time regardless of any unpaid overdue fine balance",
+   "evidence": "permitted to renew borrowed items online at any time regardless of any unpaid overdue fine balance",
    "related_ids": [
     "SD-020"
    ],
-   "rationale": "Allows Members to renew items regardless of unpaid overdue fines, directly contradicting SD-020 which blocks renewals when unpaid fines exceed $5.00 USD."
+   "rationale": "Directly contradicts SD-020, which blocks Members with an unpaid fine balance exceeding $5.00 USD from borrowing or renewing items."
   },
   {
    "req_id": "SD-027",
@@ -158,15 +158,15 @@
     "SD-001",
     "SD-009"
    ],
-   "rationale": "Introduces the undefined synonym 'Patron' instead of the standard term 'Member' used throughout the rest of the specification (e.g., SD-001 and SD-009)."
+   "rationale": "Uses the undefined term 'Patron' inconsistently instead of the established term 'Member' used throughout the rest of the specification (including SD-001 and SD-009 for the same 5-item borrowing limit)."
   },
   {
    "req_id": "SD-028",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "quickly, many users",
+   "evidence": "return search results quickly even when many users are querying",
    "related_ids": [],
-   "rationale": "Uses unquantified vague terms ('quickly', 'many users') without specifying concrete latency targets or concurrent user counts."
+   "rationale": "'quickly' and 'many users' are vague, unquantified terms lacking explicit latency limits and concurrent user load thresholds."
   },
   {
    "req_id": "SD-029",
@@ -174,83 +174,83 @@
    "subtype": "weak_phrase",
    "evidence": "where possible",
    "related_ids": [],
-   "rationale": "Uses the weak optional qualifier 'where possible', making the requirement untestable by failing to define when highlighting is required versus omitted."
+   "rationale": "'where possible' is a weak, non-binding phrase that leaves the requirement untestable and fails to specify when highlighting is required versus omitted."
   },
   {
    "req_id": "SD-030",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "sufficient ISBN matching accuracy, acceptable response times",
+   "evidence": "sufficient ISBN matching accuracy and acceptable response times",
    "related_ids": [],
-   "rationale": "Uses vague qualitative adjectives ('sufficient', 'acceptable') without defining measurable accuracy or response-time thresholds."
+   "rationale": "'sufficient' and 'acceptable response times' are vague qualifiers with no measurable accuracy target or latency threshold."
   },
   {
    "req_id": "SD-031",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "efficiently, large batch MARC21 files, noticeable system slowdown",
+   "evidence": "efficiently process large batch MARC21 files without noticeable system slowdown",
    "related_ids": [],
-   "rationale": "Uses vague terms ('efficiently', 'large', 'noticeable system slowdown') without specifying file size, throughput, or performance degradation bounds."
+   "rationale": "'efficiently', 'large', and 'noticeable system slowdown' are vague, unquantified terms without defined batch sizes, throughput targets, or acceptable performance degradation bounds."
   },
   {
    "req_id": "SD-032",
    "type": "incompleteness",
    "subtype": "missing_consequence",
-   "evidence": "shall detect the active references",
+   "evidence": "the Catalog Service shall detect the active references",
    "related_ids": [],
-   "rationale": "States only that the Catalog Service shall detect active loans or holds upon deletion attempts, without specifying the resulting action (such as blocking deletion, logging, or returning an error)."
+   "rationale": "States only that active loans or holds must be detected when a Librarian attempts to delete a bibliographic record, without specifying the required action afterward (e.g., blocking deletion and returning an error)."
   },
   {
    "req_id": "SD-034",
    "type": "incompleteness",
    "subtype": "tbd",
-   "evidence": "TBD intervals",
+   "evidence": "at TBD intervals",
    "related_ids": [],
-   "rationale": "Contains an unresolved 'TBD' placeholder instead of a concrete database backup schedule interval."
+   "rationale": "Contains an unresolved 'TBD' placeholder for the database backup execution interval."
   },
   {
    "req_id": "SD-035",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "important administrative actions, in a timely manner, appropriate period",
+   "evidence": "important administrative actions in a timely manner and retain them for an appropriate period",
    "related_ids": [],
-   "rationale": "Uses vague, undefined terms ('important', 'in a timely manner', 'appropriate period') without enumerating audited actions or specifying concrete logging latency and retention durations."
+   "rationale": "'important', 'in a timely manner', and 'an appropriate period' are vague, undefined terms that omit the specific events to audit, maximum logging delay, and retention duration."
   },
   {
    "req_id": "SD-036",
    "type": "incompleteness",
    "subtype": "missing_consequence",
-   "evidence": "shall log event FAILOVER-01",
+   "evidence": "the Failover Manager shall log event FAILOVER-01",
    "related_ids": [],
-   "rationale": "Only requires logging event FAILOVER-01 when the primary database node becomes unreachable, omitting the actual failover or recovery actions (such as promoting a standby node or alerting an Administrator)."
+   "rationale": "Specifies only logging event FAILOVER-01 when the primary database node is unreachable for more than 10 seconds, omitting the actual failover or recovery action (e.g., promoting a replica, rerouting traffic, or alerting an Administrator)."
   },
   {
    "req_id": "SD-037",
    "type": "ambiguity",
    "subtype": "vague_term",
-   "evidence": "adequate transport security, clear error messages",
+   "evidence": "adequate transport security and clear error messages",
    "related_ids": [],
-   "rationale": "Uses vague terms ('adequate transport security', 'clear error messages') without specifying concrete protocols (e.g., TLS version) or error-message requirements."
+   "rationale": "'adequate' and 'clear' are vague, subjective terms that do not define required security protocols/standards (e.g., TLS version) or concrete error message criteria."
   },
   {
    "req_id": "SD-038",
    "type": "inconsistency",
    "subtype": "conflicting_values",
-   "evidence": "any Member password of at least 8 characters",
+   "evidence": "accept any Member password of at least 8 characters",
    "related_ids": [
     "SD-002"
    ],
-   "rationale": "Accepts any Member password of at least 8 characters with no character-class restrictions, conflicting with SD-002 which requires at least 12 characters containing uppercase, lowercase, and numeric characters."
+   "rationale": "Conflicts with SD-002, which requires Member passwords of at least 12 characters containing uppercase, lowercase, and numeric characters, whereas SD-038 accepts any password of at least 8 characters."
   },
   {
    "req_id": "SD-039",
    "type": "inconsistency",
    "subtype": "conflicting_values",
-   "evidence": "60 minutes of user inactivity",
+   "evidence": "active for 60 minutes of user inactivity",
    "related_ids": [
     "SD-004"
    ],
-   "rationale": "Keeps web portal sessions active for 60 minutes of inactivity, conflicting with SD-004 which terminates sessions after 15 minutes of inactivity."
+   "rationale": "Conflicts with SD-004, which terminates authenticated web portal sessions after 15 minutes of user inactivity, whereas SD-039 keeps sessions active for 60 minutes."
   },
   {
    "req_id": "SD-040",
@@ -260,7 +260,7 @@
    "related_ids": [
     "SD-003"
    ],
-   "rationale": "Requires reversible AES-256 encryption so Administrators can decrypt passwords, directly contradicting SD-003 which mandates one-way bcrypt hashing (cost factor 12) and prohibits storing plaintext or recoverable passwords."
+   "rationale": "Directly contradicts SD-003, which mandates one-way bcrypt hashing (cost factor 12) and forbids storing or exposing plaintext passwords, whereas SD-040 mandates reversible AES-256 encryption for plaintext retrieval."
   }
  ]
 }

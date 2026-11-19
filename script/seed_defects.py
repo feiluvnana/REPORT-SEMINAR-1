@@ -687,7 +687,7 @@ def main() -> None:
     doc_out = {
         "doc_id": "seeded_lms",
         "title": "Library Management System (LMS) — Software Requirements Specification",
-        "source": "Synthetic seeded benchmark (40 requirements: 10 clean, 30 defective)",
+        "source": "Synthetic Library Management System SRS (40 requirements)",
         "requirements": seeded_reqs,
     }
     key_out = {
