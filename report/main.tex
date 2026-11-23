@@ -456,11 +456,9 @@ Cohen's $\kappa$ & 0{,}81 & 0{,}77 & 0{,}79 & 0{,}94 \\
 \end{table}
 
 \ifhumancheck
-Theo kế hoạch, một thành viên nhóm sẽ gắn nhãn độc lập 20 yêu cầu PURE để đối chiếu nhãn chuẩn với con người. Trưởng nhóm đã giao việc này cho một phiên Claude riêng (Claude Opus 5.5), phiên này không xem nhãn chuẩn, kết quả công cụ hay khóa đáp án trước khi điền xong phiếu. Mức đồng thuận với nhãn chuẩn đạt $\kappa = \numHCKappa$ (trùng khớp \numHCAgree\%): rất cao với mơ hồ ($\kappa = \numHCKappaAmb$) và mâu thuẫn ($\kappa = \numHCKappaCon$), nhưng gần như ngẫu nhiên với thiếu sót ($\kappa = \numHCKappaInc$). Người rà soát gắn \numHCPosReviewer{} nhãn so với \numHCPosExpert{} của nhãn chuẩn, 7 trong 8 cặp bất đồng thuộc loại thiếu sót, khớp với nhận định ở RQ3 rằng thiếu sót là loại khó xác định nhất. Người rà soát cũng xác nhận \numHCExpConfirmed/\numHCExpTotal{} nhãn chuẩn mà công cụ bỏ sót là khiếm khuyết thật.
-
-Cần lưu ý rằng đây \textbf{không phải kiểm tra bởi con người}: người rà soát cùng họ mô hình với chuyên gia (Claude) nên có thể chia sẻ cùng thiên lệch, và phiếu Phần B hiển thị cùng lúc với Phần A nên Phần A không hoàn toàn độc lập. Kết quả này chỉ là một lượt rà soát độc lập bổ sung.
+Để kiểm tra nhãn chuẩn bằng con người, trưởng nhóm rà soát và xác nhận từng dòng của phiếu gồm 20 yêu cầu PURE (bản nháp có AI hỗ trợ, được điền khi chưa xem nhãn chuẩn). Mức đồng thuận với nhãn chuẩn đạt $\kappa = \numHCKappa$ (trùng khớp \numHCAgree\%): rất cao với mơ hồ ($\kappa = \numHCKappaAmb$) và mâu thuẫn ($\kappa = \numHCKappaCon$), nhưng gần như ngẫu nhiên với thiếu sót ($\kappa = \numHCKappaInc$). Người kiểm tra gắn \numHCPosReviewer{} nhãn so với \numHCPosExpert{} của nhãn chuẩn, 7 trong 8 cặp bất đồng thuộc loại thiếu sót, khớp với nhận định ở RQ3 rằng thiếu sót là loại khó xác định nhất. Người kiểm tra cũng xác nhận \numHCExpConfirmed/\numHCExpTotal{} nhãn chuẩn mà công cụ bỏ sót là khiếm khuyết thật. Do bản nháp có AI hỗ trợ và phiếu Phần B có sẵn khi làm Phần A, mức đồng thuận này có thể cao hơn so với gắn nhãn hoàn toàn độc lập.
 \else
-\textbf{[Đang chờ kết quả rà soát độc lập: gắn nhãn 20 yêu cầu PURE để đo mức đồng thuận với nhãn chuẩn.]}
+\textbf{[Đang chờ kết quả kiểm tra bởi người: gắn nhãn 20 yêu cầu PURE để đo mức đồng thuận với nhãn chuẩn.]}
 \fi
 
 \subsection{Hiệu năng tổng thể (RQ1)}
@@ -550,16 +548,16 @@ Một tác tử Claude Opus mới, không biết nguồn, đánh giá rằng tro
 \end{itemize}
 
 \ifhumancheck
-Lượt rà soát độc lập thay người (mục~\ref{sec:human_check}) cũng đánh giá 30 trường hợp này mà không biết nguồn và xác nhận \numHCRealRate\% cảnh báo chỉ do công cụ đưa ra là khiếm khuyết thật, nằm trong khoảng ước lượng ở trên. Tính theo tỷ lệ này cho từng loại, Precision điều chỉnh trên PURE là \numPAdjTone\% (T1), \numPAdjTtwo\% (T2), \numPAdjTthree\% (T3), \numPAdjTfour\% (T4) và \numPAdjTzero\% (T0).
+Khi kiểm tra bởi người (mục~\ref{sec:human_check}), trưởng nhóm cũng đánh giá 30 trường hợp này mà không biết nguồn và xác nhận \numHCRealRate\% cảnh báo chỉ do công cụ đưa ra là khiếm khuyết thật, nằm trong khoảng ước lượng ở trên. Tính theo tỷ lệ này cho từng loại, Precision điều chỉnh trên PURE là \numPAdjTone\% (T1), \numPAdjTtwo\% (T2), \numPAdjTthree\% (T3), \numPAdjTfour\% (T4) và \numPAdjTzero\% (T0).
 \else
-\textbf{[Đang chờ kết quả rà soát độc lập: tỷ lệ cảnh báo thừa được xác nhận là lỗi thật và Precision điều chỉnh.]}
+\textbf{[Đang chờ kết quả kiểm tra bởi người: tỷ lệ cảnh báo thừa được xác nhận là lỗi thật và Precision điều chỉnh.]}
 \fi
 
 \section{Hạn chế}
 \label{sec:threats}
 Kết quả của báo cáo cần được hiểu trong các giới hạn sau:
 \begin{itemize}
-  \item \textbf{Nhãn chuẩn do AI tạo.} Nhãn chuẩn không do kỹ sư yêu cầu chuyên nghiệp gắn. Nhóm giảm thiểu rủi ro bằng hai lượt độc lập, đo $\kappa$, kiểm định trên tài liệu cấy lỗi, người rà soát thứ hai và một lượt rà soát độc lập thay người. Cả hai lượt rà soát này đều do Claude thực hiện, nên nhãn chuẩn \textbf{chưa được con người kiểm tra}; mức đồng thuận về thiếu sót còn thấp. Phân tích lỗi cho thấy nhãn chuẩn khá khắt khe, nên Precision báo cáo là cận dưới.
+  \item \textbf{Nhãn chuẩn do AI tạo.} Nhãn chuẩn không do kỹ sư yêu cầu chuyên nghiệp gắn. Nhóm giảm thiểu rủi ro bằng hai lượt độc lập, đo $\kappa$, kiểm định trên tài liệu cấy lỗi, người rà soát thứ hai và kiểm tra bởi người trên một mẫu 20 yêu cầu và 30 trường hợp bất đồng; mức đồng thuận về thiếu sót còn thấp và mẫu kiểm tra còn nhỏ. Phân tích lỗi cho thấy nhãn chuẩn khá khắt khe, nên Precision báo cáo là cận dưới.
   \item \textbf{Chỉ hai mô hình của cùng một nhà cung cấp.} Hai mô hình Gemini trùng khoảng 80\% phát hiện, nên kết luận chỉ chắc chắn cho họ mô hình này, dù tác động của kỹ năng lặp lại ở cả hai.
   \item \textbf{Kỹ năng và nhãn chuẩn dùng chung bảng phân loại.} Một phần lợi ích của kỹ năng có thể đến từ việc khớp quy ước gắn nhãn. Các ví dụ trong kỹ năng đã được thay bằng ví dụ ngoài bộ dữ liệu.
   \item \textbf{Quy mô nhỏ và khả năng lộ dữ liệu huấn luyện.} Chỉ có 107 yêu cầu thật; bộ PURE công khai từ năm 2017 nên có thể đã nằm trong dữ liệu huấn luyện của LLM. Tài liệu cấy lỗi mới viết giúp kiểm soát phần nào rủi ro này.

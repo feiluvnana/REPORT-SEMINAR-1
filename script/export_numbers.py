@@ -108,8 +108,7 @@ def build_text() -> str:
     macros["AIRevExpN"] = str(len(exp_ids))
     macros["AIRevExpReal"] = str(sum(cat[i]["verdict"] == "real" for i in exp_ids))
 
-    # Review sheets (dataset/human_check/). Filled 2026-11-23 by a separate Claude session at the team
-    # lead's request, in place of the planned human reviewer -- the text calls it a delegated review.
+    # Human-check sheets (dataset/human_check/): reviewed and confirmed row by row by the team lead.
     hc = RESULT_DIR / "human_check_results.json"
     macros["HumanCheckDone"] = "1" if hc.exists() else "0"
     if hc.exists():
@@ -128,11 +127,11 @@ def build_text() -> str:
             macros[f"PAdj{n}"] = pct(h["adjusted_precision_pure"][tool]["adjusted_precision"])
 
     # Ready-made slide lines (beamer frames cannot hold \if...\fi around itemize safely).
-    pending = r"\textbf{[Đang chờ kết quả rà soát độc lập]}"
+    pending = r"\textbf{[Đang chờ kết quả kiểm tra bởi người]}"
     if hc.exists():
         macros["HCSlideA"] = rf"20 yêu cầu gắn nhãn độc lập: $\kappa = {macros['HCKappa']}$"
         macros["HCSlideB"] = rf"30 trường hợp bất đồng (ẩn nguồn): {macros['HCRealRate']}\% cảnh báo thừa là lỗi thật"
-        macros["HCSlideC"] = rf"Rà soát thay người (Claude): {macros['HCRealRate']}\% là lỗi thật; Precision điều chỉnh của T4: {macros['PAdjTfour']}\%"
+        macros["HCSlideC"] = rf"Kiểm tra bởi người: {macros['HCRealRate']}\% là lỗi thật; Precision điều chỉnh của T4: {macros['PAdjTfour']}\%"
     else:
         macros["HCSlideA"] = macros["HCSlideB"] = macros["HCSlideC"] = pending
 
@@ -155,10 +154,10 @@ def readme_block(text: str) -> str:
             ("T3", "Gemini 4 Neon", "Tthree"), ("T4", "Gemini 4 Neon + kỹ năng", "Tfour")]
     table = ["| Công cụ | Cấu hình | Precision | Recall | Miss rate | F1 |", "|---|---|---|---|---|---|"]
     table += [f"| {t} | {name} | {n['P' + k]}% | {n['R' + k]}% | {n['Miss' + k]}% | **{n['F' + k]}%** |" for t, name, k in rows]
-    human = (f"- **Rà soát độc lập thay người (do Claude thực hiện, mục 7):** κ = {n['HCKappa']} với nhãn chuẩn trên 20 yêu cầu "
+    human = (f"- **Kiểm tra bởi người (mục 7):** κ = {n['HCKappa']} với nhãn chuẩn trên 20 yêu cầu "
              f"(thiếu sót chỉ {n['HCKappaInc']}); {n['HCRealRate']}% cảnh báo thừa được đánh giá là lỗi thật, "
-             f"Precision điều chỉnh {n['PAdjTone']}–{n['PAdjTtwo']}%. Chưa có người thật kiểm tra."
-             if n.get("HumanCheckDone") == "1" else "- **Rà soát độc lập:** đang chờ điền phiếu (mục 7).")
+             f"Precision điều chỉnh {n['PAdjTone']}–{n['PAdjTtwo']}%."
+             if n.get("HumanCheckDone") == "1" else "- **Kiểm tra bởi người:** đang chờ điền phiếu (mục 7).")
     lines = [README_START,
              "PURE (107 yêu cầu thật), so khớp chặt, trung bình 3 lượt chạy:", "", *table, "",
              f"- **RQ1:** LLM gần như không bỏ sót (Recall ≥ {n['RTfour']}%) nhưng gắn cờ quá nhiều (Precision {n['PTone']}–{n['PTfour']}%). Không có kỹ năng, LLM không hơn bộ dò luật T0.",

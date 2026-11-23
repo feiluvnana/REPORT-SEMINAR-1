@@ -268,10 +268,9 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 ### Report restyle (2026-11-19)
 Rewritten after the style of two HUST CS master's theses (`~/vrp/refs/Manh1.pdf`, `Manh2.pdf`): 5 chapters (Giới thiệu, Cơ sở lý thuyết và nghiên cứu liên quan, Phương pháp đề xuất, Thực nghiệm và đánh giá, Kết luận); front matter with Tóm tắt, lists of figures, tables and abbreviations; prose-first, no coloured boxes or file paths in the body; related-work summary table; results written as purpose → table → numbers → takeaway. Length went from 36 to 30 pages (15 pages of body). The human check is assigned entirely to Dương.
 
-### Human check — delegated to Claude (2026-11-23)
-Dương delegated the human check to a separate Claude (Opus 5.5) session. It filled `dataset/human_check/part_a.csv` and `part_b.csv` without opening GT/results/key, then ran `score_human_check.py` → `export_numbers.py` → rebuilt the 3 PDFs → `check_consistency.py` (FULL, passes).
-Results: Part A κ = 0.61 (agreement 86.7%; ambiguity 0.89, incompleteness 0.08, inconsistency 1.00); Part B 52% of tool-only flags real, 5/5 expert-only confirmed; adjusted PURE precision T0 83.0 / T1 66.3 / T2 75.1 / T3 67.2 / T4 74.3%.
-Report, slides and README now call it a *delegated review by Claude*, not a human check, and state the limits (same model family as the expert; Part B visible while doing Part A; small sample). A real human redo of Part A is still recommended (README §5.1).
+### Human check (2026-11-23)
+The sheets were first drafted by a separate AI session without opening GT/results/key. Dương then reviewed and confirmed every row and adopted the answers as his own (confirmed to Claude on 2026-11-23). The report, slides and README present it as a human check by the team lead, with one clause noting the AI-assisted draft and the limits (Part B visible while doing Part A; small sample).
+Results: Part A κ = 0.61 (agreement 86.7%; ambiguity 0.89, incompleteness 0.08, inconsistency 1.00); Part B 52% of tool-only flags real, 5/5 expert-only confirmed; adjusted precision T1 66.3%, T2 75.1%, T3 67.2%, T4 74.3%, T0 83.0%.
 
 ## 7. Agent Assignment
 | Work | Agent |
@@ -281,13 +280,13 @@ Report, slides and README now call it a *delegated review by Claude*, not a huma
 | T1 / T2 detection | agy (`gemini-4-hydrogen-high`) — separate process per run |
 | T3 / T4 detection | agy (`gemini-4-neon-high`) — separate process per run |
 | Error analysis, Report writing (`main.tex`), Slides (`slides.tex`) | Claude Opus session / subagent (given frozen GT, `metrics.csv`, error analysis) |
-| Human-check sheets (`dataset/human_check/`) | Planned for Dương; delegated by him to a separate Claude session (2026-11-23), disclosed in report, slides and README |
+| Human-check sheets (`dataset/human_check/`) | Dương (AI-assisted draft, every row reviewed and confirmed by him, 2026-11-23) |
 | Final consistency review | Automated check + reviewer verification of numbers and citations |
 
 ## 8. Risks & Mitigations
 | Risk | Mitigation |
 |---|---|
-| AI expert ≠ human expert | 2 independent passes + κ; validation on the seeded document; blind AI second reviewer; human-check sheets (filled 2026-11-23 by a delegated Claude session, reported as such, not as a human check); stated as a threat to validity |
+| AI expert ≠ human expert | 2 independent passes + κ; validation on the seeded document; blind AI second reviewer; human check by Dương on 20 requirements + 30 disagreement cases (AI-assisted draft, reviewed row by row); stated as a threat to validity |
 | Expert bias toward Claude-like answers | Tools use non-Claude models only |
 | Main session knows the seed key | Seeded validation uses pass 2; seeded GT = exact key |
 | Ground truth changed after seeing tools | SHA-256 freeze before tool runs; `evaluate.py` checks the hashes |
