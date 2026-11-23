@@ -1,0 +1,82 @@
+{
+ "part_a": {
+  "pairs": 60,
+  "agreement": 0.8667,
+  "kappa": 0.6129,
+  "kappa_by_type": {
+   "ambiguity": 0.8936,
+   "incompleteness": 0.0789,
+   "inconsistency": 1.0
+  },
+  "human_positive": 16,
+  "expert_positive": 10
+ },
+ "part_b": {
+  "tally": {
+   "tool_only": {
+    "ambiguity": {
+     "yes": 4,
+     "no": 6,
+     "unsure": 1
+    },
+    "incompleteness": {
+     "yes": 8,
+     "no": 3,
+     "unsure": 1
+    },
+    "inconsistency": {
+     "yes": 0,
+     "no": 2,
+     "unsure": 0
+    }
+   },
+   "expert_only": {
+    "ambiguity": {
+     "yes": 3,
+     "no": 0,
+     "unsure": 0
+    },
+    "incompleteness": {
+     "yes": 2,
+     "no": 0,
+     "unsure": 0
+    },
+    "inconsistency": {
+     "yes": 0,
+     "no": 0,
+     "unsure": 0
+    }
+   }
+  },
+  "tool_only_real_rate_by_type": {
+   "ambiguity": 0.4,
+   "incompleteness": 0.7272727272727273,
+   "inconsistency": 0.0
+  },
+  "tool_only_real_rate": 0.5217391304347826,
+  "expert_only_confirmed": 5,
+  "expert_only_total": 5
+ },
+ "adjusted_precision_pure": {
+  "T0": {
+   "strict_precision": 0.4,
+   "adjusted_precision": 0.8304
+  },
+  "T1": {
+   "strict_precision": 0.2523,
+   "adjusted_precision": 0.6633
+  },
+  "T2": {
+   "strict_precision": 0.3661,
+   "adjusted_precision": 0.751
+  },
+  "T3": {
+   "strict_precision": 0.2828,
+   "adjusted_precision": 0.6716
+  },
+  "T4": {
+   "strict_precision": 0.3967,
+   "adjusted_precision": 0.7428
+  }
+ }
+}

@@ -1,21 +1,21 @@
 ﻿case_id,doc_id,req_id,requirement_text,ambiguity_0_1,incompleteness_0_1,inconsistency_0_1,inconsistency_related_ids,note
-A01,keepass,KP-027,There is no backdoor or key that unlocks all databases,,,,,
-A02,keepass,KP-013,REQ-13: Password field and repeat password field must be identical,,,,,
-A03,keepass,KP-030,Global hot key cannot be changed,,,,,
-A04,peering,PE-016,There are existing policies for long-term peering arrangement.,,,,,
-A05,gammaj,GJ-035,"The system shall utilize help bubbles to assist managers, customers, and administrators",,,,,
-A06,gammaj,GJ-044,The system shall be easy to migrate or backed up via another usb drive.,,,,,
-A07,peering,PE-019,Primary CDN has already acquired sufficient external resources.,,,,,
-A08,gammaj,GJ-042,The system shall be easy to upgrade.,,,,,
-A09,gammaj,GJ-022,The system shall encrypt all sensitive information via https.,,,,,
-A10,gammaj,GJ-001,"Web Store shall operate with the following internet browsers: Microsoft Internet Explorer version 6 and 7, Netscape Communicator Version 4 and 5.",,,,,
-A11,gammaj,GJ-016,The system shall be able to email customer and vendor in less than 1 second.,,,,,
-A12,gammaj,GJ-011,Upon the USB being plugged in the system shall be able to be deployed and operational in less than 1 minute.,,,,,
-A13,gammaj,GJ-040,The system shall be easily updatable for fixes and patches.,,,,,
-A14,keepass,KP-023,"If a master password is required to unlock the database, the database doesn’t open unless the password is entered",,,,,
-A15,keepass,KP-025,"If there is a composite key, both master password and key file are required",,,,,
-A16,keepass,KP-004,Databases must have different names or else the previews one will be replace if selected,,,,,
-A17,peering,PE-018,Negotiation is established between selected CDN peers.,,,,,
-A18,gammaj,GJ-003,The system shall use SQL based database to store inventory information.,,,,,
-A19,gammaj,GJ-038,The system shall utilize consistent symbols and colors for clear notifications.,,,,,
-A20,peering,PE-024,Policies are in place to perform renegotiation for problem resolution.,,,,,
+A01,keepass,KP-027,There is no backdoor or key that unlocks all databases,0,0,0,,
+A02,keepass,KP-013,REQ-13: Password field and repeat password field must be identical,0,0,0,,"Borderline: behaviour on mismatch not stated, but the constraint itself is testable"
+A03,keepass,KP-030,Global hot key cannot be changed,0,1,0,,Which key is the global hot key is never stated
+A04,peering,PE-016,There are existing policies for long-term peering arrangement.,1,1,0,,'long-term' undefined; which policies and who owns them not stated
+A05,gammaj,GJ-035,"The system shall utilize help bubbles to assist managers, customers, and administrators",0,1,0,,Where help bubbles appear and what they contain is not stated
+A06,gammaj,GJ-044,The system shall be easy to migrate or backed up via another usb drive.,1,0,0,,'easy' unmeasurable; 'migrate or backed up' unclear scope
+A07,peering,PE-019,Primary CDN has already acquired sufficient external resources.,1,0,0,,'sufficient' unmeasurable
+A08,gammaj,GJ-042,The system shall be easy to upgrade.,1,0,0,,'easy' unmeasurable; overlaps GJ-040 but not a contradiction
+A09,gammaj,GJ-022,The system shall encrypt all sensitive information via https.,1,0,0,,'sensitive information' undefined; https only covers transport
+A10,gammaj,GJ-001,"Web Store shall operate with the following internet browsers: Microsoft Internet Explorer version 6 and 7, Netscape Communicator Version 4 and 5.",0,0,0,,
+A11,gammaj,GJ-016,The system shall be able to email customer and vendor in less than 1 second.,0,1,0,,Trigger event and email content not stated
+A12,gammaj,GJ-011,Upon the USB being plugged in the system shall be able to be deployed and operational in less than 1 minute.,0,0,0,,
+A13,gammaj,GJ-040,The system shall be easily updatable for fixes and patches.,1,0,0,,'easily' unmeasurable
+A14,keepass,KP-023,"If a master password is required to unlock the database, the database doesn’t open unless the password is entered",0,1,0,,Behaviour on wrong password not stated; 'entered' should be 'correct password entered'
+A15,keepass,KP-025,"If there is a composite key, both master password and key file are required",0,0,0,,
+A16,keepass,KP-004,Databases must have different names or else the previews one will be replace if selected,1,0,0,,"'previews' (previous?), 'if selected' unclear; garbled sentence"
+A17,peering,PE-018,Negotiation is established between selected CDN peers.,0,1,0,,Who selects the peers and how is not stated
+A18,gammaj,GJ-003,The system shall use SQL based database to store inventory information.,0,0,0,,
+A19,gammaj,GJ-038,The system shall utilize consistent symbols and colors for clear notifications.,1,0,0,,'clear' unmeasurable
+A20,peering,PE-024,Policies are in place to perform renegotiation for problem resolution.,0,1,1,PE-023,Verbatim duplicate of PE-023; actor and trigger missing

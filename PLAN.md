@@ -268,46 +268,7 @@ Smoke test (done): `agy --sandbox` runs headless cleanly on both `gemini-4-hydro
 ### Report restyle (2026-11-19)
 Rewritten after the style of two HUST CS master's theses (`~/vrp/refs/Manh1.pdf`, `Manh2.pdf`): 5 chapters (Giới thiệu, Cơ sở lý thuyết và nghiên cứu liên quan, Phương pháp đề xuất, Thực nghiệm và đánh giá, Kết luận); front matter with Tóm tắt, lists of figures, tables and abbreviations; prose-first, no coloured boxes or file paths in the body; related-work summary table; results written as purpose → table → numbers → takeaway. Length went from 36 to 30 pages (15 pages of body). The human check is assigned entirely to Dương.
 
-### Remaining after the human check
-1. Team fills `dataset/human_check/part_a.csv` and `part_b.csv` (README §7).
-2. `score_human_check.py` → `export_numbers.py` → rebuild the 3 PDFs → `check_consistency.py` (without `--allow-pending-human`) → commit and push.
-
-## 7. Agent Assignment
-| Work | Agent |
-|---|---|
-| Orchestration, scripts, T0, report/slides scaffolding, evaluation & charts | Claude Opus main session (scaffolds already prepared) |
-| Expert pass 1, Expert pass 2 (isolated), Adjudication | **Claude Opus only** (`claude` CLI / Claude Opus subagent — isolated passes) |
-| T1 / T2 detection | agy (`gemini-4-hydrogen-high`) — separate process per run |
-| T3 / T4 detection | agy (`gemini-4-neon-high`) — separate process per run |
-| Error analysis, Report writing (`main.tex`), Slides (`slides.tex`) | Claude Opus session / subagent (given frozen GT, `metrics.csv`, error analysis) |
-| Final consistency review | Automated check + reviewer verification of numbers and citations |
-
-## 8. Risks & Mitigations
-| Risk | Mitigation |
-|---|---|
-| AI expert ≠ human expert | 2 independent passes + κ; validation on the seeded document; stated as a threat to validity |
-| Expert bias toward Claude-like answers | Tools use non-Claude models only |
-| Main session knows the seed key | Seeded validation uses pass 2; seeded GT = exact key |
-| Ground truth changed after seeing tools | SHA-256 freeze before tool runs; `evaluate.py` checks the hashes |
-| LLM non-determinism | 3 repeats, mean ± SD, stability metrics |
-| Invalid JSON / CLI failures | 1 retry, failures logged and reported |
-| PURE documents seen during LLM training | Seeded document is new; contamination discussed in threats to validity |
-| Small dataset (147 reqs) | Bootstrap CIs; documented as a limitation |
-| Fabricated references | Only cite sources that have been checked |
-
-## 9. Team Information (in `meta.tex`)
-| Role | Name | Student ID |
-|---|---|---|
-| Lecturer | TS. Nguyễn Thanh Hùng — Khoa Khoa học Máy tính, SoICT | — |
-| Group | Nhóm 4 | — |
-| Leader | Nguyễn Tùng Dương | 20251175M |
-| Member | Trần Xuân Nam | 20251177M |
-| Member | Phạm Gia Khánh | 20252636M |
-
-HUST logo: fetched from hust.edu.vn (`/uploads/sys/logobk-mb.png`); emblem cropped to `slide/hust_logo.png` + `report/figures/hust_logo.png` (392×577); full white-text banner kept as `slide/hust_banner_white.png` for dark backgrounds.
-
-## 10. Deliverables
-- `REPORT/README.md`: Vietnamese project guide and reproduction documentation
-- `REPORT/main.pdf`: the full report (Vietnamese)
-- `REPORT/slide/slides.pdf` + `slides-notes.pdf`: LaTeX Beamer presentation with HUST theme and speaker notes
-- Reproducible artifacts: data, skill, prompts, frozen ground truth, raw runs, evaluation scripts, and charts
+### Human check — delegated to Claude (2026-11-23)
+Dương delegated the human check to a separate Claude (Opus 5.5) session. It filled `dataset/human_check/part_a.csv` and `part_b.csv` without opening GT/results/key, then ran `score_human_check.py` → `export_numbers.py` → rebuilt the 3 PDFs → `check_consistency.py` (FULL, passes).
+Results: Part A κ = 0.61 (agreement 86.7%; ambiguity 0.89, incompleteness 0.08, inconsistency 1.00); Part B 52% of tool-only flags real, 5/5 expert-only confirmed; adjusted PURE precision T0 83.0 / T1 66.3 / T2 75.1 / T3 67.2 / T4 74.3%.
+Report, slides and README now call it a *delegated review by Claude*, not a human check, and state the limits (same model family as the expert; Part B visible while doing Part A; small sample). A real human redo of Part A is still recommended (README §5.1).

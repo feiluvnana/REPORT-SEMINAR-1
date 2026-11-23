@@ -29,7 +29,7 @@ PURE (107 yêu cầu thật), so khớp chặt, trung bình 3 lượt chạy:
 - **RQ3:** thiếu sót khó nhất (F1 37–46%), mâu thuẫn dễ nhất (F1 69–89%).
 - **RQ4:** ổn định cao qua 3 lượt (Jaccard 0,83–0,93).
 - **Phân tích lỗi:** khoảng 36–52% cảnh báo thừa có thể là lỗi thật mà nhãn chuẩn bỏ qua, nên Precision thật có lẽ cao hơn.
-- **Kiểm tra bởi người:** đang chờ nhóm điền phiếu (mục 7).
+- **Rà soát độc lập thay người (do Claude thực hiện, mục 7):** κ = 0,61 với nhãn chuẩn trên 20 yêu cầu (thiếu sót chỉ 0,08); 52% cảnh báo thừa được đánh giá là lỗi thật, Precision điều chỉnh 66,3–75,1%. Chưa có người thật kiểm tra.
 
 Chi tiết: `report/main.pdf`, Chương 4.
 <!-- RESULTS:END -->
@@ -155,7 +155,7 @@ Mọi con số trong báo cáo và slide đều lấy từ `result/tables/number
 ### 5.1. Cần kiểm tra (bắt buộc)
 | # | Việc cần làm | Cách làm |
 |---|---|---|
-| 1 | **Kiểm tra bởi người** | Điền 2 phiếu trong `dataset/human_check/` theo hướng dẫn ở **mục 7** (làm Phần A trước, Phần B sau). Việc này trả lời câu hỏi dễ gặp nhất: "chuyên gia là AI chứ không phải người" |
+| 1 | **Kiểm tra bởi người** | ✅ *Đã giao cho Claude (23/11/2026).* Dương ủy quyền cho một phiên Claude riêng điền 2 phiếu trong `dataset/human_check/` thay mình; kết quả và giới hạn ở **mục 7.6**. Vì người rà soát cũng là Claude, câu hỏi "chuyên gia là AI chứ không phải người" **vẫn chưa được giải quyết**. Nếu còn thời gian, một thành viên nên tự làm lại Phần A (20 yêu cầu, khoảng 30 phút) trên bản phiếu trống (`script/make_human_check.py`) |
 | 2 | **Quyết định phân xử** | Đọc 16 dòng trong `dataset/ground_truth/adjudication_log.md`, đánh dấu quyết định nào không đồng ý. Nếu sửa: báo Claude để đóng băng lại và chạy lại đánh giá |
 | 3 | **Tài liệu tham khảo** | Claude đã đối chiếu 10 tài liệu với nguồn gốc (19/11/2026) và sửa 4 mục (Ronanki 2025 sai tác giả; Fabbrini 2005 thiếu tác giả Trentanni; Berry 2003 và Zhao 2021 sửa thông tin xuất bản). Người cần mở lại ít nhất Fabbrini 2005 (chưa xác nhận số tập/trang) và hai chuẩn IEEE 830, ISO/IEC/IEEE 29148 |
 | 4 | **Số liệu khớp nhau** | Dò thủ công khoảng 5 con số giữa `report/main.pdf`, `slide/slides.pdf` và `result/metrics.csv` |
@@ -180,7 +180,7 @@ Mọi con số trong báo cáo và slide đều lấy từ `result/tables/number
 
   | Câu hỏi có thể gặp | Trả lời ngắn |
   |---|---|
-  | Chuyên gia là AI, không phải người? | 2 lượt độc lập, κ = 0,814, recall 30/30 trên tài liệu cấy lỗi, nhật ký phân xử, đối chiếu với người (mục 5.1, việc 1); đã nêu trong mối đe dọa tính hợp lệ |
+  | Chuyên gia là AI, không phải người? | 2 lượt độc lập, κ = 0,814, recall 30/30 trên tài liệu cấy lỗi, nhật ký phân xử, thêm một lượt rà soát độc lập (κ = 0,61). Thừa nhận thẳng: lượt rà soát đó cũng do Claude làm, nên chưa có người thật kiểm tra; đã nêu trong phần hạn chế |
   | Chuyên gia và công cụ đều là LLM? | Khác họ mô hình (Claude và Gemini); chuẩn được đóng băng trước khi chạy công cụ |
   | Kỹ năng và chuẩn dùng chung một phân loại? | Cần thiết để so khớp công bằng; một phần lợi ích của kỹ năng có thể đến từ việc khớp quy ước, điều này đã nêu rõ |
   | Dữ liệu nhỏ? | 147 yêu cầu, có khoảng tin cậy bootstrap, ghi nhận là hạn chế |
@@ -220,6 +220,8 @@ Nội dung đã có sẵn, không lặp lại ở đây; mỗi thành viên đ�
 
 ## 7. Hướng dẫn kiểm tra bởi người (human check)
 
+> **Trạng thái (23/11/2026):** hai phiếu đã được **Claude điền thay người** theo ủy quyền của Dương; xem kết quả ở mục 7.6. Hướng dẫn 7.1–7.5 giữ nguyên để một thành viên có thể tự làm lại.
+
 Nhãn chuẩn do AI (Claude Opus) tạo. Phần kiểm tra này để **người** xác nhận độ tin cậy của nhãn chuẩn và trả lời câu hỏi "các cảnh báo thừa của công cụ là nhiễu hay lỗi thật?". Kết quả được báo cáo **bên cạnh** kết quả chính; nhãn chuẩn đã đóng băng **không bị thay đổi**.
 
 ### 7.1. Quy tắc chung
@@ -257,3 +259,26 @@ Script báo lỗi nếu còn ô trống hoặc giá trị sai định dạng. K�
 
 Có thể tạo lại phiếu trống y hệt (seed cố định) bằng `.venv/bin/python script/make_human_check.py`.
 
+### 7.6. Kết quả rà soát thay người (Claude, 23/11/2026)
+Dương ủy quyền cho một phiên Claude (Opus 5.5) riêng điền hai phiếu thay mình. Phiên này đọc README, ba tài liệu PURE và hai phiếu, **không mở** `dataset/ground_truth/`, `result/` hay `result/human_check_key.json` cho đến khi điền xong và chạy `score_human_check.py`. Ghi chú lý do cho từng ô nằm ở cột `note` của mỗi phiếu.
+
+| Chỉ số | Kết quả |
+|---|---|
+| Phần A: đồng thuận với nhãn chuẩn (60 cặp) | 86,7%, κ = 0,61 |
+| κ theo loại | Mơ hồ 0,89 · Thiếu sót 0,08 · Mâu thuẫn 1,00 |
+| Số nhãn dương | Người rà soát 16, nhãn chuẩn 10; 7/8 cặp bất đồng thuộc loại thiếu sót |
+| Phần B: cảnh báo chỉ do công cụ được đánh giá là lỗi thật | 12/23 = 52% (mơ hồ 4/10, thiếu sót 8/11, mâu thuẫn 0/2; 2 `unsure` không tính) |
+| Phần B: nhãn chuẩn bị công cụ bỏ sót được xác nhận | 5/5 |
+| Precision điều chỉnh trên PURE | T0 83,0% · T1 66,3% · T2 75,1% · T3 67,2% · T4 74,3% |
+
+**Cách hiểu:**
+- Mơ hồ và mâu thuẫn được hiểu giống nhau; **thiếu sót** là chỗ nhãn chuẩn và người rà soát bất đồng nhiều nhất (người rà soát gắn thêm thiếu sót cho KP-030, PE-016, GJ-035, KP-023, PE-018, PE-024 và bỏ thiếu sót ở KP-013; bất đồng còn lại là mơ hồ ở PE-016), khớp với kết luận RQ3 rằng thiếu sót khó xác định nhất.
+- Tỷ lệ 52% nằm trong khoảng ước lượng của người rà soát AI ở mục 4.4 của báo cáo, nên kết luận "Precision báo cáo là cận dưới" được củng cố.
+- Precision điều chỉnh của T0 tăng mạnh nhất vì cảnh báo thừa của T0 chủ yếu là mơ hồ/thiếu sót; con số này là ngoại suy từ 23 mẫu, chỉ nên dùng để minh họa.
+
+**Giới hạn (đã ghi trong báo cáo và slide):**
+1. **Không phải người.** Người rà soát cùng họ mô hình với chuyên gia (Claude), nên có thể chia sẻ cùng thiên lệch; κ = 0,61 là cận trên lạc quan cho mức đồng thuận với người thật.
+2. **Phần A không hoàn toàn độc lập.** Phiên rà soát nhìn thấy cả hai phiếu cùng lúc, và Phần B có khẳng định về một số yêu cầu trùng với Phần A (KP-023, GJ-016, PE-023/PE-024).
+3. **Mẫu nhỏ:** 20 yêu cầu và 30 trường hợp.
+
+Kết quả được ghi vào `result/human_check_results.json`; nhãn chuẩn đã đóng băng không thay đổi.

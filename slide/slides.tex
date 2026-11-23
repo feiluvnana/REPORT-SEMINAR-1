@@ -222,7 +222,7 @@
       \end{block}
     \end{column}
     \begin{column}{0.47\textwidth}
-      \begin{block}{Kiểm tra bởi người}
+      \begin{block}{Rà soát thay người (Claude)}
         \begin{itemize}
           \item \numHCSlideA
           \item \numHCSlideB
@@ -230,7 +230,7 @@
       \end{block}
     \end{column}
   \end{columns}
-  \note{[Khánh] Nhãn chuẩn do Claude Opus tạo, khác họ mô hình với các công cụ Gemini để tránh thiên lệch. Hai lượt độc lập đạt kappa 0,81, và trên tài liệu cấy lỗi chuyên gia tìm đủ 30/30 lỗi. Nhóm cũng tự kiểm tra một phần nhãn chuẩn; kết quả ở ô bên phải. Tất cả nhãn được đóng băng bằng mã băm trước khi chạy công cụ nên không thể chỉnh sau khi thấy kết quả.}
+  \note{[Khánh] Nhãn chuẩn do Claude Opus tạo, khác họ mô hình với các công cụ Gemini để tránh thiên lệch. Hai lượt độc lập đạt kappa 0,81, và trên tài liệu cấy lỗi chuyên gia tìm đủ 30/30 lỗi. Thay cho kiểm tra bởi người, nhóm giao cho một phiên Claude riêng gắn nhãn lại 20 yêu cầu mà không xem đáp án: đồng thuận cao với mơ hồ và mâu thuẫn, nhưng thấp với thiếu sót. Vì người rà soát cũng là Claude, đây chưa phải kiểm tra bởi con người. Tất cả nhãn được đóng băng bằng mã băm trước khi chạy công cụ nên không thể chỉnh sau khi thấy kết quả.}
 \end{frame}
 
 % --- Slide 12: Results table ---
@@ -339,13 +339,13 @@
 % --- Slide 18: Limitations ---
 \begin{frame}{Hạn chế và mối đe dọa tính hợp lệ}
   \begin{itemize}
-    \item \textbf{Nhãn chuẩn do AI tạo:} giảm thiểu bằng 2 lượt độc lập, $\kappa$, kiểm định cấy lỗi, người rà soát thứ hai và kiểm tra bởi người. Nhãn chuẩn khá khắt khe nên Precision báo cáo là cận dưới.
+    \item \textbf{Nhãn chuẩn do AI tạo:} giảm thiểu bằng 2 lượt độc lập, $\kappa$, kiểm định cấy lỗi, người rà soát thứ hai và rà soát độc lập (đều do Claude, chưa có người kiểm tra). Nhãn chuẩn khá khắt khe nên Precision báo cáo là cận dưới.
     \item \textbf{Chỉ 2 mô hình Gemini:} kết luận chắc chắn cho họ mô hình này; tác động kỹ năng lặp lại ở cả hai mô hình.
     \item \textbf{Tài liệu cấy lỗi quá dễ:} PURE là thước đo chính.
     \item \textbf{Rò rỉ đáp án đã phát hiện và sửa:} ví dụ trong \texttt{SKILL.md}, luật T0, số lượng lỗi trong \texttt{seeded\_lms}; lượt chạy bị ảnh hưởng đã được chạy lại.
     \item \textbf{Quy mô nhỏ (107 yêu cầu thật):} có KTC bootstrap 95\%; PURE có thể đã nằm trong dữ liệu huấn luyện của LLM.
   \end{itemize}
-  \note{[Dương] Nhóm nêu thẳng các hạn chế: nhãn chuẩn do AI tạo, nhưng đã có nhiều lớp kiểm tra, kể cả kiểm tra bởi người. Chỉ có hai mô hình Gemini, nên kết luận gắn với họ mô hình này. Trong quá trình làm, nhóm phát hiện và sửa ba chỗ rò rỉ đáp án; các lượt chạy bị ảnh hưởng đã được chạy lại.}
+  \note{[Dương] Nhóm nêu thẳng các hạn chế: nhãn chuẩn do AI tạo, dù đã có nhiều lớp kiểm tra, các lớp đó đều do Claude thực hiện; nhóm chưa có người thật kiểm tra nhãn chuẩn. Chỉ có hai mô hình Gemini, nên kết luận gắn với họ mô hình này. Trong quá trình làm, nhóm phát hiện và sửa ba chỗ rò rỉ đáp án; các lượt chạy bị ảnh hưởng đã được chạy lại.}
 \end{frame}
 
 % --- Slide 19: Conclusion & Q&A ---
